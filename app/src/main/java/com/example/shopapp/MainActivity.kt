@@ -8,11 +8,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+
                 }
             }
         }
@@ -385,14 +387,137 @@ fun SignupScreenPreview() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun HomeScreen() {
+    Scaffold(
+        topBar = { HomeTopBar() },
+        bottomBar = { BottomBar() }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
+
+        }
+    }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun DefaultPreview() {
+fun HomeScreenPreview() {
     ShopAppTheme {
-        Greeting("Android")
+        HomeScreen()
+    }
+}
+
+@Composable
+fun HomeTopBar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
+            .padding(vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Shop Name",
+            fontWeight = FontWeight.SemiBold
+        )
+
+        IconButton(
+            onClick = {}
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.ShoppingCart,
+                contentDescription = "Cart"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun HomeTopBarPreview() {
+    ShopAppTheme {
+        HomeTopBar()
+    }
+}
+
+@Composable
+fun BottomBar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
+            .padding(vertical = 5.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        BottomBarItem(
+            text = "Home",
+            icon = Icons.Outlined.Home,
+            onClick = {}
+        )
+
+        BottomBarItem(
+            text = "Categories",
+            icon = Icons.Outlined.Search,
+            onClick = {}
+        )
+
+        BottomBarItem(
+            text = "Favourites",
+            icon = Icons.Outlined.FavoriteBorder,
+            onClick = {}
+        )
+
+        BottomBarItem(
+            text = "Account",
+            icon = Icons.Outlined.Person,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BottomBarPreview() {
+    ShopAppTheme {
+        BottomBar()
+    }
+}
+
+@Composable
+fun BottomBarItem(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .clickable { onClick() },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = text
+        )
+
+        Text(
+            text = text,
+            fontSize = 10.sp
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BottomBarItemPreview() {
+    ShopAppTheme {
+        BottomBarItem(
+            text = "Favourites",
+            icon = Icons.Outlined.FavoriteBorder,
+            onClick = {}
+        )
     }
 }
