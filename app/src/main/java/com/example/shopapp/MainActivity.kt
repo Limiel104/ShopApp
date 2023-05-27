@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
+                    HomeScreen()
                 }
             }
         }
@@ -388,15 +391,38 @@ fun SignupScreenPreview() {
 
 @Composable
 fun HomeScreen() {
+    val offers = listOf(
+        "All clothes for women now 10% cheaper",
+        "All clothes for men now 15% cheaper",
+        "All shirts 20% cheaper with code SHIRT20",
+        "Buy two pairs of pants for the price of one",
+        "13% off for purchase above 200$"
+    )
+    val scaffoldState = rememberScaffoldState()
+
     Scaffold(
         topBar = { HomeTopBar() },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar() },
+        scaffoldState = scaffoldState,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = 10.dp)
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                itemsIndexed(offers) { _, offer ->
+                    OfferItem(
+                        text = offer
+                    )
+                }
+            }
         }
     }
 }
@@ -518,6 +544,45 @@ fun BottomBarItemPreview() {
             text = "Favourites",
             icon = Icons.Outlined.FavoriteBorder,
             onClick = {}
+        )
+    }
+}
+
+@Composable
+fun OfferItem(
+    text: String
+) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .padding(top = 5.dp, bottom = 20.dp)
+            .fillMaxWidth()
+            .height(150.dp),
+        backgroundColor = Color.Gray
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 26.sp,
+                textAlign = TextAlign.Center,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun OfferItemPreview() {
+    ShopAppTheme {
+        OfferItem(
+            text = "All clothes for women now 10% cheaper"
         )
     }
 }
