@@ -1,0 +1,127 @@
+package com.example.shopapp.composable
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.shopapp.ui.theme.ShopAppTheme
+
+@Composable
+fun ProductDetailsBottomSheet(
+    name: String,
+    price: String,
+    description: String,
+    isProductInFavourites: Boolean
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
+            .padding(15.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Divider(
+                modifier = Modifier
+                    .width(50.dp),
+                thickness = 4.dp,
+                color = Color.Gray
+            )
+        }
+
+        Text(
+            text = name,
+            fontWeight = FontWeight.Light,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = price,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 24.sp
+            )
+
+            CardIconButton(
+                icon = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                description = "Favourites button",
+                color = if(isProductInFavourites) Color.Red else Color.Gray,
+                onClick = {}
+            )
+        }
+
+        Text(
+            text = "Description",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 5.dp)
+        )
+
+        Text(
+            text = description,
+            fontWeight = FontWeight.Light,
+            fontSize = 12.sp,
+            modifier = Modifier
+                .padding(top = 5.dp)
+                .padding(bottom = 15.dp)
+        )
+
+        ShopButtonItem(
+            text = "Add to Cart",
+            testTag = "AddToCartButton",
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ProductDetailsBottomSheetPreview() {
+    ShopAppTheme {
+        ProductDetailsBottomSheet(
+            name = "DANVOUY Womens T Shirt Casual Cotton Short",
+            price = "129,99 PLN",
+            description = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
+            isProductInFavourites = true
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ProductDetailsBottomSheetFalsePreview() {
+    ShopAppTheme {
+        ProductDetailsBottomSheet(
+            name = "DANVOUY Womens T Shirt Casual Cotton Short",
+            price = "129,99 PLN",
+            description = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
+            isProductInFavourites = false
+        )
+    }
+}

@@ -1,5 +1,6 @@
 package com.example.shopapp.composable
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
@@ -18,12 +19,15 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun ImageItem(
     imageUrl: String,
-    width: Int,
-    height: Int
+    width: Int? = null,
+    height: Int? = null
 ) {
     Card(
-        modifier = Modifier
-            .size(width.dp, height.dp),
+        modifier =
+            if (width  == null && height == null)
+                Modifier.fillMaxWidth()
+            else
+                Modifier.size(width!!.dp, height!!.dp),
         backgroundColor = Color.LightGray,
         elevation = 0.dp
     ) {
@@ -50,6 +54,16 @@ fun ImageItemPreview() {
             imageUrl = "",
             width = 180,
             height = 200
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ImageItemNullPreview() {
+    ShopAppTheme() {
+        ImageItem(
+            imageUrl = ""
         )
     }
 }

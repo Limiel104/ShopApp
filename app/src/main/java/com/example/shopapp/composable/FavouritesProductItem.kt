@@ -3,6 +3,8 @@ package com.example.shopapp.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +30,11 @@ fun FavouriteProductItem() {
                 height = 200
             )
 
-            CardIconButton()
+            CardIconButton(
+                icon = Icons.Outlined.ShoppingCart,
+                description = "Add to cart",
+                onClick = {}
+            )
         }
 
         ProductItemTitle(
