@@ -19,7 +19,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ProductDetailsScreen()
+                    AccountScreen(
+                        customerName = "John",
+                        customerClubPoints = 452
+                    )
                 }
             }
         }
