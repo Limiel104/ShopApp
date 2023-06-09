@@ -1,63 +1,48 @@
 package com.example.shopapp.presentation.common.composable
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.shopapp.ui.theme.ShopAppTheme
+import androidx.navigation.NavController
+import com.example.shopapp.domain.model.BottomBarItem
+import com.example.shopapp.util.Screen
 
 @Composable
-fun BottomBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
-            .padding(vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        BottomBarItem(
-            text = "Home",
-            icon = Icons.Outlined.Home,
-            onClick = {}
-        )
+fun BottomBar(
+    navController: NavController
+) {
+    BottomBarNavigation(
+        items = listOf(
+            BottomBarItem(
+                name = "Home",
+                route = Screen.HomeScreen.route,
+                icon = Icons.Outlined.Home
+            ),
 
-        BottomBarItem(
-            text = "Categories",
-            icon = Icons.Outlined.Search,
-            onClick = {}
-        )
+            BottomBarItem(
+                name = "Categories",
+                route = Screen.CategoryScreen.route,
+                icon = Icons.Outlined.Search
+            ),
 
-        BottomBarItem(
-            text = "Favourites",
-            icon = Icons.Outlined.FavoriteBorder,
-            onClick = {}
-        )
+            BottomBarItem(
+                name = "Favourites",
+                route = Screen.FavouriteScreen.route,
+                icon = Icons.Outlined.FavoriteBorder
+            ),
 
-        BottomBarItem(
-            text = "Account",
-            icon = Icons.Outlined.Person,
-            onClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-fun BottomBarPreview() {
-    ShopAppTheme {
-        BottomBar()
-    }
+            BottomBarItem(
+                name = "Account",
+                route = Screen.AccountScreen.route,
+                icon = Icons.Outlined.Person
+            ),
+        ),
+        navController = navController,
+        onItemClick = {
+            navController.navigate(it.route)
+        }
+    )
 }

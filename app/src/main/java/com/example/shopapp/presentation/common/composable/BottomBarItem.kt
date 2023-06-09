@@ -1,11 +1,8 @@
 package com.example.shopapp.presentation.common.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
@@ -18,25 +15,45 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun BottomBarItem(
-    text: String,
+    name: String,
     icon: ImageVector,
-    onClick: () -> Unit
+    badgeCount: Int
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .clickable { onClick() },
+            .background(MaterialTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = text
-        )
+        if(badgeCount>0) {
+            BadgedBox(
+                badge = {
+                    Badge {
+                        Text(badgeCount.toString())
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = name
+                )
 
-        Text(
-            text = text,
-            fontSize = 10.sp
-        )
+                Text(
+                    text = name,
+                    fontSize = 10.sp
+                )
+            }
+        }
+        else {
+            Icon(
+                imageVector = icon,
+                contentDescription = name
+            )
+
+            Text(
+                text = name,
+                fontSize = 10.sp
+            )
+        }
     }
 }
 
@@ -45,9 +62,21 @@ fun BottomBarItem(
 fun BottomBarItemPreview() {
     ShopAppTheme {
         BottomBarItem(
-            text = "Favourites",
+            name = "Favourites",
             icon = Icons.Outlined.FavoriteBorder,
-            onClick = {}
+            badgeCount = 0
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BottomBarItemCountPreview() {
+    ShopAppTheme {
+        BottomBarItem(
+            name = "Favourites",
+            icon = Icons.Outlined.FavoriteBorder,
+            badgeCount = 10
         )
     }
 }

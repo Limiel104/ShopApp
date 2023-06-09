@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.BottomBar
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
@@ -31,7 +30,6 @@ fun HomeContent(
 
     Scaffold(
         topBar = { HomeTopBar() },
-        bottomBar = { BottomBar() },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()

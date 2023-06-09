@@ -12,7 +12,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shopapp.presentation.common.composable.BottomBar
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -29,7 +28,6 @@ fun CategoryListContent(
 
     Scaffold(
         topBar = { CategoryListTopBar() },
-        bottomBar = { BottomBar() },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()

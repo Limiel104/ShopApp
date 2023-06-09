@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation
+package com.example.shopapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -15,7 +15,7 @@ import com.example.shopapp.presentation.signup.composable.SignupScreen
 import com.example.shopapp.util.Screen
 
 @Composable
-fun ShopAppNavHost(
+fun NavigationGraph(
     navController: NavHostController
 ) {
     NavHost(

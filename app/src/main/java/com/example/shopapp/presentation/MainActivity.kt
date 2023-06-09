@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.presentation.navigation.ShopAppNavigation
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,8 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val navController = rememberNavController()
-                    ShopAppNavHost(navController = navController)
+                    ShopAppNavigation()
                 }
             }
         }
