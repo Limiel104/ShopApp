@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
-import com.example.shopapp.presentation.navigation.ShopAppNavigation
+import com.example.shopapp.presentation.navigation.composable.ShopAppNavigation
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 class MainActivity : ComponentActivity() {

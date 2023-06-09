@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.common.composable
+package com.example.shopapp.presentation.navigation.composable
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -19,7 +19,8 @@ fun BottomBar(
             BottomBarItem(
                 name = "Home",
                 route = Screen.HomeScreen.route,
-                icon = Icons.Outlined.Home
+                icon = Icons.Outlined.Home,
+                badgeCount = 10
             ),
 
             BottomBarItem(
