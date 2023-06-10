@@ -12,14 +12,9 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProductDetailsContent() {
-    val sheetState = rememberBottomSheetState(
-        initialValue = BottomSheetValue.Collapsed,
-    )
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = sheetState
-    )
-
+fun ProductDetailsContent(
+    scaffoldState: BottomSheetScaffoldState
+) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = { ProductDetailsBottomSheet(
@@ -43,10 +38,20 @@ fun ProductDetailsContent() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun ProductDetailsContentPreview() {
     ShopAppTheme() {
-        ProductDetailsContent()
+        val bottomSheetState = rememberBottomSheetState(
+            initialValue = BottomSheetValue.Collapsed,
+        )
+        val scaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = bottomSheetState
+        )
+
+        ProductDetailsContent(
+            scaffoldState = scaffoldState
+        )
     }
 }

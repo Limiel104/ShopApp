@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryListContent(
+    scaffoldState: ScaffoldState,
     onNavigateToCategory: () -> Unit
 ) {
     val categories = listOf(
@@ -24,8 +26,6 @@ fun CategoryListContent(
         "men's clothing",
         "women's clothing"
     )
-    val scaffoldState = rememberScaffoldState()
-
     Scaffold(
         topBar = { CategoryListTopBar() },
         scaffoldState = scaffoldState,
@@ -58,6 +58,7 @@ fun CategoryListContent(
 fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
+            scaffoldState = rememberScaffoldState(),
             onNavigateToCategory = {}
         )
     }

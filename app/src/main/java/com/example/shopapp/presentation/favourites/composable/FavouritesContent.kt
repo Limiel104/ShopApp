@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,10 +19,9 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun FavouritesContent(
+    scaffoldState: ScaffoldState,
     onNavigateToProductDetails: () -> Unit
 ) {
-    val scaffoldState = rememberScaffoldState()
-
     Scaffold(
         topBar = { FavouritesTopBar() },
         scaffoldState = scaffoldState,
@@ -56,6 +56,7 @@ fun FavouritesContent(
 fun FavouritesContentPreview() {
     ShopAppTheme {
         FavouritesContent(
+            scaffoldState = rememberScaffoldState(),
             onNavigateToProductDetails = {}
         )
     }

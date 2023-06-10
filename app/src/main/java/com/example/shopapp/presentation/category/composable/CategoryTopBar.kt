@@ -19,7 +19,8 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun CategoryTopBar(
-    categoryName: String
+    categoryName: String,
+    onSelected: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -41,7 +42,7 @@ fun CategoryTopBar(
                 imageVector = Icons.Outlined.Sort,
                 contentDescription = "Sort",
                 modifier = Modifier
-                    .clickable {}
+                    .clickable { onSelected() }
             )
 
             Spacer(modifier = Modifier.width(15.dp))
@@ -61,7 +62,8 @@ fun CategoryTopBar(
 fun CategoryTopBarPreview() {
     ShopAppTheme {
         CategoryTopBar(
-            categoryName = "Category Name"
+            categoryName = "Category Name",
+            onSelected = {}
         )
     }
 }

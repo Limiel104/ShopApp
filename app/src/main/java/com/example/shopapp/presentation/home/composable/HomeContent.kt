@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun HomeContent(
+    scaffoldState: ScaffoldState,
     onNavigateToCategory: () -> Unit
 ) {
     val offers = listOf(
@@ -26,7 +28,6 @@ fun HomeContent(
         "Buy two pairs of pants for the price of one",
         "13% off for purchase above 200$"
     )
-    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
         topBar = { HomeTopBar() },
@@ -60,6 +61,7 @@ fun HomeContent(
 fun HomeContentPreview() {
     ShopAppTheme {
         HomeContent(
+            scaffoldState = rememberScaffoldState(),
             onNavigateToCategory = {}
         )
     }

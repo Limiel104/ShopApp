@@ -1,14 +1,13 @@
 package com.example.shopapp.presentation.category.composable
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,14 +17,15 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun CategoryContent(
+    scaffoldState: ScaffoldState,
+    isSortSectionToggled: Boolean,
     onNavigateToProductDetails: () -> Unit
 ) {
-    val scaffoldState = rememberScaffoldState()
-
     Scaffold(
         topBar = {
             CategoryTopBar(
-                categoryName = "Category Name"
+                categoryName = "Category Name",
+                onSelected = {}
             ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
@@ -39,6 +39,15 @@ fun CategoryContent(
                 .padding(innerPadding)
                 .padding(horizontal = 10.dp)
         ) {
+
+            AnimatedVisibility(
+                visible = isSortSectionToggled,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                SortSection()
+            }
+
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -60,6 +69,20 @@ fun CategoryContent(
 fun CategoryContentPreview() {
     ShopAppTheme {
         CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            isSortSectionToggled = false,
+            onNavigateToProductDetails = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentToggleTruePreview() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            isSortSectionToggled = true,
             onNavigateToProductDetails = {}
         )
     }

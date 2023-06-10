@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,9 +18,9 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun AccountContent(
     customerName: String,
-    customerClubPoints: Int
+    customerClubPoints: Int,
+    scaffoldState: ScaffoldState
 ) {
-    val scaffoldState = rememberScaffoldState()
     val coupons = listOf(10,20,50)
 
     Scaffold(
@@ -79,6 +80,7 @@ fun AccountContent(
 fun AccountContentPreview() {
     ShopAppTheme {
         AccountContent(
+            scaffoldState = rememberScaffoldState(),
             customerName = "John",
             customerClubPoints = 234
         )
