@@ -6,13 +6,16 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.example.shopapp.domain.model.BottomBarItem
 import com.example.shopapp.util.Screen
 
 @Composable
 fun BottomBar(
-    navController: NavController
+    navController: NavController,
+    backStackEntry: State<NavBackStackEntry?>
 ) {
     BottomBarNavigation(
         items = listOf(
@@ -25,7 +28,7 @@ fun BottomBar(
 
             BottomBarItem(
                 name = "Categories",
-                route = Screen.CategoryScreen.route,
+                route = Screen.CategoryListScreen.route,
                 icon = Icons.Outlined.Search
             ),
 
@@ -41,9 +44,7 @@ fun BottomBar(
                 icon = Icons.Outlined.Person
             ),
         ),
-        navController = navController,
-        onItemClick = {
-            navController.navigate(it.route)
-        }
+        backStackEntry = backStackEntry,
+        onItemClick = { navController.navigate(it.route) }
     )
 }
