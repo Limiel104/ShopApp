@@ -8,7 +8,9 @@ import androidx.compose.material.*
 import androidx.compose.ui.Modifier
 import com.example.shopapp.presentation.navigation.composable.ShopAppNavigation
 import com.example.shopapp.ui.theme.ShopAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
