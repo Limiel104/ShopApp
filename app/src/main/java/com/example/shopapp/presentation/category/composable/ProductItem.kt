@@ -23,6 +23,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun ProductItem(
+    name: String,
     isProductInFavourites: Boolean,
     onClick: () -> Unit
 ) {
@@ -47,7 +48,7 @@ fun ProductItem(
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 Text(
-                    text = "Shirt with regular line retert ewjwerhwjkehrwk",
+                    text = name,
                     fontWeight = FontWeight.Light,
                     fontSize = 12.sp,
                     maxLines = 1,
@@ -81,6 +82,7 @@ fun ProductItem(
 fun ProductItemFavouriteFalsePreview() {
     ShopAppTheme {
         ProductItem(
+            name = "Shirt",
             isProductInFavourites = false,
             onClick = {}
         )
@@ -92,6 +94,7 @@ fun ProductItemFavouriteFalsePreview() {
 fun ProductItemFavouriteTruePreview() {
     ShopAppTheme {
         ProductItem(
+            name = "Shirt",
             isProductInFavourites = true,
             onClick = {}
         )

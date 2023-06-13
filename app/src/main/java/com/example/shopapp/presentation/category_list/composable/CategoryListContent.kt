@@ -19,7 +19,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun CategoryListContent(
     scaffoldState: ScaffoldState,
-    onNavigateToCategory: () -> Unit
+    onCategorySelected: (String) -> Unit
 ) {
     val categories = listOf(
         "jewelery",
@@ -44,7 +44,7 @@ fun CategoryListContent(
                 itemsIndexed(categories) { _, category ->
                     CategoryListItem(
                         name = category,
-                        onClick = { onNavigateToCategory() }
+                        onClick = { onCategorySelected(category) }
                     )
                 }
             }
@@ -59,7 +59,7 @@ fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
             scaffoldState = rememberScaffoldState(),
-            onNavigateToCategory = {}
+            onCategorySelected = {}
         )
     }
 }
