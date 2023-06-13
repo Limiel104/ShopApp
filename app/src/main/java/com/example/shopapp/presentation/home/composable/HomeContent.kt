@@ -19,16 +19,9 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
+    offerList: List<String>,
     onNavigateToCategory: () -> Unit
 ) {
-    val offers = listOf(
-        "All clothes for women now 10% cheaper",
-        "All clothes for men now 15% cheaper",
-        "All shirts 20% cheaper with code SHIRT20",
-        "Buy two pairs of pants for the price of one",
-        "13% off for purchase above 200$"
-    )
-
     Scaffold(
         topBar = { HomeTopBar() },
         scaffoldState = scaffoldState,
@@ -45,7 +38,7 @@ fun HomeContent(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
-                itemsIndexed(offers) { _, offer ->
+                itemsIndexed(offerList) { _, offer ->
                     OfferItem(
                         text = offer,
                         onClick = { onNavigateToCategory() }
@@ -60,8 +53,17 @@ fun HomeContent(
 @Composable
 fun HomeContentPreview() {
     ShopAppTheme {
+        val offerList = listOf(
+            "All clothes for women now 10% cheaper",
+            "All clothes for men now 15% cheaper",
+            "All shirts 20% cheaper with code SHIRT20",
+            "Buy two pairs of pants for the price of one",
+            "13% off for purchase above 200$"
+        )
+
         HomeContent(
             scaffoldState = rememberScaffoldState(),
+            offerList = offerList,
             onNavigateToCategory = {}
         )
     }
