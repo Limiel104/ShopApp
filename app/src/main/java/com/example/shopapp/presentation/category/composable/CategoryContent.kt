@@ -21,7 +21,8 @@ fun CategoryContent(
     scaffoldState: ScaffoldState,
     categoryName: String,
     productList: List<String>,
-    isSortSectionToggled: Boolean
+    isSortSectionToggled: Boolean,
+    onProductSelected: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -60,7 +61,7 @@ fun CategoryContent(
                     ProductItem(
                         name = product,
                         isProductInFavourites = index%3 == 0,
-                        onClick = {}
+                        onClick = { onProductSelected(product) }
                     )
                 }
             }
@@ -87,7 +88,8 @@ fun CategoryContentPreview() {
             scaffoldState = rememberScaffoldState(),
             categoryName = "Man's clothing",
             productList = productList,
-            isSortSectionToggled = false
+            isSortSectionToggled = false,
+            onProductSelected = {}
         )
     }
 }
@@ -111,7 +113,8 @@ fun CategoryContentToggleTruePreview() {
             scaffoldState = rememberScaffoldState(),
             categoryName = "Man's clothing",
             productList = productList,
-            isSortSectionToggled = true
+            isSortSectionToggled = true,
+            onProductSelected = {}
         )
     }
 }
