@@ -68,7 +68,7 @@ fun NavigationGraph(
                 }
             )
         ) {
-            ProductDetailsScreen()
+            ProductDetailsScreen(navController = navController)
         }
         composable(
             route = Screen.LoginScreen.route

@@ -13,16 +13,19 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductDetailsContent(
-    scaffoldState: BottomSheetScaffoldState
+    name: String,
+    scaffoldState: BottomSheetScaffoldState,
+    onNavigateBack: () -> Unit
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetContent = { ProductDetailsBottomSheet(
-            name = "DANVOUY Womens T Shirt Casual Cotton Short",
-            price = "129,99 PLN",
-            description = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
-            isProductInFavourites = true
-        ) },
+        sheetContent = {
+            ProductDetailsBottomSheet(
+                name = name,
+                price = "129,99 PLN",
+                description = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
+                isProductInFavourites = true
+            ) },
         sheetBackgroundColor = MaterialTheme.colors.background,
         sheetPeekHeight = 100.dp
     ) {
@@ -32,7 +35,8 @@ fun ProductDetailsContent(
                 .padding(15.dp)
         ) {
             ProductDetailsImageItem(
-                imageUrl = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
+                imageUrl = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+                onNavigateBack = { onNavigateBack() }
             )
         }
     }
@@ -51,7 +55,9 @@ fun ProductDetailsContentPreview() {
         )
 
         ProductDetailsContent(
-            scaffoldState = scaffoldState
+            name = "Shirt with regular line",
+            scaffoldState = scaffoldState,
+            onNavigateBack = {}
         )
     }
 }

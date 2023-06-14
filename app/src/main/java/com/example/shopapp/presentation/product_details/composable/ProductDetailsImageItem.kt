@@ -14,6 +14,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun ProductDetailsImageItem(
     imageUrl: String,
+    onNavigateBack: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -32,12 +33,12 @@ fun ProductDetailsImageItem(
             CardIconButton(
                 icon = Icons.Default.ArrowBack,
                 description = "Go back",
-                onClick = {}
+                onClick = { onNavigateBack() }
             )
 
             CardIconButton(
                 icon = Icons.Default.ShoppingCart,
-                description = "Go back",
+                description = "Go to cart",
                 onClick = {}
             )
         }
@@ -49,7 +50,8 @@ fun ProductDetailsImageItem(
 fun ProductDetailsImageItemPreview() {
     ShopAppTheme() {
         ProductDetailsImageItem(
-            imageUrl = ""
+            imageUrl = "",
+            onNavigateBack = {}
         )
     }
 }
