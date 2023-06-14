@@ -17,6 +17,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun FavouriteProductItem(
+    name: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -44,7 +45,7 @@ fun FavouriteProductItem(
         }
 
         ProductItemTitle(
-            name = "Shirt with regular line retert ewjwerhwjkehrwk",
+            name = name,
             price = "15,59 PLN"
         )
     }
@@ -55,6 +56,7 @@ fun FavouriteProductItem(
 fun FavouriteProductItemPreview() {
     ShopAppTheme {
         FavouriteProductItem(
+            name = "Shirt with regular line",
             onClick = {}
         )
     }

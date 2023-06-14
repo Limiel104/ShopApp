@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import com.example.shopapp.presentation.account.composable.AccountScreen
 import com.example.shopapp.presentation.category.composable.CategoryScreen
 import com.example.shopapp.presentation.category_list.composable.CategoryListScreen
-import com.example.shopapp.presentation.favourites.composable.FavouritesScreen
+import com.example.shopapp.presentation.favourites.composable.FavouriteScreen
 import com.example.shopapp.presentation.home.composable.HomeScreen
 import com.example.shopapp.presentation.login.composable.LoginScreen
 import com.example.shopapp.presentation.product_details.composable.ProductDetailsScreen
@@ -34,9 +34,7 @@ fun NavigationGraph(
         composable(
             route = Screen.FavouriteScreen.route
         ) {
-            FavouritesScreen(
-                onNavigateToProductDetails = { navController.navigate(Screen.ProductDetailsScreen.route) }
-            )
+            FavouriteScreen(navController = navController)
         }
         composable(
             route = Screen.CategoryListScreen.route
@@ -61,7 +59,14 @@ fun NavigationGraph(
             AccountScreen()
         }
         composable(
-            route = Screen.ProductDetailsScreen.route
+            route = Screen.ProductDetailsScreen.route + "productId={productId}",
+            arguments = listOf(
+                navArgument(
+                    name = "productId"
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             ProductDetailsScreen()
         }

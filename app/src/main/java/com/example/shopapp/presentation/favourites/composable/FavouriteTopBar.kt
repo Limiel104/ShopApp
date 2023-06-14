@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
-fun FavouritesTopBar() {
+fun FavouriteTopBar() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,8 +44,8 @@ fun FavouritesTopBar() {
 
 @Preview
 @Composable
-fun FavouritesTopBarPreview() {
+fun FavouriteTopBarPreview() {
     ShopAppTheme {
-        FavouritesTopBar()
+        FavouriteTopBar()
     }
 }
