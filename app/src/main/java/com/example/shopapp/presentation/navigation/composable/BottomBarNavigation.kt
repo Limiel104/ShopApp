@@ -20,14 +20,14 @@ import com.example.shopapp.util.Screen
 @Composable
 fun BottomBarNavigation(
     items: List<BottomBarItem>,
-    backStackEntry: State<NavBackStackEntry?>,
+    navBackStackEntry: State<NavBackStackEntry?>,
     onItemClick: (BottomBarItem) -> Unit
 ) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.background
     ) {
         items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
+            val selected = item.route == navBackStackEntry.value?.destination?.route
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
@@ -72,7 +72,7 @@ fun BottomBarNavigationPreview() {
                 ),
             ),
             onItemClick = {},
-            backStackEntry = state
+            navBackStackEntry = state
         )
     }
 }

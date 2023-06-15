@@ -15,7 +15,7 @@ import com.example.shopapp.util.Screen
 @Composable
 fun BottomBar(
     navController: NavController,
-    backStackEntry: State<NavBackStackEntry?>
+    navBackStackEntry: State<NavBackStackEntry?>
 ) {
     BottomBarNavigation(
         items = listOf(
@@ -44,7 +44,7 @@ fun BottomBar(
                 icon = Icons.Outlined.Person
             ),
         ),
-        backStackEntry = backStackEntry,
+        navBackStackEntry = navBackStackEntry,
         onItemClick = { navController.navigate(it.route) }
     )
 }
