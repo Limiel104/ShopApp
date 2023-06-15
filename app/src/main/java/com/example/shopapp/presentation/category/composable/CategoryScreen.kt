@@ -20,7 +20,7 @@ fun CategoryScreen(
     val scaffoldState = rememberScaffoldState()
     val categoryId = viewModel.categoryState.value.categoryId
     val productList = viewModel.categoryState.value.productList
-    val isSortSectionToggled = viewModel.categoryState.value.isSortSectionToggled
+    val isSortSectionVisible = viewModel.categoryState.value.isSortSectionVisible
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -37,9 +37,10 @@ fun CategoryScreen(
         scaffoldState = scaffoldState,
         categoryName = categoryId,
         productList = productList,
-        isSortSectionToggled = isSortSectionToggled,
+        isSortSectionVisible = isSortSectionVisible,
         onProductSelected = { productId: String ->
             viewModel.onEvent(CategoryEvent.OnProductSelected(productId))
-        }
+        },
+        onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) }
     )
 }

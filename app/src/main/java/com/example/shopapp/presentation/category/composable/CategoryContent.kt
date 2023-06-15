@@ -21,14 +21,15 @@ fun CategoryContent(
     scaffoldState: ScaffoldState,
     categoryName: String,
     productList: List<String>,
-    isSortSectionToggled: Boolean,
-    onProductSelected: (String) -> Unit
+    isSortSectionVisible: Boolean,
+    onProductSelected: (String) -> Unit,
+    onSortSelected: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CategoryTopBar(
                 categoryName = categoryName,
-                onSortSelected = {},
+                onSortSelected = { onSortSelected() },
                 onCartSelected = {}
             ) },
         scaffoldState = scaffoldState,
@@ -45,7 +46,7 @@ fun CategoryContent(
         ) {
 
             AnimatedVisibility(
-                visible = isSortSectionToggled,
+                visible = isSortSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
@@ -88,8 +89,9 @@ fun CategoryContentPreview() {
             scaffoldState = rememberScaffoldState(),
             categoryName = "Man's clothing",
             productList = productList,
-            isSortSectionToggled = false,
-            onProductSelected = {}
+            isSortSectionVisible = false,
+            onProductSelected = {},
+            onSortSelected = {}
         )
     }
 }
@@ -113,8 +115,9 @@ fun CategoryContentToggleTruePreview() {
             scaffoldState = rememberScaffoldState(),
             categoryName = "Man's clothing",
             productList = productList,
-            isSortSectionToggled = true,
-            onProductSelected = {}
+            isSortSectionVisible = true,
+            onProductSelected = {},
+            onSortSelected = {}
         )
     }
 }

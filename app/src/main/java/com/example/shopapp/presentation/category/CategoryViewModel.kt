@@ -57,6 +57,11 @@ class CategoryViewModel @Inject constructor(
                     _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
+            CategoryEvent.ToggleSortSection -> {
+                _categoryState.value = categoryState.value.copy(
+                    isSortSectionVisible = !_categoryState.value.isSortSectionVisible
+                )
+            }
         }
     }
 }
