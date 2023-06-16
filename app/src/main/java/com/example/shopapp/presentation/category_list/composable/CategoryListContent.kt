@@ -24,7 +24,8 @@ fun CategoryListContent(
     val categories = listOf(
         "jewelery",
         "men's clothing",
-        "women's clothing"
+        "women's clothing",
+        "all"
     )
     Scaffold(
         topBar = { CategoryListTopBar() },

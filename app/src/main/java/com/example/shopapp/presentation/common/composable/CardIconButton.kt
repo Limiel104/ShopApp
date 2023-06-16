@@ -23,13 +23,14 @@ fun CardIconButton(
     icon: ImageVector,
     description: String,
     color: Color = Color.Black,
+    outsidePaddingValue: Int = 5,
     onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(35.dp),
         backgroundColor = Color.White,
         modifier = Modifier
-            .padding(5.dp)
+            .padding(outsidePaddingValue.dp)
             .size(36.dp)
             .clip(shape = CircleShape)
             .clickable { onClick() }
@@ -38,8 +39,7 @@ fun CardIconButton(
             imageVector = icon,
             tint = color,
             contentDescription = description,
-            modifier = Modifier
-                .padding(5.dp),
+            modifier = Modifier.padding(5.dp)
         )
     }
 }
