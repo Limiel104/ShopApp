@@ -14,13 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.domain.model.Offer
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
-    offerList: List<String>,
-    onNavigateToCategory: () -> Unit
+    offerList: List<Offer>,
+    onOfferSelected: (String) -> Unit
 ) {
     Scaffold(
         topBar = { HomeTopBar() },
@@ -40,8 +41,8 @@ fun HomeContent(
             ) {
                 itemsIndexed(offerList) { _, offer ->
                     OfferItem(
-                        text = offer,
-                        onClick = { onNavigateToCategory() }
+                        text = offer.description,
+                        onClick = { onOfferSelected(offer.categoryId) }
                     )
                 }
             }
@@ -54,17 +55,32 @@ fun HomeContent(
 fun HomeContentPreview() {
     ShopAppTheme {
         val offerList = listOf(
-            "All clothes for women now 10% cheaper",
-            "All clothes for men now 15% cheaper",
-            "All shirts 20% cheaper with code SHIRT20",
-            "Buy two pairs of pants for the price of one",
-            "13% off for purchase above 200$"
+            Offer(
+                categoryId = "women's clothing",
+                discountPercent = 10,
+                description = "All clothes for women now 10% cheaper"
+            ),
+            Offer(
+                categoryId = "men's clothing",
+                discountPercent = 15,
+                description = "All clothes for men now 15% cheaper"
+            ),
+            Offer(
+                categoryId = "jewelery",
+                discountPercent = 50,
+                description = "Buy two pieces of jewelery for the price of one"
+            ),
+            Offer(
+                categoryId = "",
+                discountPercent = 13,
+                description = "13% off for purchase above 200\$"
+            )
         )
 
         HomeContent(
             scaffoldState = rememberScaffoldState(),
             offerList = offerList,
-            onNavigateToCategory = {}
+            onOfferSelected = {}
         )
     }
 }

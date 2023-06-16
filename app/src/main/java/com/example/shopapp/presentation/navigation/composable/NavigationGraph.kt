@@ -27,9 +27,7 @@ fun NavigationGraph(
         composable(
             route = Screen.HomeScreen.route
         ) {
-            HomeScreen(
-                onNavigateToCategory = { navController.navigate(Screen.CategoryScreen.route) }
-            )
+            HomeScreen(navController = navController)
         }
         composable(
             route = Screen.FavouriteScreen.route

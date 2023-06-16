@@ -26,20 +26,28 @@ class CategoryViewModel @Inject constructor(
     init {
         Log.i("TAG","CategoryViewModel")
         val productList = listOf(
-            "men's clothing 1",
-            "men's clothing 2",
-            "women's clothing 1",
-            "jewelery 1",
-            "men's clothing 3",
-            "women's clothing 2",
-            "jewelery 2",
-            "women's clothing 3"
+            "men's clothing",
+            "men's clothing",
+            "women's clothing",
+            "jewelery",
+            "men's clothing",
+            "women's clothing",
+            "jewelery",
+            "women's clothing"
         )
 
         savedStateHandle.get<String>("categoryId")?.let { categoryId ->
-            val productsFromCategoryList = productList.filter { product ->
-                product.contains(categoryId)
+            val productsFromCategoryList = when(categoryId) {
+                 "all" -> {
+                    productList
+                }
+                else -> {
+                    productList.filter { product ->
+                        product == categoryId
+                    }
+                }
             }
+
             _categoryState.value = categoryState.value.copy(
                 categoryId = categoryId,
                 productList = productsFromCategoryList
@@ -57,7 +65,7 @@ class CategoryViewModel @Inject constructor(
                     _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
-            CategoryEvent.ToggleSortSection -> {
+            is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
