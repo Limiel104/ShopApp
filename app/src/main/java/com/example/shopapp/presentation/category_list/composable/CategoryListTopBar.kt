@@ -13,8 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.CardIconButton
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CART_BTN
 
 @Composable
 fun CategoryListTopBar() {
@@ -26,9 +27,9 @@ fun CategoryListTopBar() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
     ) {
-        CardIconButton(
+        IconButtonCard(
             icon = Icons.Outlined.ShoppingCart,
-            description = "Cart",
+            description = CART_BTN,
             outsidePaddingValue = 0,
             onClick = {}
         )

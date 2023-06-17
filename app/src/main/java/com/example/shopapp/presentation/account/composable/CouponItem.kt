@@ -11,12 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.ACTIVATE_COUPON_BTN
+import com.example.shopapp.util.Constants.discountAmount
+import com.example.shopapp.util.Constants.pointsToActivate
 
 @Composable
 fun CouponItem(
@@ -34,7 +39,7 @@ fun CouponItem(
                 .padding(15.dp)
         ) {
             Text(
-                text = "$discount PLN Discount",
+                text = "$discount " + stringResource(id = R.string.pln_discount),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -42,8 +47,8 @@ fun CouponItem(
             )
 
             Text(
-                text = "The coupon is valid for 14 days after activation.\n" +
-                        "Minimum purchase amount is " + discount+1,
+                text = stringResource(id = R.string.coupon_validation_message) +
+                        stringResource(id = R.string.purchase_minimal_amount_message) + " " + (discount+1),
                 fontWeight = FontWeight.Light,
                 fontSize = 10.sp,
                 modifier = Modifier
@@ -51,8 +56,8 @@ fun CouponItem(
             )
 
             ShopButtonItem(
-                text = "Activate for $pointsToActivate",
-                testTag = "Activate coupon button",
+                text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
+                testTag = ACTIVATE_COUPON_BTN,
                 onClick = {}
             )
         }
@@ -64,8 +69,8 @@ fun CouponItem(
 fun CouponItemPreview() {
     ShopAppTheme() {
         CouponItem(
-            discount = 10,
-            pointsToActivate = 100
+            discount = discountAmount,
+            pointsToActivate = pointsToActivate
         )
     }
 }

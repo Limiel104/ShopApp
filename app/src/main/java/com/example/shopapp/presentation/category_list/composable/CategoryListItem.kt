@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.util.Constants.categoryName
 
 @Composable
 fun CategoryListItem(
@@ -47,7 +48,7 @@ fun CategoryListItem(
 @Composable
 fun CategoryItemPreview() {
     CategoryListItem(
-        name = "women's clothing",
+        name = categoryName,
         onClick = {}
     )
 }

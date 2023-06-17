@@ -8,10 +8,15 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.R
 import com.example.shopapp.domain.model.BottomBarItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.badgeCount
+import com.example.shopapp.util.Constants.badgeCountZero
+import com.example.shopapp.util.Constants.emptyString
 
 @Composable
 fun BottomBarNavigationItem(
@@ -67,10 +72,10 @@ fun BottomBarNavigationItemPreview() {
     ShopAppTheme {
         BottomBarNavigationItem(
             BottomBarItem(
-                name = "Favourites",
-                route = "",
+                name = stringResource(id = R.string.favourite),
+                route = emptyString,
                 icon = Icons.Outlined.FavoriteBorder,
-                badgeCount = 0
+                badgeCount = badgeCountZero
             )
         )
     }
@@ -82,10 +87,10 @@ fun BottomBarNavigationItemCountPreview() {
     ShopAppTheme {
         BottomBarNavigationItem(
             BottomBarItem(
-                name = "Favourites",
-                route = "",
+                name = stringResource(id = R.string.favourite),
+                route = emptyString,
                 icon = Icons.Outlined.FavoriteBorder,
-                badgeCount = 10
+                badgeCount = badgeCount
             )
         )
     }

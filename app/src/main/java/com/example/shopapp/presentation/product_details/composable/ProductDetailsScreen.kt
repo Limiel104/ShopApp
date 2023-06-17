@@ -12,6 +12,8 @@ import androidx.navigation.NavController
 import com.example.shopapp.presentation.product_details.ProductDetailsEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsUiEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsViewModel
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_SCREEN_LE
+import com.example.shopapp.util.Constants.TAG
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -32,7 +34,7 @@ fun ProductDetailsScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is ProductDetailsUiEvent.NavigateBack -> {
-                    Log.i("TAG","ProductDetailsScreen Launched Effect")
+                    Log.i(TAG, PRODUCT_DETAILS_SCREEN_LE)
                     navController.popBackStack()
                 }
             }

@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.util.Constants.CATEGORY_VM
+import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Constants.categoryId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,7 +27,7 @@ class CategoryViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        Log.i("TAG","CategoryViewModel")
+        Log.i(TAG, CATEGORY_VM)
         val productList = listOf(
             "men's clothing",
             "men's clothing",
@@ -36,7 +39,7 @@ class CategoryViewModel @Inject constructor(
             "women's clothing"
         )
 
-        savedStateHandle.get<String>("categoryId")?.let { categoryId ->
+        savedStateHandle.get<String>(categoryId)?.let { categoryId ->
             val productsFromCategoryList = when(categoryId) {
                  "all" -> {
                     productList

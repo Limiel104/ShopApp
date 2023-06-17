@@ -5,6 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.util.Constants.CATEGORY_LIST_VM
+import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,7 +25,7 @@ class CategoryListViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        Log.i("TAG","CategoryListViewModel")
+        Log.i(TAG, CATEGORY_LIST_VM)
     }
 
     fun onEvent(event: CategoryListEvent) {
@@ -33,7 +35,7 @@ class CategoryListViewModel @Inject constructor(
                     _categoryListState.value = categoryListState.value.copy(
                         categoryId = event.value
                     )
-                    Log.i("TAG",event.value)
+                    Log.i(TAG,event.value)
                     _eventFlow.emit(CategoryListUiEvent.NavigateToCategory(event.value))
                 }
             }

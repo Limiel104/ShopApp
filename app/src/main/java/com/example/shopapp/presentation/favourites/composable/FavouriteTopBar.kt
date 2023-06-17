@@ -12,11 +12,14 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.CardIconButton
+import com.example.shopapp.R
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CART_BTN
 
 @Composable
 fun FavouriteTopBar() {
@@ -29,13 +32,13 @@ fun FavouriteTopBar() {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = "Favourites",
+            text = stringResource(id = R.string.favourite_title),
             fontWeight = FontWeight.SemiBold
         )
 
-        CardIconButton(
+        IconButtonCard(
             icon = Icons.Outlined.ShoppingCart,
-            description = "Cart",
+            description = CART_BTN,
             outsidePaddingValue = 0,
             onClick = {}
         )

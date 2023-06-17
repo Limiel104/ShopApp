@@ -10,6 +10,9 @@ import androidx.navigation.NavController
 import com.example.shopapp.presentation.category_list.CategoryListEvent
 import com.example.shopapp.presentation.category_list.CategoryListUiEvent
 import com.example.shopapp.presentation.category_list.CategoryListViewModel
+import com.example.shopapp.util.Constants.CATEGORY_LIST_SCREEN_LE
+import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Constants.categoryId
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -25,8 +28,8 @@ fun CategoryListScreen(
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is CategoryListUiEvent.NavigateToCategory -> {
-                    Log.i("TAG","CategoryListScreen Launched Effect")
-                    navController.navigate(Screen.CategoryScreen.route + "categoryId="+ event.categoryId)
+                    Log.i(TAG, CATEGORY_LIST_SCREEN_LE)
+                    navController.navigate(Screen.CategoryScreen.route + "$categoryId="+ event.categoryId)
                 }
             }
         }

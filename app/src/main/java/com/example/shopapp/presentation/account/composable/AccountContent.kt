@@ -10,10 +10,16 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.R
+import com.example.shopapp.util.Constants.MY_PROFILE_BTN
+import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
+import com.example.shopapp.util.Constants.customerName
+import com.example.shopapp.util.Constants.customerPoints
 
 @Composable
 fun AccountContent(
@@ -59,16 +65,16 @@ fun AccountContent(
             Spacer(modifier = Modifier.height(30.dp))
 
             ShopButtonItem(
-                text = "My profile",
-                testTag = "Orders button",
+                text = stringResource(id = R.string.my_profile),
+                testTag = MY_PROFILE_BTN,
                 onClick = {}
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             ShopButtonItem(
-                text = "Orders and Returns",
-                testTag = "Orders button",
+                text = stringResource(id = R.string.orders_and_returns),
+                testTag = ORDERS_AND_RETURNS_BTN,
                 onClick = {}
             )
         }
@@ -81,8 +87,8 @@ fun AccountContentPreview() {
     ShopAppTheme {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
-            customerName = "John",
-            customerClubPoints = 234
+            customerName = customerName,
+            customerClubPoints = customerPoints
         )
     }
 }

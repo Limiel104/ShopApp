@@ -9,6 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.util.Constants.productImageUrl
+import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productPrice
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -22,8 +26,8 @@ fun ProductDetailsContent(
         sheetContent = {
             ProductDetailsBottomSheet(
                 name = name,
-                price = "129,99 PLN",
-                description = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.",
+                price = productPrice,
+                description =  productDescription,
                 isProductInFavourites = true
             ) },
         sheetBackgroundColor = MaterialTheme.colors.background,
@@ -35,7 +39,7 @@ fun ProductDetailsContent(
                 .padding(15.dp)
         ) {
             ProductDetailsImageItem(
-                imageUrl = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+                imageUrl = productImageUrl,
                 onNavigateBack = { onNavigateBack() }
             )
         }
@@ -55,7 +59,7 @@ fun ProductDetailsContentPreview() {
         )
 
         ProductDetailsContent(
-            name = "Shirt with regular line",
+            name = productName,
             scaffoldState = scaffoldState,
             onNavigateBack = {}
         )

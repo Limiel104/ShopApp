@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
+import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Constants.productId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,9 +27,9 @@ class ProductDetailsViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        Log.i("TAG","ProductDetailViewModel")
+        Log.i(TAG, PRODUCT_DETAILS_VM)
 
-        savedStateHandle.get<String>("productId")?.let { procustId ->
+        savedStateHandle.get<String>(productId)?.let { procustId ->
             _productDetailsState.value = productDetailsState.value.copy(
                 name = procustId
             )

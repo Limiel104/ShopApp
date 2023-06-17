@@ -7,9 +7,12 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shopapp.presentation.common.composable.CardIconButton
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
+import com.example.shopapp.util.Constants.GO_BACK_BTN
+import com.example.shopapp.util.Constants.emptyString
 
 @Composable
 fun ProductDetailsImageItem(
@@ -30,15 +33,15 @@ fun ProductDetailsImageItem(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CardIconButton(
+            IconButtonCard(
                 icon = Icons.Default.ArrowBack,
-                description = "Go back",
+                description = GO_BACK_BTN,
                 onClick = { onNavigateBack() }
             )
 
-            CardIconButton(
+            IconButtonCard(
                 icon = Icons.Default.ShoppingCart,
-                description = "Go to cart",
+                description = ADD_TO_CART_BTN,
                 onClick = {}
             )
         }
@@ -50,7 +53,7 @@ fun ProductDetailsImageItem(
 fun ProductDetailsImageItemPreview() {
     ShopAppTheme() {
         ProductDetailsImageItem(
-            imageUrl = "",
+            imageUrl = emptyString,
             onNavigateBack = {}
         )
     }

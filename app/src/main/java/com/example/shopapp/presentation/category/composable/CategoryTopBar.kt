@@ -13,8 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.CardIconButton
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.SORT_BTN
+import com.example.shopapp.util.Constants.categoryName
 
 @Composable
 fun CategoryTopBar(
@@ -38,16 +41,16 @@ fun CategoryTopBar(
         Row(
             horizontalArrangement = Arrangement.End
         ) {
-            CardIconButton(
+            IconButtonCard(
                 icon = Icons.Outlined.Sort,
-                description = "Sort",
+                description = SORT_BTN,
                 outsidePaddingValue = 0,
                 onClick = { onSortSelected() }
             )
 
-            CardIconButton(
+            IconButtonCard(
                 icon = Icons.Outlined.ShoppingCart,
-                description = "Cart",
+                description = CART_BTN,
                 outsidePaddingValue = 0,
                 onClick = { onCartSelected() }
             )
@@ -60,7 +63,7 @@ fun CategoryTopBar(
 fun CategoryTopBarPreview() {
     ShopAppTheme {
         CategoryTopBar(
-            categoryName = "Category Name",
+            categoryName = categoryName,
             onSortSelected = {},
             onCartSelected = {}
         )

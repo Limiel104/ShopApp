@@ -20,10 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.FAVOURITE_BTN
+import com.example.shopapp.util.Constants.productImageUrl
+import com.example.shopapp.util.Constants.productItemImageHeight
+import com.example.shopapp.util.Constants.productItemImageWidth
+import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun ProductItem(
     name: String,
+    price: String,
     isProductInFavourites: Boolean,
     onClick: () -> Unit
 ) {
@@ -34,9 +41,9 @@ fun ProductItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ImageItem(
-            imageUrl = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-            width = 180,
-            height = 200
+            imageUrl = productImageUrl,
+            width = productItemImageWidth,
+            height = productItemImageHeight
         )
 
         Column(
@@ -60,7 +67,7 @@ fun ProductItem(
                 Icon(
                     imageVector = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                     tint = if(isProductInFavourites) Color.Red else Color.Gray,
-                    contentDescription = "Add to favourites",
+                    contentDescription = FAVOURITE_BTN,
                     modifier = Modifier
                         .weight(1F)
                         .clickable {}
@@ -69,7 +76,7 @@ fun ProductItem(
 
             Row {
                 Text(
-                    text = "15,59 PLN",
+                    text = price,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -82,7 +89,8 @@ fun ProductItem(
 fun ProductItemFavouriteFalsePreview() {
     ShopAppTheme {
         ProductItem(
-            name = "Shirt",
+            name = productName,
+            price = productPrice,
             isProductInFavourites = false,
             onClick = {}
         )
@@ -94,7 +102,8 @@ fun ProductItemFavouriteFalsePreview() {
 fun ProductItemFavouriteTruePreview() {
     ShopAppTheme {
         ProductItem(
-            name = "Shirt",
+            name = productName,
+            price = productPrice,
             isProductInFavourites = true,
             onClick = {}
         )

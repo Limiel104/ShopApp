@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.categoryName
+import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun CategoryContent(
@@ -61,6 +63,7 @@ fun CategoryContent(
                 itemsIndexed(productList) { index, product ->
                     ProductItem(
                         name = product,
+                        price = productPrice,
                         isProductInFavourites = index%3 == 0,
                         onClick = { onProductSelected(product) }
                     )
@@ -87,7 +90,7 @@ fun CategoryContentPreview() {
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            categoryName = "Man's clothing",
+            categoryName = categoryName,
             productList = productList,
             isSortSectionVisible = false,
             onProductSelected = {},
@@ -113,7 +116,7 @@ fun CategoryContentToggleTruePreview() {
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            categoryName = "Man's clothing",
+            categoryName = categoryName,
             productList = productList,
             isSortSectionVisible = true,
             onProductSelected = {},
