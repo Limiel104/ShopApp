@@ -17,8 +17,8 @@ import com.example.shopapp.util.Constants.productPrice
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductDetailsContent(
-    name: String,
     scaffoldState: BottomSheetScaffoldState,
+    name: String,
     onNavigateBack: () -> Unit
 ) {
     BottomSheetScaffold(

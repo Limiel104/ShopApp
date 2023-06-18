@@ -42,8 +42,8 @@ fun ProductDetailsScreen(
     }
 
     ProductDetailsContent(
-        name = name,
         scaffoldState = scaffoldState,
+        name = name,
         onNavigateBack = { viewModel.onEvent(ProductDetailsEvent.GoBack) }
     )
 }

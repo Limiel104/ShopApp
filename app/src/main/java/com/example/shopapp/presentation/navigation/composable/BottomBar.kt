@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -18,7 +19,8 @@ import com.example.shopapp.util.Screen
 @Composable
 fun BottomBar(
     navController: NavController,
-    navBackStackEntry: State<NavBackStackEntry?>
+    navBackStackEntry: State<NavBackStackEntry?>,
+    modifier: Modifier = Modifier
 ) {
     BottomBarNavigation(
         items = listOf(
@@ -48,6 +50,7 @@ fun BottomBar(
             ),
         ),
         navBackStackEntry = navBackStackEntry,
-        onItemClick = { navController.navigate(it.route) }
+        onItemClick = { navController.navigate(it.route) },
+        modifier = modifier
     )
 }

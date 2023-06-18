@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.navigation.composable
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -20,7 +21,8 @@ import com.example.shopapp.util.Screen
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomBarHeight: Dp
 ) {
     NavHost(
         navController = navController,
@@ -29,17 +31,26 @@ fun NavigationGraph(
         composable(
             route = Screen.HomeScreen.route
         ) {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.FavouriteScreen.route
         ) {
-            FavouriteScreen(navController = navController)
+            FavouriteScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.CategoryListScreen.route
         ) {
-            CategoryListScreen(navController = navController)
+            CategoryListScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.CategoryScreen.route + categoryId + "={$categoryId}",
@@ -51,12 +62,15 @@ fun NavigationGraph(
                 }
             )
         ) {
-            CategoryScreen(navController = navController)
+            CategoryScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.AccountScreen.route
         ) {
-            AccountScreen()
+            AccountScreen(bottomBarHeight = bottomBarHeight)
         }
         composable(
             route = Screen.ProductDetailsScreen.route + productId + "={$productId}",
@@ -68,7 +82,7 @@ fun NavigationGraph(
                 }
             )
         ) {
-            ProductDetailsScreen(navController = navController)
+            ProductDetailsScreen(navController = navController,)
         }
         composable(
             route = Screen.LoginScreen.route

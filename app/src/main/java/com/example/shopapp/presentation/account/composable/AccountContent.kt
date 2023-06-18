@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -23,9 +24,10 @@ import com.example.shopapp.util.Constants.customerPoints
 
 @Composable
 fun AccountContent(
+    scaffoldState: ScaffoldState,
+    bottomBarHeight: Dp,
     customerName: String,
-    customerClubPoints: Int,
-    scaffoldState: ScaffoldState
+    customerClubPoints: Int
 ) {
     val coupons = listOf(10,20,50)
 
@@ -38,6 +40,7 @@ fun AccountContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -87,6 +90,7 @@ fun AccountContentPreview() {
     ShopAppTheme {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             customerName = customerName,
             customerClubPoints = customerPoints
         )

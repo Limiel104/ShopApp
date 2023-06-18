@@ -15,12 +15,14 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
 fun FavouriteContent(
     scaffoldState: ScaffoldState,
+    bottomBarHeight: Dp,
     productList: List<String>,
     onProductSelected: (String) -> Unit
 ) {
@@ -31,6 +33,7 @@ fun FavouriteContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -68,6 +71,7 @@ fun FavouriteContentPreview() {
 
         FavouriteContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             productList = productList,
             onProductSelected = {}
         )

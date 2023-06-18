@@ -3,6 +3,14 @@ package com.example.shopapp.presentation.navigation.composable
 import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +22,8 @@ fun ShopAppNavigation() {
     val navController = rememberNavController()
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = currentRoute(navBackStackEntry.value)
+    var bottomBarHeight by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
 
     Scaffold(
         bottomBar = {
@@ -21,13 +31,21 @@ fun ShopAppNavigation() {
                 if(!currentRoute.contains(Screen.ProductDetailsScreen.route)) {
                     BottomBar(
                         navController = navController,
-                        navBackStackEntry = navBackStackEntry
+                        navBackStackEntry = navBackStackEntry,
+                        modifier = Modifier.onGloballyPositioned {
+                            bottomBarHeight = with(density) {
+                                it.size.height.toDp()
+                            }
+                        }
                     )
                 }
             }
         }
     ) {
-        NavigationGraph(navController = navController)
+        NavigationGraph(
+            navController = navController,
+            bottomBarHeight = bottomBarHeight
+        )
     }
 }
 

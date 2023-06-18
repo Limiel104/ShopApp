@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.favourites.FavouriteEvent
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun FavouriteScreen(
     navController: NavController,
+    bottomBarHeight: Dp,
     viewModel: FavouriteViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -37,6 +39,7 @@ fun FavouriteScreen(
 
     FavouriteContent(
         scaffoldState = scaffoldState,
+        bottomBarHeight = bottomBarHeight,
         productList = productList,
         onProductSelected = { productId: String ->
             viewModel.onEvent(FavouriteEvent.OnProductSelected(productId))

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,10 +24,12 @@ import com.example.shopapp.util.Screen
 fun BottomBarNavigation(
     items: List<BottomBarItem>,
     navBackStackEntry: State<NavBackStackEntry?>,
-    onItemClick: (BottomBarItem) -> Unit
+    onItemClick: (BottomBarItem) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = modifier
     ) {
         items.forEach { item ->
             val selected = item.route == navBackStackEntry.value?.destination?.route

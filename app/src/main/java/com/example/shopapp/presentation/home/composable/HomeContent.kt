@@ -13,6 +13,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Offer
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -20,6 +21,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
+    bottomBarHeight: Dp,
     offerList: List<Offer>,
     onOfferSelected: (String) -> Unit
 ) {
@@ -30,6 +32,7 @@ fun HomeContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -79,6 +82,7 @@ fun HomeContentPreview() {
 
         HomeContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             offerList = offerList,
             onOfferSelected = {}
         )

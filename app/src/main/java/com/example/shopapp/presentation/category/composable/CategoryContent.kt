@@ -13,6 +13,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.categoryName
@@ -21,6 +22,7 @@ import com.example.shopapp.util.Constants.productPrice
 @Composable
 fun CategoryContent(
     scaffoldState: ScaffoldState,
+    bottomBarHeight: Dp,
     categoryName: String,
     productList: List<String>,
     isSortSectionVisible: Boolean,
@@ -39,6 +41,7 @@ fun CategoryContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -90,6 +93,7 @@ fun CategoryContentPreview() {
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             categoryName = categoryName,
             productList = productList,
             isSortSectionVisible = false,
@@ -116,6 +120,7 @@ fun CategoryContentToggleTruePreview() {
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             categoryName = categoryName,
             productList = productList,
             isSortSectionVisible = true,

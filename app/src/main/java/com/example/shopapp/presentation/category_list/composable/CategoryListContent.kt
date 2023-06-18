@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
@@ -13,12 +14,15 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryListContent(
     scaffoldState: ScaffoldState,
+    bottomBarHeight: Dp,
     onCategorySelected: (String) -> Unit
 ) {
     val categories = listOf(
@@ -33,6 +37,7 @@ fun CategoryListContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .padding(bottom = bottomBarHeight)
     ) { _ ->
         Column(
             modifier = Modifier
@@ -60,6 +65,7 @@ fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
             scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
             onCategorySelected = {}
         )
     }

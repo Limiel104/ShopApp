@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.category.CategoryEvent
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CategoryScreen(
     navController: NavController,
+    bottomBarHeight: Dp,
     viewModel: CategoryViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -38,6 +40,7 @@ fun CategoryScreen(
 
     CategoryContent(
         scaffoldState = scaffoldState,
+        bottomBarHeight = bottomBarHeight,
         categoryName = categoryId,
         productList = productList,
         isSortSectionVisible = isSortSectionVisible,
