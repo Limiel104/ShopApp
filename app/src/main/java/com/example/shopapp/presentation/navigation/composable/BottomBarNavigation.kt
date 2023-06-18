@@ -32,7 +32,12 @@ fun BottomBarNavigation(
         modifier = modifier
     ) {
         items.forEach { item ->
-            val selected = item.route == navBackStackEntry.value?.destination?.route
+            val isCategoryScreenCurrentlyDisplayed = navBackStackEntry.value?.destination?.route!!.contains(Screen.CategoryScreen.route)
+
+            val selected =
+                if(isCategoryScreenCurrentlyDisplayed) item.route == Screen.CategoryListScreen.route
+                else item.route == navBackStackEntry.value?.destination?.route
+
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
