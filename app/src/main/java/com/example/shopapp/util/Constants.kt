@@ -13,6 +13,7 @@ object Constants {
     const val LOGIN_SIGNUP_BTN: String = "Go to sign up screen button"
     const val LOGIN_CPI: String = "Login circular progress indicator"
     const val PRODUCT_DETAILS_ADD_TO_CART_BTN: String = "Add to cart"
+    const val HOME_TOP_BAR: String = "Home top bar"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -40,6 +41,8 @@ object Constants {
     const val badgeCount: Int = 10
     const val badgeCountZero: Int = 0
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
+    const val bottomBarHeight: Int = 56
+    const val shopName: String = "Shop Name"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
