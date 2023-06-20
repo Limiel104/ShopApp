@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +21,7 @@ import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ACTIVATE_COUPON_BTN
+import com.example.shopapp.util.Constants.COUPON_ITEM_
 import com.example.shopapp.util.Constants.discountAmount
 import com.example.shopapp.util.Constants.pointsToActivate
 
@@ -32,6 +34,7 @@ fun CouponItem(
         modifier = Modifier
             .width(300.dp)
             .clip(RoundedCornerShape(25.dp))
+            .testTag(COUPON_ITEM_+discount)
     ) {
         Column(
             modifier = Modifier

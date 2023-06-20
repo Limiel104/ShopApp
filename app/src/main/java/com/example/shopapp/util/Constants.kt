@@ -14,6 +14,13 @@ object Constants {
     const val LOGIN_CPI: String = "Login circular progress indicator"
     const val PRODUCT_DETAILS_ADD_TO_CART_BTN: String = "Add to cart"
     const val HOME_TOP_BAR: String = "Home top bar"
+    const val ACCOUNT_TOP_BAR: String = "Account top bar"
+    const val COUPON_ITEM_: String = "Coupon item for "
+    const val COUPON_ITEM_10: String = "Coupon item for 10"
+    const val COUPON_ITEM_20: String = "Coupon item for 20"
+    const val COUPON_ITEM_50: String = "Coupon item for 50"
+    const val ACCOUNT_LAZY_ROW: String = "Account lazy row"
+    const val ACCOUNT_POINTS_CARD: String = "Account points card"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -43,6 +50,9 @@ object Constants {
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
     const val bottomBarHeight: Int = 56
     const val shopName: String = "Shop Name"
+    const val hi: String = "Hi "
+    const val shopClub: String = "Shop Club"
+    const val customerClubPoints: String = "234 points"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
