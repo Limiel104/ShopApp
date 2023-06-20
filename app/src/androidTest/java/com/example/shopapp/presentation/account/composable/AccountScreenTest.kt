@@ -20,11 +20,13 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
 import com.example.shopapp.util.Constants.ACCOUNT_POINTS_CARD
+import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.COUPON_ITEM_10
 import com.example.shopapp.util.Constants.COUPON_ITEM_20
 import com.example.shopapp.util.Constants.COUPON_ITEM_50
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
+import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.customerClubPoints
 import com.example.shopapp.util.Constants.customerName
 import com.example.shopapp.util.Constants.hi
@@ -61,7 +63,7 @@ class AccountScreenTest {
                         route = Screen.AccountScreen.route
                     ) {
                         AccountScreen(
-                            bottomBarHeight = Constants.bottomBarHeight.dp
+                            bottomBarHeight = bottomBarHeight.dp
                         )
                     }
                 }
@@ -80,7 +82,7 @@ class AccountScreenTest {
     fun accountScreenTopBar_cartButtonIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(Constants.ACCOUNT_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(Constants.ACCOUNT_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(Constants.ACCOUNT_TOP_BAR).onChildAt(1).assertContentDescriptionContains(Constants.CART_BTN)
+        composeRule.onNodeWithTag(Constants.ACCOUNT_TOP_BAR).onChildAt(1).assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(Constants.ACCOUNT_TOP_BAR).onChildAt(1).assertHasClickAction()
     }
 

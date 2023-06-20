@@ -21,6 +21,8 @@ object Constants {
     const val COUPON_ITEM_50: String = "Coupon item for 50"
     const val ACCOUNT_LAZY_ROW: String = "Account lazy row"
     const val ACCOUNT_POINTS_CARD: String = "Account points card"
+    const val CATEGORY_TOP_BAR: String = "Category top bar"
+    const val CATEGORY_SORT_SECTION: String = "Category sort section"
 
     //Content Description
     const val CART_BTN: String = "Cart button"

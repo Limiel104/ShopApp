@@ -10,12 +10,14 @@ import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 import com.example.shopapp.util.Constants.categoryName
 
@@ -29,7 +31,8 @@ fun CategoryTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
-            .padding(vertical = 15.dp),
+            .padding(vertical = 15.dp)
+            .testTag(CATEGORY_TOP_BAR),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
