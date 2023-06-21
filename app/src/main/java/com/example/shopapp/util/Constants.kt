@@ -23,6 +23,12 @@ object Constants {
     const val ACCOUNT_POINTS_CARD: String = "Account points card"
     const val CATEGORY_TOP_BAR: String = "Category top bar"
     const val CATEGORY_SORT_SECTION: String = "Category sort section"
+    const val CATEGORY_LIST_TOP_BAR: String = "Category list top bar"
+    const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list crazy column"
+    const val CATEGORY_NAME_1: String = "jewelery"
+    const val CATEGORY_NAME_2: String = "men's clothing"
+    const val CATEGORY_NAME_3: String = "women's clothing"
+    const val CATEGORY_NAME_4: String = "all"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -37,7 +43,7 @@ object Constants {
     const val customerPoints: Int = 234
     const val discountAmount: Int = 10
     const val pointsToActivate: Int = 100
-    const val categoryName: String = "man's clothing"
+    const val categoryName: String = "men's clothing"
     const val productPrice: String = "15,59 PLN"
     const val productName: String = "Shirt"
     const val productImageUrl: String = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"

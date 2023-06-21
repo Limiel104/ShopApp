@@ -13,10 +13,12 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -45,7 +47,8 @@ fun CategoryListContent(
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .testTag(CATEGORY_LIST_LAZY_COLUMN),
             ) {
                 itemsIndexed(categories) { _, category ->
                     CategoryListItem(
