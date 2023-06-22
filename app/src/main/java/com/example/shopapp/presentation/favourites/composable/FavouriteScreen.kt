@@ -36,7 +36,6 @@ fun FavouriteScreen(
         }
     }
 
-
     FavouriteContent(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,

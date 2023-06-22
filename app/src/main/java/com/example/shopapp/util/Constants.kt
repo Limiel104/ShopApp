@@ -29,6 +29,7 @@ object Constants {
     const val CATEGORY_NAME_2: String = "men's clothing"
     const val CATEGORY_NAME_3: String = "women's clothing"
     const val CATEGORY_NAME_4: String = "all"
+    const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -61,6 +62,7 @@ object Constants {
     const val hi: String = "Hi "
     const val shopClub: String = "Shop Club"
     const val customerClubPoints: String = "234 points"
+    const val favouriteTitle: String = "Favourite"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
