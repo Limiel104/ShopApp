@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -31,7 +32,8 @@ fun ProductDetailsContent(
                 isProductInFavourites = true
             ) },
         sheetBackgroundColor = MaterialTheme.colors.background,
-        sheetPeekHeight = 100.dp
+        sheetPeekHeight = 100.dp,
+        modifier = Modifier.testTag("testtest")
     ) {
         Column(
             modifier = Modifier

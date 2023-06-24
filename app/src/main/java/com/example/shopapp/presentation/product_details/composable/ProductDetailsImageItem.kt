@@ -6,12 +6,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.GO_BACK_BTN
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
 import com.example.shopapp.util.Constants.emptyString
 
 @Composable
@@ -22,7 +24,7 @@ fun ProductDetailsImageItem(
     Box(
         modifier = Modifier
             .fillMaxSize()
-
+            .testTag(PRODUCT_DETAILS_IMAGE_ITEM)
     ) {
         ImageItem(
             imageUrl = imageUrl

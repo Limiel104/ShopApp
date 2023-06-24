@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +24,7 @@ import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.FAVOURITE_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productName
 import com.example.shopapp.util.Constants.productPrice
@@ -39,6 +41,7 @@ fun ProductDetailsBottomSheet(
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
             .padding(15.dp)
+            .testTag(PRODUCT_DETAILS_BOTTOM_SHEET)
     ) {
         Row(
             modifier = Modifier
