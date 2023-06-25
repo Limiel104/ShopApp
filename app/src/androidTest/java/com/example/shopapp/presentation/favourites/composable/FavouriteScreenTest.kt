@@ -4,7 +4,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
@@ -20,6 +22,7 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.FAVOURITE_TOP_BAR
 import com.example.shopapp.util.Constants.favouriteTitle
 import com.example.shopapp.util.Screen
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -61,10 +64,19 @@ class FavouriteScreenTest {
     }
 
     @Test
+    fun favouriteScreenTopBar_hasCorrectNumberOfItems() {
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(2)
+    }
+
+    @Test
     fun favouriteScreenTopBar_titleIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertTextContains(favouriteTitle)
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 
     @Test
@@ -73,5 +85,6 @@ class FavouriteScreenTest {
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(1).assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(1).assertHasClickAction()
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(1).assertTopPositionInRootIsEqualTo(15.dp)
     }
 }

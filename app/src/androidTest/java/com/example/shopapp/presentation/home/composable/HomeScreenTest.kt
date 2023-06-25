@@ -20,10 +20,10 @@ import com.example.shopapp.util.Constants.HOME_TOP_BAR
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.shopName
 import com.example.shopapp.util.Screen
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -59,6 +59,14 @@ class HomeScreenTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun homeScreenTopBar_hasCorrectNumberOfItems() {
+        composeRule.onNodeWithTag(HOME_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(HOME_TOP_BAR).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(HOME_TOP_BAR).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(2)
     }
 
     @Test

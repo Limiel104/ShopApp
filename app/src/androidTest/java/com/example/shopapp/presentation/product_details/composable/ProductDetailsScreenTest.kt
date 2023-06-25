@@ -33,7 +33,7 @@ import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Constants.productName
 import com.example.shopapp.util.Constants.productPrice
 import com.example.shopapp.util.Screen
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -85,7 +85,7 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertExists()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).fetchSemanticsNode().children.size
-        Truth.assertThat(numberOfChildren).isEqualTo(3)
+        assertThat(numberOfChildren).isEqualTo(3)
     }
 
     @Test
@@ -111,7 +111,7 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).fetchSemanticsNode().children.size
-        Truth.assertThat(numberOfChildren).isEqualTo(6)
+        assertThat(numberOfChildren).isEqualTo(6)
     }
 
     @Test

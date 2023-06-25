@@ -4,6 +4,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onNodeWithTag
@@ -65,11 +66,20 @@ class CategoryListScreenTest {
     }
 
     @Test
+    fun categoryListScreenTopBar_hasCorrectNumberOfItems() {
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(1)
+    }
+
+    @Test
     fun categoryListScreenTopBar_cartButtonIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertHasClickAction()
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertTopPositionInRootIsEqualTo(15.dp)
     }
 
     @Test
