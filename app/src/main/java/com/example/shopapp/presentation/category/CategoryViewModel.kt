@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.categoryId
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val repository: ProductRepository
 ): ViewModel() {
 
     private val _categoryState = mutableStateOf(CategoryState())
@@ -56,6 +58,8 @@ class CategoryViewModel @Inject constructor(
                 productList = productsFromCategoryList
             )
         }
+
+        getProducts()
     }
 
     fun onEvent(event: CategoryEvent) {
@@ -73,6 +77,13 @@ class CategoryViewModel @Inject constructor(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
             }
+        }
+    }
+
+    fun getProducts() {
+        viewModelScope.launch {
+            val products = repository.getProducts()
+            Log.i(TAG,products.toString())
         }
     }
 }
