@@ -15,16 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.categoryName
-import com.example.shopapp.util.Constants.productPrice
+import com.example.shopapp.util.Constants.productImageUrl
 
 @Composable
 fun CategoryContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
     categoryName: String,
-    productList: List<String>,
+    productList: List<Product>,
     isSortSectionVisible: Boolean,
     onProductSelected: (String) -> Unit,
     onSortSelected: () -> Unit
@@ -65,10 +66,9 @@ fun CategoryContent(
             ) {
                 itemsIndexed(productList) { index, product ->
                     ProductItem(
-                        name = product,
-                        price = productPrice,
+                        product = product,
                         isProductInFavourites = index%3 == 0,
-                        onClick = { onProductSelected(product) }
+                        onClick = { onProductSelected(product.title) }
                     )
                 }
             }
@@ -81,14 +81,38 @@ fun CategoryContent(
 fun CategoryContentPreview() {
     ShopAppTheme {
         val productList = listOf(
-            "men's clothing 1",
-            "men's clothing 2",
-            "women's clothing 1",
-            "jewelery 1",
-            "men's clothing 3",
-            "women's clothing 2",
-            "jewelery 2",
-            "women's clothing 3",
+            Product(
+                id = 1,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 2,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 3,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 4,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            )
         )
 
         CategoryContent(
@@ -107,15 +131,39 @@ fun CategoryContentPreview() {
 @Composable
 fun CategoryContentToggleTruePreview() {
     ShopAppTheme {
-       val productList = listOf(
-            "men's clothing 1",
-            "men's clothing 2",
-            "women's clothing 1",
-            "jewelery 1",
-            "men's clothing 3",
-            "women's clothing 2",
-            "jewelery 2",
-            "women's clothing 3",
+        val productList = listOf(
+            Product(
+                id = 1,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 2,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 3,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            ),
+            Product(
+                id = 4,
+                title = "Shirt",
+                price = 179.99,
+                description = "description",
+                category = categoryName,
+                imageUrl = productImageUrl
+            )
         )
 
         CategoryContent(

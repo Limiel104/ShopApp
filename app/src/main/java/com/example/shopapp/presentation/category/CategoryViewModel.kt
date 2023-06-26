@@ -30,32 +30,10 @@ class CategoryViewModel @Inject constructor(
 
     init {
         Log.i(TAG, CATEGORY_VM)
-        val productList = listOf(
-            "men's clothing",
-            "men's clothing",
-            "women's clothing",
-            "jewelery",
-            "men's clothing",
-            "women's clothing",
-            "jewelery",
-            "women's clothing"
-        )
 
         savedStateHandle.get<String>(categoryId)?.let { categoryId ->
-            val productsFromCategoryList = when(categoryId) {
-                 "all" -> {
-                    productList
-                }
-                else -> {
-                    productList.filter { product ->
-                        product == categoryId
-                    }
-                }
-            }
-
             _categoryState.value = categoryState.value.copy(
-                categoryId = categoryId,
-                productList = productsFromCategoryList
+                categoryId = categoryId
             )
         }
 
@@ -82,8 +60,9 @@ class CategoryViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            val products = repository.getProducts()
-            Log.i(TAG,products.toString())
+            _categoryState.value = categoryState.value.copy(
+                productList = repository.getProducts()
+            )
         }
     }
 }

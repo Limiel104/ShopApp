@@ -9,5 +9,5 @@ data class Product(
     val description: String,
     val category: String,
     @SerializedName("image")
-    val imagePath: String
+    val imageUrl: String
 )
