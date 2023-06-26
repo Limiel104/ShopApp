@@ -13,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
@@ -57,7 +59,7 @@ fun SortSectionItem(
 fun SortSectionItemPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = "Lowest price",
+            text = stringResource(id = R.string.lowest_price),
             selected = true,
             onClick = {}
         )
@@ -69,7 +71,7 @@ fun SortSectionItemPreview() {
 fun SortSectionItemNotSelectedPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = "Highest price",
+            text = stringResource(id = R.string.highest_price),
             selected = false,
             onClick = {}
         )

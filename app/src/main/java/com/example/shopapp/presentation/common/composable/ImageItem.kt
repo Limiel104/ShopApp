@@ -15,6 +15,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.IMAGE
+import com.example.shopapp.util.Constants.emptyString
+import com.example.shopapp.util.Constants.productItemImageHeight
+import com.example.shopapp.util.Constants.productItemImageWidth
 
 @Composable
 fun ImageItem(
@@ -38,7 +42,7 @@ fun ImageItem(
                 .crossfade(true)
                 .placeholder(R.drawable.ic_no_image)
                 .build(),
-            contentDescription = "Image",
+            contentDescription = IMAGE,
             fallback = painterResource(R.drawable.ic_no_image),
             error = painterResource(R.drawable.ic_no_image),
             contentScale = ContentScale.FillBounds
@@ -51,9 +55,9 @@ fun ImageItem(
 fun ImageItemPreview() {
     ShopAppTheme() {
         ImageItem(
-            imageUrl = "",
-            width = 180,
-            height = 200
+            imageUrl = emptyString,
+            width = productItemImageWidth,
+            height = productItemImageHeight
         )
     }
 }
@@ -63,7 +67,7 @@ fun ImageItemPreview() {
 fun ImageItemNullPreview() {
     ShopAppTheme() {
         ImageItem(
-            imageUrl = ""
+            imageUrl = emptyString
         )
     }
 }

@@ -8,11 +8,14 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.shopapp.R
 import com.example.shopapp.domain.model.BottomBarItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Screen
@@ -20,14 +23,21 @@ import com.example.shopapp.util.Screen
 @Composable
 fun BottomBarNavigation(
     items: List<BottomBarItem>,
-    backStackEntry: State<NavBackStackEntry?>,
-    onItemClick: (BottomBarItem) -> Unit
+    navBackStackEntry: State<NavBackStackEntry?>,
+    onItemClick: (BottomBarItem) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = modifier
     ) {
         items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
+            val isCategoryScreenCurrentlyDisplayed = navBackStackEntry.value?.destination?.route!!.contains(Screen.CategoryScreen.route)
+
+            val selected =
+                if(isCategoryScreenCurrentlyDisplayed) item.route == Screen.CategoryListScreen.route
+                else item.route == navBackStackEntry.value?.destination?.route
+
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item) },
@@ -47,32 +57,32 @@ fun BottomBarNavigationPreview() {
         BottomBarNavigation(
             items = listOf(
                 BottomBarItem(
-                    name = "Home",
+                    name = stringResource(id = R.string.home),
                     route = Screen.HomeScreen.route,
                     icon = Icons.Outlined.Home,
                     badgeCount = 10
                 ),
 
                 BottomBarItem(
-                    name = "Categories",
+                    name = stringResource(id = R.string.categories),
                     route = Screen.CategoryScreen.route,
                     icon = Icons.Outlined.Search
                 ),
 
                 BottomBarItem(
-                    name = "Favourites",
+                    name = stringResource(id = R.string.favourite),
                     route = Screen.FavouriteScreen.route,
                     icon = Icons.Outlined.FavoriteBorder
                 ),
 
                 BottomBarItem(
-                    name = "Account",
+                    name = stringResource(id = R.string.account),
                     route = Screen.AccountScreen.route,
                     icon = Icons.Outlined.Person
                 ),
             ),
             onItemClick = {},
-            backStackEntry = state
+            navBackStackEntry = state
         )
     }
 }

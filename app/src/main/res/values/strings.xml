@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">ShopApp</string>
+    <string name="shop_club">Shop Club</string>
+    <string name="points"> points</string>
+    <string name="pln_discount">PLN Discount</string>
+    <string name="coupon_validation_message">The coupon is valid for 14 days after activation.\n</string>
+    <string name="purchase_minimal_amount_message">"Minimum purchase amount is"</string>
+    <string name="activation_points_amount">Activate for</string>
+    <string name="hi">Hi</string>
+    <string name="my_profile">My profile</string>
+    <string name="orders_and_returns">Orders and Returns</string>
+    <string name="lowest_price">Lowest Price</string>
+    <string name="highest_price">Highest price</string>
+    <string name="favourite_title">Favourite</string>
+    <string name="shop_name">Shop Name</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="no_account_text">Don\'t have an account?</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="favourite">Favourite</string>
+    <string name="account">Account</string>
+    <string name="description">Description</string>
+    <string name="add_to_cart">Add to Cart</string>
 </resources>

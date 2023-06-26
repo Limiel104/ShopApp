@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -12,26 +13,35 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.categoryName
+import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun CategoryContent(
     scaffoldState: ScaffoldState,
-    isSortSectionToggled: Boolean,
-    onNavigateToProductDetails: () -> Unit
+    bottomBarHeight: Dp,
+    categoryName: String,
+    productList: List<String>,
+    isSortSectionVisible: Boolean,
+    onProductSelected: (String) -> Unit,
+    onSortSelected: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CategoryTopBar(
-                categoryName = "Category Name",
-                onSelected = {}
+                categoryName = categoryName,
+                onSortSelected = { onSortSelected() },
+                onCartSelected = {}
             ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -41,7 +51,7 @@ fun CategoryContent(
         ) {
 
             AnimatedVisibility(
-                visible = isSortSectionToggled,
+                visible = isSortSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
@@ -53,10 +63,12 @@ fun CategoryContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                items(20) { i ->
+                itemsIndexed(productList) { index, product ->
                     ProductItem(
-                        isProductInFavourites = i%3 == 0,
-                        onClick = { onNavigateToProductDetails() }
+                        name = product,
+                        price = productPrice,
+                        isProductInFavourites = index%3 == 0,
+                        onClick = { onProductSelected(product) }
                     )
                 }
             }
@@ -68,10 +80,25 @@ fun CategoryContent(
 @Composable
 fun CategoryContentPreview() {
     ShopAppTheme {
+        val productList = listOf(
+            "men's clothing 1",
+            "men's clothing 2",
+            "women's clothing 1",
+            "jewelery 1",
+            "men's clothing 3",
+            "women's clothing 2",
+            "jewelery 2",
+            "women's clothing 3",
+        )
+
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            isSortSectionToggled = false,
-            onNavigateToProductDetails = {}
+            bottomBarHeight = 56.dp,
+            categoryName = categoryName,
+            productList = productList,
+            isSortSectionVisible = false,
+            onProductSelected = {},
+            onSortSelected = {}
         )
     }
 }
@@ -80,10 +107,25 @@ fun CategoryContentPreview() {
 @Composable
 fun CategoryContentToggleTruePreview() {
     ShopAppTheme {
+       val productList = listOf(
+            "men's clothing 1",
+            "men's clothing 2",
+            "women's clothing 1",
+            "jewelery 1",
+            "men's clothing 3",
+            "women's clothing 2",
+            "jewelery 2",
+            "women's clothing 3",
+        )
+
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            isSortSectionToggled = true,
-            onNavigateToProductDetails = {}
+            bottomBarHeight = 56.dp,
+            categoryName = categoryName,
+            productList = productList,
+            isSortSectionVisible = true,
+            onProductSelected = {},
+            onSortSelected = {}
         )
     }
 }

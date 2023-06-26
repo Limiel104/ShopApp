@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -14,21 +15,25 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 
 @Composable
-fun FavouritesContent(
+fun FavouriteContent(
     scaffoldState: ScaffoldState,
-    onNavigateToProductDetails: () -> Unit
+    bottomBarHeight: Dp,
+    productList: List<String>,
+    onProductSelected: (String) -> Unit
 ) {
     Scaffold(
-        topBar = { FavouritesTopBar() },
+        topBar = { FavouriteTopBar() },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
+            .padding(bottom = bottomBarHeight)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -41,9 +46,10 @@ fun FavouritesContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                items(20) {
+                itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(
-                        onClick = { onNavigateToProductDetails() }
+                        name = product,
+                        onClick = { onProductSelected(product) }
                     )
                 }
             }
@@ -53,11 +59,21 @@ fun FavouritesContent(
 
 @Preview
 @Composable
-fun FavouritesContentPreview() {
+fun FavouriteContentPreview() {
     ShopAppTheme {
-        FavouritesContent(
+        val productList = listOf(
+            "Shirt with regular line",
+            "Shorts with flowers",
+            "Jumper with regular line",
+            "Skirt in black",
+            "Shirt with irregular line"
+        )
+
+        FavouriteContent(
             scaffoldState = rememberScaffoldState(),
-            onNavigateToProductDetails = {}
+            bottomBarHeight = 56.dp,
+            productList = productList,
+            onProductSelected = {}
         )
     }
 }

@@ -17,19 +17,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CART_BTN
 
 @Composable
-fun CardIconButton(
+fun IconButtonCard(
     icon: ImageVector,
     description: String,
     color: Color = Color.Black,
+    outsidePaddingValue: Int = 5,
     onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(35.dp),
         backgroundColor = Color.White,
         modifier = Modifier
-            .padding(5.dp)
+            .padding(outsidePaddingValue.dp)
             .size(36.dp)
             .clip(shape = CircleShape)
             .clickable { onClick() }
@@ -38,8 +40,7 @@ fun CardIconButton(
             imageVector = icon,
             tint = color,
             contentDescription = description,
-            modifier = Modifier
-                .padding(5.dp),
+            modifier = Modifier.padding(5.dp)
         )
     }
 }
@@ -48,9 +49,9 @@ fun CardIconButton(
 @Composable
 fun CardIconButtonPreview() {
     ShopAppTheme {
-        CardIconButton(
+        IconButtonCard(
             icon = Icons.Outlined.ShoppingCart,
-            description = "Add to cart",
+            description = CART_BTN,
             onClick = {}
         )
     }

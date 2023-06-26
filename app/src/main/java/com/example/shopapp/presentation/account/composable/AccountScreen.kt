@@ -2,14 +2,22 @@ package com.example.shopapp.presentation.account.composable
 
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.shopapp.presentation.account.AccountViewModel
 
 @Composable
-fun AccountScreen() {
+fun AccountScreen(
+    bottomBarHeight: Dp,
+    viewModel: AccountViewModel = hiltViewModel()
+) {
     val scaffoldState = rememberScaffoldState()
+    val name = viewModel.accountState.value.name
 
     AccountContent(
-        customerName = "John",
-        customerClubPoints = 234,
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        bottomBarHeight = bottomBarHeight,
+        customerName = name,
+        customerClubPoints = 234
     )
 }

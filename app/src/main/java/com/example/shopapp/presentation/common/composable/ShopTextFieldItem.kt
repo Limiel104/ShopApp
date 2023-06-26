@@ -12,6 +12,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.emptyString
+import com.example.shopapp.util.Constants.placeholder
+import com.example.shopapp.util.Constants.testTag
+import com.example.shopapp.util.Constants.text
 
 @Composable
 fun ShopTextFieldItem(
@@ -45,10 +49,10 @@ fun ShopTextFieldItem(
 fun ShopTextFieldItemPreview() {
     ShopAppTheme {
         ShopTextFieldItem(
-            text = "",
-            label = "Text",
-            placeholder = "Placeholder",
-            testTag = "testTag",
+            text = emptyString,
+            label = text,
+            placeholder = placeholder,
+            testTag = testTag,
             isError = false,
             onValueChange = {}
         )
@@ -60,10 +64,10 @@ fun ShopTextFieldItemPreview() {
 fun ShopTextFieldItemWithErrorPreview() {
     ShopAppTheme {
         ShopTextFieldItem(
-            text = "",
-            label = "Text",
-            placeholder = "Placeholder",
-            testTag = "testTag",
+            text = emptyString,
+            label = text,
+            placeholder = placeholder,
+            testTag = testTag,
             isError = true,
             onValueChange = {}
         )

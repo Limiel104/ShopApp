@@ -11,12 +11,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.CardIconButton
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.productImageUrl
+import com.example.shopapp.util.Constants.productItemImageHeight
+import com.example.shopapp.util.Constants.productItemImageWidth
+import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun FavouriteProductItem(
+    name: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -31,21 +38,21 @@ fun FavouriteProductItem(
             contentAlignment = Alignment.TopEnd
         ) {
             ImageItem(
-                imageUrl = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-                width = 180,
-                height = 200
+                imageUrl = productImageUrl,
+                width = productItemImageWidth,
+                height = productItemImageHeight
             )
 
-            CardIconButton(
+            IconButtonCard(
                 icon = Icons.Outlined.ShoppingCart,
-                description = "Add to cart",
+                description = CART_BTN,
                 onClick = {}
             )
         }
 
         ProductItemTitle(
-            name = "Shirt with regular line retert ewjwerhwjkehrwk",
-            price = "15,59 PLN"
+            name = name,
+            price = productPrice
         )
     }
 }
@@ -55,6 +62,7 @@ fun FavouriteProductItem(
 fun FavouriteProductItemPreview() {
     ShopAppTheme {
         FavouriteProductItem(
+            name = productName,
             onClick = {}
         )
     }

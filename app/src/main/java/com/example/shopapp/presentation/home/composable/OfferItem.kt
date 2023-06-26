@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.offerDescription
 
 @Composable
 fun OfferItem(
@@ -51,7 +52,7 @@ fun OfferItem(
 fun OfferItemPreview() {
     ShopAppTheme {
         OfferItem(
-            text = "All clothes for women now 10% cheaper",
+            text = offerDescription,
             onClick = {}
         )
     }

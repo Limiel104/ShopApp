@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.common.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -9,6 +10,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.errorMessage
+import com.example.shopapp.util.Constants.testTag
 
 @Composable
 fun ErrorTextFieldItem(
@@ -22,6 +25,7 @@ fun ErrorTextFieldItem(
         textAlign = TextAlign.Start,
         modifier = Modifier
             .testTag(testTag)
+            .background(MaterialTheme.colors.background)
     )
 }
 
@@ -30,8 +34,8 @@ fun ErrorTextFieldItem(
 fun ErrorTextFieldItemPreview() {
     ShopAppTheme {
         ErrorTextFieldItem(
-            errorMessage = "Error message",
-            testTag = "tag"
+            errorMessage = errorMessage,
+            testTag = testTag
         )
     }
 }
