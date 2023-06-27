@@ -1,12 +1,11 @@
 package com.example.shopapp.data.remote
 
-import com.example.shopapp.domain.model.Product
 import retrofit2.http.GET
 
 interface FakeShopApi {
 
     @GET("products")
-    suspend fun getProducts(): List<Product>
+    suspend fun getProducts(): List<ProductDto>
 
     @GET("products/categories")
     suspend fun getCategories(): List<String>
