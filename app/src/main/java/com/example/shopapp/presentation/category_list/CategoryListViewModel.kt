@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_LIST_VM
 import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryListViewModel @Inject constructor(
-
+    private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
     private val _categoryListState = mutableStateOf(CategoryListState())
@@ -26,6 +27,7 @@ class CategoryListViewModel @Inject constructor(
 
     init {
         Log.i(TAG, CATEGORY_LIST_VM)
+        getCategories()
     }
 
     fun onEvent(event: CategoryListEvent) {
@@ -38,6 +40,16 @@ class CategoryListViewModel @Inject constructor(
                     Log.i(TAG,event.value)
                     _eventFlow.emit(CategoryListUiEvent.NavigateToCategory(event.value))
                 }
+            }
+        }
+    }
+
+    fun getCategories() {
+        viewModelScope.launch {
+            shopUseCases.getCategoriesUseCase().collect { categories ->
+                _categoryListState.value = categoryListState.value.copy(
+                    categoryList = categories
+                )
             }
         }
     }

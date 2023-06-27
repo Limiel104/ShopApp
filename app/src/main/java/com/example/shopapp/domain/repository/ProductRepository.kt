@@ -5,4 +5,6 @@ import com.example.shopapp.domain.model.Product
 interface ProductRepository {
 
     suspend fun getProducts(): List<Product>
+
+    suspend fun getCategories(): List<String>
 }

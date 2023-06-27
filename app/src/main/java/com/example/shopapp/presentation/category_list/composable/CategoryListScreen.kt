@@ -25,6 +25,7 @@ fun CategoryListScreen(
     viewModel: CategoryListViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
+    val categoryList = viewModel.categoryListState.value.categoryList
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -40,6 +41,7 @@ fun CategoryListScreen(
     CategoryListContent(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
+        categoryList = categoryList,
         onCategorySelected = { categoryId: String ->
             viewModel.onEvent(CategoryListEvent.OnCategorySelected(categoryId))
         }

@@ -67,6 +67,7 @@ object Constants {
     const val favouriteTitle: String = "Favourite"
     const val productDescriptionTitle: String = "Description"
     const val addToCart: String = "Add to Cart"
+    const val all: String = "all"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180

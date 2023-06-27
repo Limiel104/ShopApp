@@ -25,14 +25,9 @@ import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
 fun CategoryListContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
+    categoryList: List<String>,
     onCategorySelected: (String) -> Unit
 ) {
-    val categories = listOf(
-        "jewelery",
-        "men's clothing",
-        "women's clothing",
-        "all"
-    )
     Scaffold(
         topBar = { CategoryListTopBar() },
         scaffoldState = scaffoldState,
@@ -50,7 +45,7 @@ fun CategoryListContent(
                     .fillMaxSize()
                     .testTag(CATEGORY_LIST_LAZY_COLUMN),
             ) {
-                itemsIndexed(categories) { _, category ->
+                itemsIndexed(categoryList) { _, category ->
                     CategoryListItem(
                         name = category,
                         onClick = { onCategorySelected(category) }
@@ -66,9 +61,18 @@ fun CategoryListContent(
 @Composable
 fun CategoryListContentPreview() {
     ShopAppTheme {
+        val categoryList = listOf(
+            "jewelery",
+            "men's clothing",
+            "women's clothing",
+            "electronics",
+            "all"
+        )
+
         CategoryListContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
+            categoryList = categoryList,
             onCategorySelected = {}
         )
     }
