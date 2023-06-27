@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Constants.categoryId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -60,10 +61,22 @@ class CategoryViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            shopUseCases.getProductsUseCase().collect { products ->
-                _categoryState.value = categoryState.value.copy(
-                    productList = products
-                )
+
+            when(val categoryId = _categoryState.value.categoryId) {
+                all -> {
+                    shopUseCases.getProductsUseCase().collect { products ->
+                        _categoryState.value = categoryState.value.copy(
+                            productList = products
+                        )
+                    }
+                }
+                else -> {
+                    shopUseCases.getProductsFromCategory(categoryId).collect { products ->
+                        _categoryState.value = categoryState.value.copy(
+                            productList = products
+                        )
+                    }
+                }
             }
         }
     }
