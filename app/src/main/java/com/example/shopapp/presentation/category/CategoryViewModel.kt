@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.domain.repository.ProductRepository
+import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.categoryId
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: ProductRepository
+    private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
     private val _categoryState = mutableStateOf(CategoryState())
@@ -60,9 +60,11 @@ class CategoryViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            _categoryState.value = categoryState.value.copy(
-                productList = repository.getProducts()
-            )
+            shopUseCases.getProductsUseCase().collect { products ->
+                _categoryState.value = categoryState.value.copy(
+                    productList = products
+                )
+            }
         }
     }
 }

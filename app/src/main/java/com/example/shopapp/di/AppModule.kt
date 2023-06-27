@@ -3,6 +3,8 @@ package com.example.shopapp.di
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.domain.repository.ProductRepository
+import com.example.shopapp.domain.use_case.GetProductsUseCase
+import com.example.shopapp.domain.use_case.ShopUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +32,13 @@ object AppModule {
     @Singleton
     fun provideProductRepository(api: FakeShopApi): ProductRepository {
         return ProductRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideShopUseCases(productRepository: ProductRepository): ShopUseCases {
+        return ShopUseCases(
+            getProductsUseCase = GetProductsUseCase(productRepository)
+        )
     }
 }
