@@ -6,5 +6,5 @@ data class CategoryState (
     val categoryId: String = "",
     val productList: List<Product> = emptyList(),
     val isSortSectionVisible: Boolean = false,
-    val productId: String = ""
+    val productId: Int = -1
 )

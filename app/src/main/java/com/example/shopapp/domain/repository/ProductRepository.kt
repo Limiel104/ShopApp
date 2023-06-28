@@ -8,5 +8,7 @@ interface ProductRepository {
 
     suspend fun getProductsFromCategory(categoryId: String): List<ProductDto>
 
+    suspend fun getProduct(productId: Int): ProductDto
+
     suspend fun getCategories(): List<String>
 }

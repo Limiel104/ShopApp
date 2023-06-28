@@ -44,7 +44,7 @@ fun CategoryScreen(
         categoryName = categoryId,
         productList = productList,
         isSortSectionVisible = isSortSectionVisible,
-        onProductSelected = { productId: String ->
+        onProductSelected = { productId: Int ->
             viewModel.onEvent(CategoryEvent.OnProductSelected(productId))
         },
         onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) }

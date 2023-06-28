@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Constants.productPrice
 
 @Composable
@@ -49,7 +49,7 @@ fun ProductItemTitle(
 fun ProductItemTitlePreview() {
     ShopAppTheme {
         ProductItemTitle(
-            name = productName,
+            name = productTitle,
             price = productPrice
         )
     }

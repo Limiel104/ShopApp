@@ -18,12 +18,12 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.productImageUrl
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
-import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun FavouriteProductItem(
-    name: String,
+    title: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -51,7 +51,7 @@ fun FavouriteProductItem(
         }
 
         ProductItemTitle(
-            name = name,
+            name = title,
             price = productPrice
         )
     }
@@ -62,7 +62,7 @@ fun FavouriteProductItem(
 fun FavouriteProductItemPreview() {
     ShopAppTheme {
         FavouriteProductItem(
-            name = productName,
+            title = productTitle,
             onClick = {}
         )
     }

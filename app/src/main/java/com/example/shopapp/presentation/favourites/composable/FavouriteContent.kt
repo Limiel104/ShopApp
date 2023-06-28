@@ -48,7 +48,7 @@ fun FavouriteContent(
             ) {
                 itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(
-                        name = product,
+                        title = product,
                         onClick = { onProductSelected(product) }
                     )
                 }

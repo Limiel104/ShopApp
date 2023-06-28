@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.product_details.ProductDetailsEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsUiEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsViewModel
@@ -28,7 +29,14 @@ fun ProductDetailsScreen(
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = bottomSheetState
     )
-    val name = viewModel.productDetailsState.value.name
+    val product = Product(
+        id = viewModel.productDetailsState.value.productId,
+        title = viewModel.productDetailsState.value.title,
+        price = viewModel.productDetailsState.value.price,
+        description = viewModel.productDetailsState.value.description,
+        category = viewModel.productDetailsState.value.category,
+        imageUrl = viewModel.productDetailsState.value.imageUrl
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -43,7 +51,7 @@ fun ProductDetailsScreen(
 
     ProductDetailsContent(
         scaffoldState = scaffoldState,
-        name = name,
+        product = product,
         onNavigateBack = { viewModel.onEvent(ProductDetailsEvent.GoBack) }
     )
 }

@@ -30,7 +30,7 @@ import com.example.shopapp.util.Constants.addToCart
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productDescriptionTitle
 import com.example.shopapp.util.Constants.productId
-import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Constants.productPrice
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -68,7 +68,7 @@ class ProductDetailsScreenTest {
                                 name = productId
                             ) {
                                 type = NavType.StringType
-                                defaultValue = productName
+                                defaultValue = productTitle
                             }
                         )
                     ) {
@@ -130,7 +130,7 @@ class ProductDetailsScreenTest {
     fun productDetailsScreenProductDetailsBottomSheet_productNameIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertTextEquals(productName)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertTextEquals(productTitle)
     }
 
     @Test

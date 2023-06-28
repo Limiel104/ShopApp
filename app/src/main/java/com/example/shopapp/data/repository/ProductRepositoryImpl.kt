@@ -19,6 +19,10 @@ class ProductRepositoryImpl @Inject constructor(
         return api.getProductsFromCategory(categoryId)
     }
 
+    override suspend fun getProduct(productId: Int): ProductDto {
+        return api.getProduct(productId)
+    }
+
     override suspend fun getCategories(): List<String> {
         return api.getCategories()
     }

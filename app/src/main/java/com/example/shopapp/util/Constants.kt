@@ -48,7 +48,7 @@ object Constants {
     const val pointsToActivate: Int = 100
     const val categoryName: String = "men's clothing"
     const val productPrice: String = "15,59 PLN"
-    const val productName: String = "Shirt"
+    const val productTitle: String = "Shirt"
     const val productImageUrl: String = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
     const val errorMessage: String = "Error Message"
     const val testTag: String = "tag"

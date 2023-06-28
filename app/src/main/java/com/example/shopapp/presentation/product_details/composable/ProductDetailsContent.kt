@@ -6,34 +6,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.categoryName
+import com.example.shopapp.util.Constants.emptyString
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productImageUrl
-import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Constants.productPrice
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProductDetailsContent(
     scaffoldState: BottomSheetScaffoldState,
-    name: String,
+    product: Product,
     onNavigateBack: () -> Unit
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
             ProductDetailsBottomSheet(
-                name = name,
-                price = productPrice,
-                description =  productDescription,
+                product = product,
                 isProductInFavourites = true
             ) },
         sheetBackgroundColor = MaterialTheme.colors.background,
-        sheetPeekHeight = 100.dp,
-        modifier = Modifier.testTag("testtest")
+        sheetPeekHeight = 100.dp
     ) {
         Column(
             modifier = Modifier
@@ -41,7 +39,7 @@ fun ProductDetailsContent(
                 .padding(15.dp)
         ) {
             ProductDetailsImageItem(
-                imageUrl = productImageUrl,
+                imageUrl = product.imageUrl,
                 onNavigateBack = { onNavigateBack() }
             )
         }
@@ -60,8 +58,17 @@ fun ProductDetailsContentPreview() {
             bottomSheetState = bottomSheetState
         )
 
+        val product = Product(
+            id = 1,
+            title = productTitle,
+            price = productPrice,
+            description = productDescription,
+            category = categoryName,
+            imageUrl = emptyString
+        )
+
         ProductDetailsContent(
-            name = productName,
+            product = product,
             scaffoldState = scaffoldState,
             onNavigateBack = {}
         )

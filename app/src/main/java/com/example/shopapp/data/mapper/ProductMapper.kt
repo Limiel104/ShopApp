@@ -7,7 +7,7 @@ fun ProductDto.toProduct(): Product {
     return Product(
         id = id,
         title = title,
-        price = price,
+        price = String.format("%.2f PLN", price),
         description = description,
         category = category,
         imageUrl = imageUrl

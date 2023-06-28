@@ -23,9 +23,12 @@ import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.FAVOURITE_BTN
+import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productImageUrl
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
+import com.example.shopapp.util.Constants.productPrice
+import com.example.shopapp.util.Constants.productTitle
 
 @Composable
 fun ProductItem(
@@ -75,7 +78,7 @@ fun ProductItem(
 
             Row {
                 Text(
-                    text = "${product.price} PLN",
+                    text = product.price,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -89,9 +92,9 @@ fun ProductItemFavouriteFalsePreview() {
     ShopAppTheme {
         val product = Product(
             id = 1,
-            title = "Shirt",
-            price = 179.99,
-            description = "description",
+            title = productTitle,
+            price = productPrice,
+            description = productDescription,
             category = Constants.categoryName,
             imageUrl = productImageUrl
         )
@@ -110,9 +113,9 @@ fun ProductItemFavouriteTruePreview() {
     ShopAppTheme {
         val product = Product(
             id = 1,
-            title = "Shirt",
-            price = 179.99,
-            description = "description",
+            title = productTitle,
+            price = productPrice,
+            description = productDescription,
             category = Constants.categoryName,
             imageUrl = productImageUrl
         )
