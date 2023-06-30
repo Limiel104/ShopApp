@@ -11,6 +11,7 @@ import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Constants.categoryId
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -38,7 +39,7 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        getProducts()
+        getProducts(_categoryState.value.categoryId)
     }
 
     fun onEvent(event: CategoryEvent) {
@@ -59,22 +60,64 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun getProducts() {
-        viewModelScope.launch {
+    fun getProducts(categoryId: String) {
+//        viewModelScope.launch {
+//            when(val categoryId = _categoryState.value.categoryId) {
+//                all -> {
+//                    shopUseCases.getProductsUseCase().collect { products ->
+//                        _categoryState.value = categoryState.value.copy(
+//                            productList = products
+//                        )
+//                    }
+//                }
+//                else -> {
+//                    shopUseCases.getProductsFromCategory(categoryId).collect { products ->
+//                        _categoryState.value = categoryState.value.copy(
+//                            productList = products
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
-            when(val categoryId = _categoryState.value.categoryId) {
-                all -> {
-                    shopUseCases.getProductsUseCase().collect { products ->
-                        _categoryState.value = categoryState.value.copy(
-                            productList = products
-                        )
+        if(_categoryState.value.categoryId == all) getAllProducts()
+        else getProductsFromCategory(categoryId)
+    }
+
+    fun getAllProducts() {
+        viewModelScope.launch {
+            shopUseCases.getProductsUseCase().collect { response ->
+                when(response) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        response.data?.let { products ->
+                            _categoryState.value = categoryState.value.copy(
+                                productList = products
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
                     }
                 }
-                else -> {
-                    shopUseCases.getProductsFromCategory(categoryId).collect { products ->
-                        _categoryState.value = categoryState.value.copy(
-                            productList = products
-                        )
+            }
+        }
+    }
+
+    fun getProductsFromCategory(categoryId: String) {
+        viewModelScope.launch {
+            shopUseCases.getProductsFromCategory(categoryId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        response.data?.let { products ->
+                            _categoryState.value = categoryState.value.copy(
+                                productList = products
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
                     }
                 }
             }

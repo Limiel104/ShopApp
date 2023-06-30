@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_LIST_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -37,7 +38,6 @@ class CategoryListViewModel @Inject constructor(
                     _categoryListState.value = categoryListState.value.copy(
                         categoryId = event.value
                     )
-                    Log.i(TAG,event.value)
                     _eventFlow.emit(CategoryListUiEvent.NavigateToCategory(event.value))
                 }
             }
@@ -46,10 +46,26 @@ class CategoryListViewModel @Inject constructor(
 
     fun getCategories() {
         viewModelScope.launch {
-            shopUseCases.getCategoriesUseCase().collect { categories ->
-                _categoryListState.value = categoryListState.value.copy(
-                    categoryList = categories
-                )
+            shopUseCases.getCategoriesUseCase().collect { response ->
+                when (response) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        response.data?.let { categories ->
+                            _categoryListState.value = categoryListState.value.copy(
+                                categoryList = categories
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                    }
+                }
+//            shopUseCases.getCategoriesUseCase().collect { categories ->
+//                _categoryListState.value = categoryListState.value.copy(
+//                    categoryList = categories
+//                )
+//            }
+
             }
         }
     }

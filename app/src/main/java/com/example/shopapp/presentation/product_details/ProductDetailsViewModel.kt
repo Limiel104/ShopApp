@@ -10,6 +10,7 @@ import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.productId
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -52,15 +53,46 @@ class ProductDetailsViewModel @Inject constructor(
 
     private fun getProduct(productId: Int) {
         viewModelScope.launch {
-            shopUseCases.getProductUseCase(productId).collect { product ->
-                _productDetailsState.value = productDetailsState.value.copy(
-                    title = product.title,
-                    price = product.price,
-                    description = product.description,
-                    category = product.category,
-                    imageUrl = product.imageUrl
-                )
+            when(val response = shopUseCases.getProductUseCase(productId)) {
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    if (response.data != null) {
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            title = response.data.title,
+                            price = response.data.price,
+                            description = response.data.description,
+                            category = response.data.category,
+                            imageUrl = response.data.imageUrl
+                        )
+                    }
+                }
+                is Resource.Error -> {
+                    Log.i(TAG, response.message.toString())
+                }
             }
+
+//            val product = shopUseCases.getProductUseCase(productId).let {  ->
+//                _productDetailsState.value = productDetailsState.value.copy(
+//                    title = it.title,
+//                    price = product.price,
+//                    description = product.description,
+//                    category = product.category,
+//                    imageUrl = product.imageUrl
+//                )
+//            }
+
+
+
+
+//            shopUseCases.getProductUseCase(productId).collect { product ->
+//                _productDetailsState.value = productDetailsState.value.copy(
+//                    title = product.title,
+//                    price = product.price,
+//                    description = product.description,
+//                    category = product.category,
+//                    imageUrl = product.imageUrl
+//                )
+//            }
         }
     }
 }

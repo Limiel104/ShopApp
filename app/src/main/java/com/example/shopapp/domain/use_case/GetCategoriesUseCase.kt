@@ -1,26 +1,26 @@
 package com.example.shopapp.domain.use_case
 
-import android.util.Log
 import com.example.shopapp.domain.repository.ProductRepository
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.all
+import com.example.shopapp.util.Resource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import java.io.IOException
 
 class GetCategoriesUseCase(
     private val productRepository: ProductRepository
 ) {
-    operator fun invoke(): Flow<List<String>> = flow {
-        try {
-            val categoryList: MutableList<String> = mutableListOf()
-            categoryList.addAll(productRepository.getCategories())
-            categoryList.add(all)
-            emit(categoryList)
-        }
-        catch (e: IOException) {
-            Log.i(TAG,e.message.toString())
-            emit(emptyList())
-        }
+    suspend operator fun invoke(): Flow<Resource<List<String>>> {
+        return productRepository.getCategories()
+//        try {
+////            val categoryList: MutableList<String> = mutableListOf()
+////            val categories = productRepository.getCategories().collect {
+////
+////            }
+////            categoryList.addAll()
+////            categoryList.add(all)
+////            emit(categoryList)
+//        }
+//        catch (e: IOException) {
+//            Log.i(TAG,e.message.toString())
+//            emit(emptyList())
+//        }
     }
 }
