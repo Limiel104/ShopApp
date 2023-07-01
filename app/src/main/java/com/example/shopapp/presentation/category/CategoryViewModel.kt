@@ -61,26 +61,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun getProducts(categoryId: String) {
-//        viewModelScope.launch {
-//            when(val categoryId = _categoryState.value.categoryId) {
-//                all -> {
-//                    shopUseCases.getProductsUseCase().collect { products ->
-//                        _categoryState.value = categoryState.value.copy(
-//                            productList = products
-//                        )
-//                    }
-//                }
-//                else -> {
-//                    shopUseCases.getProductsFromCategory(categoryId).collect { products ->
-//                        _categoryState.value = categoryState.value.copy(
-//                            productList = products
-//                        )
-//                    }
-//                }
-//            }
-//        }
-
-        if(_categoryState.value.categoryId == all) getAllProducts()
+        if(categoryId == all) getAllProducts()
         else getProductsFromCategory(categoryId)
     }
 

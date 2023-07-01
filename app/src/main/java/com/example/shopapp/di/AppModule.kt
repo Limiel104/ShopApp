@@ -46,8 +46,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideProductRepository(api: FakeShopApi): ProductRepository {
-        return ProductRepositoryImpl(api)
+    fun provideProductRepository(api: FakeShopApi, db: ShopDatabase): ProductRepository {
+        return ProductRepositoryImpl(api,db.productDao)
     }
 
     @Provides

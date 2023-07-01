@@ -10,13 +10,5 @@ class GetProductsUseCase(
 ) {
     suspend operator fun invoke(): Flow<Resource<List<Product>>> {
         return productRepository.getProducts()
-//        try {
-//            val products = productRepository.getProducts()
-//            emit(products)
-//        }
-//        catch (e: IOException) {
-//            Log.i(TAG,e.message.toString())
-//            emit(emptyList())
-//        }
     }
 }

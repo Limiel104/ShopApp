@@ -1,6 +1,8 @@
 package com.example.shopapp.data.repository
 
+import com.example.shopapp.data.local.ProductDao
 import com.example.shopapp.data.mapper.toProduct
+import com.example.shopapp.data.mapper.toProductEntity
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
@@ -15,14 +17,43 @@ import javax.inject.Singleton
 
 @Singleton
 class ProductRepositoryImpl @Inject constructor(
-    private val api: FakeShopApi
+    private val api: FakeShopApi,
+    private val dao: ProductDao
 ): ProductRepository {
 
     override suspend fun getProducts(): Flow<Resource<List<Product>>> {
         return flow {
             emit(Resource.Loading(true))
-            val products = api.getProducts().map { it.toProduct() }
-            emit(Resource.Success(products))
+
+            val products = dao.getProducts().map { it.toProduct() }
+            val loadFromCache = products.isNotEmpty()
+
+            if (loadFromCache) {
+                emit(Resource.Success(products))
+                emit(Resource.Loading(false))
+                return@flow
+            }
+
+            val productsFromRemote = try {
+                api.getProducts().map { it.toProduct() }
+            }
+            catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error(e.message.toString()))
+                null
+            }
+            catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error(e.message()))
+                null
+            }
+
+            productsFromRemote?.let { productList ->
+                dao.deleteProducts()
+                dao.insertProducts(productList.map { it.toProductEntity() })
+                emit(Resource.Success(dao.getProducts().map { it.toProduct() }))
+            }
+
             emit(Resource.Loading(false))
         }
     }

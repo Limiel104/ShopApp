@@ -1,15 +1,19 @@
 package com.example.shopapp.data.local
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Upsert
 
 @Dao
 interface ProductDao {
 
-    @Upsert
-    suspend fun upsertAllProducts(products: List<ProductEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducts(products: List<ProductEntity>)
+
+    @Query("SELECT * FROM productentity")
+    suspend fun getProducts(): List<ProductEntity>
 
     @Query("DELETE FROM productentity")
-    suspend fun deleteAll()
+    suspend fun deleteProducts()
 }
