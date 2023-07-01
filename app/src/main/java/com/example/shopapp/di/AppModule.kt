@@ -1,5 +1,8 @@
 package com.example.shopapp.di
 
+import android.app.Application
+import androidx.room.Room
+import com.example.shopapp.data.local.ShopDatabase
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.domain.repository.ProductRepository
@@ -29,6 +32,16 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideShopDatabase(application: Application): ShopDatabase {
+        return Room.databaseBuilder(
+            application,
+            ShopDatabase::class.java,
+            ShopDatabase.DATABASE_NAME
+        ).build()
     }
 
     @Provides
