@@ -11,6 +11,4 @@ interface ProductRepository {
     suspend fun getProductsFromCategory(categoryId: String): Flow<Resource<List<Product>>>
 
     suspend fun getProduct(productId: Int): Resource<Product>
-
-    suspend fun getCategories(): Flow<Resource<List<String>>>
 }

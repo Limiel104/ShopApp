@@ -18,14 +18,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
+import com.example.shopapp.util.getCategory
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryListContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    categoryList: List<String>,
+    categoryList: List<Category>,
     onCategorySelected: (String) -> Unit
 ) {
     Scaffold(
@@ -47,8 +49,8 @@ fun CategoryListContent(
             ) {
                 itemsIndexed(categoryList) { _, category ->
                     CategoryListItem(
-                        name = category,
-                        onClick = { onCategorySelected(category) }
+                        name = category.categoryTitle,
+                        onClick = { onCategorySelected(category.categoryId) }
                     )
                 }
             }
@@ -61,18 +63,10 @@ fun CategoryListContent(
 @Composable
 fun CategoryListContentPreview() {
     ShopAppTheme {
-        val categoryList = listOf(
-            "jewelery",
-            "men's clothing",
-            "women's clothing",
-            "electronics",
-            "all"
-        )
-
         CategoryListContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
-            categoryList = categoryList,
+            categoryList = getCategory(),
             onCategorySelected = {}
         )
     }

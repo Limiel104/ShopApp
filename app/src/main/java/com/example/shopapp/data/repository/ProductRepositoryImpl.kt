@@ -6,7 +6,6 @@ import com.example.shopapp.data.mapper.toProductEntity
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
-import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -89,27 +88,6 @@ class ProductRepositoryImpl @Inject constructor(
         catch (e: HttpException) {
             e.printStackTrace()
             Resource.Error(e.message())
-        }
-    }
-
-    override suspend fun getCategories(): Flow<Resource<List<String>>> {
-        return flow {
-            emit(Resource.Loading(true))
-            try {
-                val categories: MutableList<String> = mutableListOf()
-                categories.addAll(api.getCategories())
-                categories.add(all)
-                emit(Resource.Success(categories))
-                emit(Resource.Loading(false))
-            }
-            catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error(e.message.toString()))
-            }
-            catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error(e.message()))
-            }
         }
     }
 }

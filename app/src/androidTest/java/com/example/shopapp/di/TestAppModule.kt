@@ -41,15 +41,15 @@ object TestAppModule {
     }
 
     @Provides
-    fun provideProductRepository(api: FakeShopApi): ProductRepository {
-        return ProductRepositoryImpl(api)
+    fun provideProductRepository(api: FakeShopApi, db: ShopDatabase): ProductRepository {
+        return ProductRepositoryImpl(api,db.productDao)
     }
 
     @Provides
     fun provideShopUseCases(productRepository: ProductRepository): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
-            getCategoriesUseCase = GetCategoriesUseCase(productRepository),
+            getCategoriesUseCase = GetCategoriesUseCase(),
             getProductsFromCategory = GetProductsFromCategory(productRepository),
             getProductUseCase = GetProductUseCase(productRepository)
         )
