@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Constants.categoryId
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,33 +60,8 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun getProducts(categoryId: String) {
-        if(categoryId == all) getAllProducts()
-        else getProductsFromCategory(categoryId)
-    }
-
-    fun getAllProducts() {
         viewModelScope.launch {
-            shopUseCases.getProductsUseCase().collect { response ->
-                when(response) {
-                    is Resource.Loading -> {}
-                    is Resource.Success -> {
-                        response.data?.let { products ->
-                            _categoryState.value = categoryState.value.copy(
-                                productList = products
-                            )
-                        }
-                    }
-                    is Resource.Error -> {
-                        Log.i(TAG, response.message.toString())
-                    }
-                }
-            }
-        }
-    }
-
-    fun getProductsFromCategory(categoryId: String) {
-        viewModelScope.launch {
-            shopUseCases.getProductsFromCategory(categoryId).collect { response ->
+            shopUseCases.getProductsUseCase(categoryId).collect { response ->
                 when(response) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {

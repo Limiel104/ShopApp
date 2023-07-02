@@ -6,6 +6,7 @@ import com.example.shopapp.data.mapper.toProductEntity
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
+import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,11 +21,16 @@ class ProductRepositoryImpl @Inject constructor(
     private val dao: ProductDao
 ): ProductRepository {
 
-    override suspend fun getProducts(): Flow<Resource<List<Product>>> {
+    override suspend fun getProducts(categoryId: String): Flow<Resource<List<Product>>> {
         return flow {
             emit(Resource.Loading(true))
 
-            val products = dao.getProducts().map { it.toProduct() }
+            val products =
+                when(categoryId) {
+                    all -> dao.getProducts().map { it.toProduct() }
+                    else -> dao.getProductsFromCategory(categoryId).map { it.toProduct() }
+                }
+
             val loadFromCache = products.isNotEmpty()
 
             if (loadFromCache) {
@@ -50,29 +56,13 @@ class ProductRepositoryImpl @Inject constructor(
             productsFromRemote?.let { productList ->
                 dao.deleteProducts()
                 dao.insertProducts(productList.map { it.toProductEntity() })
-                emit(Resource.Success(dao.getProducts().map { it.toProduct() }))
+                when(categoryId) {
+                    all -> emit(Resource.Success(dao.getProducts().map { it.toProduct() }))
+                    else -> emit(Resource.Success(dao.getProductsFromCategory(categoryId).map { it.toProduct() }))
+                }
             }
 
             emit(Resource.Loading(false))
-        }
-    }
-
-    override suspend fun getProductsFromCategory(categoryId: String): Flow<Resource<List<Product>>> {
-        return flow {
-            emit(Resource.Loading(true))
-            try {
-                val products = api.getProductsFromCategory(categoryId).map { it.toProduct() }
-                emit(Resource.Success(products))
-                emit(Resource.Loading(false))
-            }
-            catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error(e.message.toString()))
-            }
-            catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error(e.message()))
-            }
         }
     }
 

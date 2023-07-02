@@ -8,7 +8,6 @@ import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
-import com.example.shopapp.domain.use_case.GetProductsFromCategory
 import com.example.shopapp.domain.use_case.GetProductsUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import dagger.Module
@@ -50,7 +49,6 @@ object TestAppModule {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
             getCategoriesUseCase = GetCategoriesUseCase(),
-            getProductsFromCategory = GetProductsFromCategory(productRepository),
             getProductUseCase = GetProductUseCase(productRepository)
         )
     }
