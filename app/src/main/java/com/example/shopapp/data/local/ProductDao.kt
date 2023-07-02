@@ -23,6 +23,15 @@ interface ProductDao {
     )
     suspend fun getProductsFromCategory(categoryId: String): List<ProductEntity>
 
+    @Query(
+        """
+            SELECT *
+            FROM productentity
+            WHERE id = :productId
+        """
+    )
+    suspend fun getProduct(productId: Int): ProductEntity
+
     @Query("DELETE FROM productentity")
     suspend fun deleteProducts()
 }

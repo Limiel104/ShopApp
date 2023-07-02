@@ -67,17 +67,6 @@ class ProductRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProduct(productId: Int): Resource<Product> {
-        return try {
-            val product = api.getProduct(productId)
-            Resource.Success(product.toProduct())
-        }
-        catch (e: IOException) {
-            e.printStackTrace()
-            Resource.Error(e.message.toString())
-        }
-        catch (e: HttpException) {
-            e.printStackTrace()
-            Resource.Error(e.message())
-        }
+        return Resource.Success(dao.getProduct(productId).toProduct())
     }
 }
