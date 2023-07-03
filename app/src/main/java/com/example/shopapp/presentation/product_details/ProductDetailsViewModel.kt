@@ -70,29 +70,6 @@ class ProductDetailsViewModel @Inject constructor(
                     Log.i(TAG, response.message.toString())
                 }
             }
-
-//            val product = shopUseCases.getProductUseCase(productId).let {  ->
-//                _productDetailsState.value = productDetailsState.value.copy(
-//                    title = it.title,
-//                    price = product.price,
-//                    description = product.description,
-//                    category = product.category,
-//                    imageUrl = product.imageUrl
-//                )
-//            }
-
-
-
-
-//            shopUseCases.getProductUseCase(productId).collect { product ->
-//                _productDetailsState.value = productDetailsState.value.copy(
-//                    title = product.title,
-//                    price = product.price,
-//                    description = product.description,
-//                    category = product.category,
-//                    imageUrl = product.imageUrl
-//                )
-//            }
         }
     }
 }

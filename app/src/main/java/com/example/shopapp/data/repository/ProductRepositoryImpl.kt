@@ -67,6 +67,12 @@ class ProductRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getProduct(productId: Int): Resource<Product> {
-        return Resource.Success(dao.getProduct(productId).toProduct())
+        val product = dao.getProduct(productId)
+
+        return if(product != null) {
+            Resource.Success(product.toProduct())
+        } else {
+            Resource.Error(message = "No product found with this id")
+        }
     }
 }
