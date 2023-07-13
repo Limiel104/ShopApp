@@ -6,10 +6,12 @@ import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.getCategory
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +48,11 @@ class CategoryListViewModelTest {
         )
     }
 
+    @After
+    fun tearDown() {
+        clearAllMocks()
+    }
+
     private fun setViewModel(
         state: CategoryListState = CategoryListState("", emptyList())
     ): CategoryListViewModel {
@@ -70,7 +77,7 @@ class CategoryListViewModelTest {
         val categories= getCurrentCategoryListState().categoryList
         assertThat(categories).isEmpty()
 
-        verify { categoryListViewModel.getCategories() }
+        verify { shopUseCases.getCategoriesUseCase() }
     }
 
     @Test
@@ -83,6 +90,8 @@ class CategoryListViewModelTest {
         assertThat(categories).isNotEmpty()
         assertThat(categories.size).isEqualTo(5)
         assertThat(categories).isEqualTo(categoryList)
+
+        verify { shopUseCases.getCategoriesUseCase() }
     }
 
     @Test
@@ -99,5 +108,7 @@ class CategoryListViewModelTest {
         val resultId = getCurrentCategoryListState().categoryId
         assertThat(resultId).isEqualTo("men's clothing")
         assertThat(categoryIdList).contains(resultId)
+
+        verify { shopUseCases.getCategoriesUseCase() }
     }
 }
