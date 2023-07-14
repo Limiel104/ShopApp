@@ -31,6 +31,7 @@ class CategoryListViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+
         categoryList = listOf(
             Category.All,
             Category.Men,
@@ -53,15 +54,8 @@ class CategoryListViewModelTest {
         clearAllMocks()
     }
 
-    private fun setViewModel(
-        state: CategoryListState = CategoryListState("", emptyList())
-    ): CategoryListViewModel {
-        val viewModel = CategoryListViewModel(shopUseCases)
-        viewModel.categoryListState.value.copy(
-            categoryId = state.categoryId,
-            categoryList = state.categoryList
-        )
-        return viewModel
+    private fun setViewModel(): CategoryListViewModel {
+        return CategoryListViewModel(shopUseCases)
     }
 
     private fun getCurrentCategoryListState(): CategoryListState {

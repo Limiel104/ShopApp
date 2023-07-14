@@ -70,19 +70,8 @@ class CategoryViewModelTest {
         clearAllMocks()
     }
 
-    private fun setViewModel(
-        state: CategoryState = CategoryState()
-    ): CategoryViewModel {
-        val viewModel = CategoryViewModel(savedStateHandle, shopUseCases)
-
-        viewModel.categoryState.value.copy(
-            categoryId = state.categoryId,
-            productList = state.productList,
-            isSortSectionVisible = state.isSortSectionVisible,
-            productId = state.productId
-        )
-
-        return viewModel
+    private fun setViewModel(): CategoryViewModel {
+        return CategoryViewModel(savedStateHandle, shopUseCases)
     }
 
     private fun getCurrentCategoryState(): CategoryState {
