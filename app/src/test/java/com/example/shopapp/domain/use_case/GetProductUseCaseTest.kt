@@ -27,11 +27,11 @@ class GetProductUseCaseTest {
         this.getProductUseCase = GetProductUseCase(productRepository)
         product = Product(
             id = 1,
-            title = Constants.productTitle,
-            price = Constants.productPrice,
+            title = "Shirt",
+            price = "195,59 PLN",
             description = Constants.productDescription,
             category = Category.Women.id,
-            imageUrl = Constants.productImageUrl
+            imageUrl = "imageUrl"
         )
     }
 

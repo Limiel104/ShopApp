@@ -15,11 +15,8 @@ import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.productImageUrl
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
-import com.example.shopapp.util.Constants.productTitle
-import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun FavouriteProductItem(
@@ -38,7 +35,7 @@ fun FavouriteProductItem(
             contentAlignment = Alignment.TopEnd
         ) {
             ImageItem(
-                imageUrl = productImageUrl,
+                imageUrl = "imageUrl",
                 width = productItemImageWidth,
                 height = productItemImageHeight
             )
@@ -52,7 +49,7 @@ fun FavouriteProductItem(
 
         ProductItemTitle(
             name = title,
-            price = productPrice
+            price = "195,59 PLN"
         )
     }
 }
@@ -62,7 +59,7 @@ fun FavouriteProductItem(
 fun FavouriteProductItemPreview() {
     ShopAppTheme {
         FavouriteProductItem(
-            title = productTitle,
+            title = "Shirt",
             onClick = {}
         )
     }

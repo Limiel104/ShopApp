@@ -16,7 +16,6 @@ import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.IMAGE
-import com.example.shopapp.util.Constants.emptyString
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
 
@@ -55,7 +54,7 @@ fun ImageItem(
 fun ImageItemPreview() {
     ShopAppTheme() {
         ImageItem(
-            imageUrl = emptyString,
+            imageUrl = "",
             width = productItemImageWidth,
             height = productItemImageHeight
         )
@@ -67,7 +66,7 @@ fun ImageItemPreview() {
 fun ImageItemNullPreview() {
     ShopAppTheme() {
         ImageItem(
-            imageUrl = emptyString
+            imageUrl = ""
         )
     }
 }

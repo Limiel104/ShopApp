@@ -22,8 +22,6 @@ import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ACTIVATE_COUPON_BTN
 import com.example.shopapp.util.Constants.COUPON_ITEM_
-import com.example.shopapp.util.Constants.discountAmount
-import com.example.shopapp.util.Constants.pointsToActivate
 
 @Composable
 fun CouponItem(
@@ -72,8 +70,8 @@ fun CouponItem(
 fun CouponItemPreview() {
     ShopAppTheme() {
         CouponItem(
-            discount = discountAmount,
-            pointsToActivate = pointsToActivate
+            discount = 10,
+            pointsToActivate = 100
         )
     }
 }

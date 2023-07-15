@@ -17,7 +17,7 @@ fun AccountScreen(
     AccountContent(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
-        customerName = name,
-        customerClubPoints = 234
+        userName = name,
+        userClubPoints = 234
     )
 }

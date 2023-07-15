@@ -26,8 +26,6 @@ import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
-import com.example.shopapp.util.Constants.addToCart
-import com.example.shopapp.util.Constants.productDescriptionTitle
 import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -147,7 +145,7 @@ class ProductDetailsScreenTest {
     fun productDetailsScreenProductDetailsBottomSheet_productDescriptionTitleIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertTextEquals(productDescriptionTitle)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertTextEquals("Description")
     }
 
     @Test
@@ -160,7 +158,7 @@ class ProductDetailsScreenTest {
     fun productDetailsScreenProductDetailsBottomSheet_addToCartButtonIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertTextEquals(addToCart)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertTextEquals("Add to Cart")
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertHasClickAction()
     }
 }

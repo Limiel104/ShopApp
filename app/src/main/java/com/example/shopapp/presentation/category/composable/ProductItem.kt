@@ -21,14 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.FAVOURITE_BTN
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productImageUrl
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
-import com.example.shopapp.util.Constants.productPrice
-import com.example.shopapp.util.Constants.productTitle
 
 @Composable
 fun ProductItem(
@@ -92,11 +88,11 @@ fun ProductItemFavouriteFalsePreview() {
     ShopAppTheme {
         val product = Product(
             id = 1,
-            title = productTitle,
-            price = productPrice,
+            title = "Shirt",
+            price = "195,59 PLN",
             description = productDescription,
-            category = Constants.categoryName,
-            imageUrl = productImageUrl
+            category = "men's clothing",
+            imageUrl = "imageUrl"
         )
 
         ProductItem(
@@ -113,11 +109,11 @@ fun ProductItemFavouriteTruePreview() {
     ShopAppTheme {
         val product = Product(
             id = 1,
-            title = productTitle,
-            price = productPrice,
+            title = "Shirt",
+            price = "195,59 PLN",
             description = productDescription,
-            category = Constants.categoryName,
-            imageUrl = productImageUrl
+            category = "men's clothing",
+            imageUrl = "imageUrl"
         )
 
         ProductItem(

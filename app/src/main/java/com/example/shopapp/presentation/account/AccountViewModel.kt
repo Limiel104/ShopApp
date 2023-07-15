@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.shopapp.util.Constants.ACCOUNT_VM
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.customerName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -22,7 +21,7 @@ class AccountViewModel @Inject constructor(
         Log.i(TAG, ACCOUNT_VM)
 
         _accountState.value = accountState.value.copy(
-            name = customerName
+            name = "John"
         )
     }
 }

@@ -20,11 +20,10 @@ import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ACCOUNT_POINTS_CARD
-import com.example.shopapp.util.Constants.customerPoints
 
 @Composable
 fun PointsCard(
-    customerClubPoints: Int
+    userClubPoints: Int
 ) {
     Card(
         modifier = Modifier
@@ -45,7 +44,7 @@ fun PointsCard(
             )
 
             Text(
-                text = "$customerClubPoints " + stringResource(id = R.string.points),
+                text = "$userClubPoints " + stringResource(id = R.string.points),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp
             )
@@ -58,7 +57,7 @@ fun PointsCard(
 fun PointsCardPreview() {
     ShopAppTheme() {
         PointsCard(
-            customerClubPoints = customerPoints
+            userClubPoints = 234
         )
     }
 }

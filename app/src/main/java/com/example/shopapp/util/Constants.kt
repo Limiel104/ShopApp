@@ -43,32 +43,10 @@ object Constants {
     const val ADD_TO_CART_BTN: String = "Add to cart button"
 
     //TEST VALUES
-    const val customerName: String = "John"
-    const val customerPoints: Int = 234
-    const val discountAmount: Int = 10
-    const val pointsToActivate: Int = 100
-    const val categoryName: String = "men's clothing"
-    const val productPrice: String = "15,59 PLN"
-    const val productTitle: String = "Shirt"
-    const val productImageUrl: String = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
-    const val errorMessage: String = "Error Message"
-    const val testTag: String = "tag"
-    const val emptyString: String = ""
-    const val text: String = "Text"
-    const val placeholder: String = "placeholder"
-    const val offerDescription: String = "All clothes for women now 10% cheaper"
     const val badgeCount: Int = 10
     const val badgeCountZero: Int = 0
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
     const val bottomBarHeight: Int = 56
-    const val shopName: String = "Shop Name"
-    const val hi: String = "Hi "
-    const val shopClub: String = "Shop Club"
-    const val customerClubPoints: String = "234 points"
-    const val favouriteTitle: String = "Favourite"
-    const val productDescriptionTitle: String = "Description"
-    const val addToCart: String = "Add to Cart"
-    const val all: String = "all"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180

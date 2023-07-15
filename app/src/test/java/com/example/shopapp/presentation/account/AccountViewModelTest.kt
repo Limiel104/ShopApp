@@ -18,7 +18,7 @@ class AccountViewModelTest {
     }
 
     @Test
-    fun `customer name is set correctly on init`() {
+    fun `user name is set correctly on init`() {
         val name = getCurrentAccountState().name
         assertThat(name).isEqualTo("John")
     }

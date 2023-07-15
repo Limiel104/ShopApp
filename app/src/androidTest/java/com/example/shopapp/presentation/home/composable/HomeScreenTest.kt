@@ -18,7 +18,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.HOME_TOP_BAR
 import com.example.shopapp.util.Constants.bottomBarHeight
-import com.example.shopapp.util.Constants.shopName
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -73,7 +72,7 @@ class HomeScreenTest {
     fun homeScreenTopBar_shopNameIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(HOME_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(HOME_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(HOME_TOP_BAR).onChildAt(0).assertTextContains(shopName)
+        composeRule.onNodeWithTag(HOME_TOP_BAR).onChildAt(0).assertTextContains("Shop Name")
     }
 
     @Test

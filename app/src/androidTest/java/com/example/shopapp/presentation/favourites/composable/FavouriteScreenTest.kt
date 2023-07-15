@@ -20,7 +20,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.FAVOURITE_TOP_BAR
-import com.example.shopapp.util.Constants.favouriteTitle
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -75,7 +74,7 @@ class FavouriteScreenTest {
     fun favouriteScreenTopBar_titleIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertTextContains(favouriteTitle)
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertTextContains("Favourite")
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 

@@ -21,21 +21,19 @@ import com.example.shopapp.R
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
-import com.example.shopapp.util.Constants.customerName
-import com.example.shopapp.util.Constants.customerPoints
 
 @Composable
 fun AccountContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    customerName: String,
-    customerClubPoints: Int
+    userName: String,
+    userClubPoints: Int
 ) {
     val coupons = listOf(10,20,50)
 
     Scaffold(
         topBar = { AccountTopBar(
-            customerName = customerName
+            userName = userName
         ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
@@ -50,7 +48,7 @@ fun AccountContent(
                 .padding(innerPadding)
         ) {
             PointsCard(
-                customerClubPoints = customerClubPoints
+                userClubPoints = userClubPoints
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -94,8 +92,8 @@ fun AccountContentPreview() {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
-            customerName = customerName,
-            customerClubPoints = customerPoints
+            userName = "John",
+            userClubPoints = 234
         )
     }
 }

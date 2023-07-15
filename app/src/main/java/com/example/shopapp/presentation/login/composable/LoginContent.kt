@@ -30,7 +30,6 @@ import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
 import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
-import com.example.shopapp.util.Constants.placeholder
 
 @Composable
 fun LoginContent() {
@@ -59,7 +58,7 @@ fun LoginContent() {
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
-                placeholder = placeholder,
+                placeholder = "placeholder",
                 testTag = LOGIN_EMAIL_TF,
                 isError = emailError != null,
                 onValueChange = {},
@@ -80,7 +79,7 @@ fun LoginContent() {
             ShopTextFieldItem(
                 text = password,
                 label = stringResource(id = R.string.password),
-                placeholder = placeholder,
+                placeholder = "placeholder",
                 testTag = LOGIN_PASSWORD_TF,
                 isError = passwordError != null,
                 onValueChange = {},
