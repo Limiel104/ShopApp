@@ -37,7 +37,7 @@ class GetProductsUseCaseTest {
                 title = productTitle,
                 price = productPrice,
                 description = productDescription,
-                category = Category.Women.categoryId,
+                category = Category.Women.id,
                 imageUrl = productImageUrl
             ),
             Product(
@@ -45,7 +45,7 @@ class GetProductsUseCaseTest {
                 title = productTitle,
                 price = productPrice,
                 description = productDescription,
-                category = Category.Men.categoryId,
+                category = Category.Men.id,
                 imageUrl = productImageUrl
             ),
             Product(
@@ -53,7 +53,7 @@ class GetProductsUseCaseTest {
                 title = productTitle,
                 price = productPrice,
                 description = productDescription,
-                category = Category.Jewelery.categoryId,
+                category = Category.Jewelery.id,
                 imageUrl = productImageUrl
             ),
             Product(
@@ -61,7 +61,7 @@ class GetProductsUseCaseTest {
                 title = productTitle,
                 price = productPrice,
                 description = productDescription,
-                category = Category.Men.categoryId,
+                category = Category.Men.id,
                 imageUrl = productImageUrl
             )
         )
@@ -70,14 +70,14 @@ class GetProductsUseCaseTest {
     @Test
     fun `get products regardless of category id`() {
         runBlocking {
-            coEvery { productRepository.getProducts(Category.All.categoryId)
+            coEvery { productRepository.getProducts(Category.All.id)
             } returns flowOf(
                 Resource.Success(productList)
             )
 
-            val products = getProductsUseCase(Category.All.categoryId).first().data
+            val products = getProductsUseCase(Category.All.id).first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.All.categoryId) }
+            coVerify(exactly = 1) { getProductsUseCase(Category.All.id) }
             assertThat(products?.size).isEqualTo(4)
         }
     }
@@ -86,14 +86,14 @@ class GetProductsUseCaseTest {
     fun `get products from exactly one category`() {
         runBlocking {
             coEvery {
-                productRepository.getProducts(Category.Men.categoryId)
+                productRepository.getProducts(Category.Men.id)
             } returns flowOf(
-                Resource.Success(productList.filter { it.category == Category.Men.categoryId })
+                Resource.Success(productList.filter { it.category == Category.Men.id })
             )
 
-            val products = getProductsUseCase(Category.Men.categoryId).first().data
+            val products = getProductsUseCase(Category.Men.id).first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.Men.categoryId) }
+            coVerify(exactly = 1) { getProductsUseCase(Category.Men.id) }
             assertThat(products?.size).isEqualTo(2)
         }
     }
@@ -102,14 +102,14 @@ class GetProductsUseCaseTest {
     fun `return empty list when no product from that category`() {
         runBlocking {
             coEvery {
-                productRepository.getProducts(Category.Electronics.categoryId)
+                productRepository.getProducts(Category.Electronics.id)
             } returns flowOf(
-                Resource.Success(productList.filter { it.category == Category.Electronics.categoryId })
+                Resource.Success(productList.filter { it.category == Category.Electronics.id })
             )
 
-            val products = getProductsUseCase(Category.Electronics.categoryId).first().data
+            val products = getProductsUseCase(Category.Electronics.id).first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.Electronics.categoryId) }
+            coVerify(exactly = 1) { getProductsUseCase(Category.Electronics.id) }
             assertThat(products).isEmpty()
         }
     }
@@ -121,11 +121,11 @@ class GetProductsUseCaseTest {
                 Resource.Error("Error")
             )
 
-            val result = getProductsUseCase(Category.All.categoryId).first()
+            val result = getProductsUseCase(Category.All.id).first()
             val errorMessage = result.message
             val products = result.data
 
-            coVerify { getProductsUseCase(Category.All.categoryId) }
+            coVerify { getProductsUseCase(Category.All.id) }
             assertThat(errorMessage).isEqualTo("Error")
             assertThat(products).isNull()
         }

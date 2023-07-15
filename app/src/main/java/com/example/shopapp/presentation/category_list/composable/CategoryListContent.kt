@@ -49,8 +49,8 @@ fun CategoryListContent(
             ) {
                 itemsIndexed(categoryList) { _, category ->
                     CategoryListItem(
-                        name = category.categoryTitle,
-                        onClick = { onCategorySelected(category.categoryId) }
+                        name = category.title,
+                        onClick = { onCategorySelected(category.id) }
                     )
                 }
             }

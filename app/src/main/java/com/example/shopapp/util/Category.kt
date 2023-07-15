@@ -1,6 +1,6 @@
 package com.example.shopapp.util
 
-enum class Category(val categoryId: String, val categoryTitle: String) {
+enum class Category(val id: String, val title: String) {
     All("all","All"),
     Men("men's clothing","Men's clothing"),
     Women("women's clothing","Women's clothing"),

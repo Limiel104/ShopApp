@@ -41,11 +41,11 @@ class CategoryListViewModelTest {
         )
 
         categoryIdList = listOf(
-            Category.All.categoryId,
-            Category.Men.categoryId,
-            Category.Women.categoryId,
-            Category.Jewelery.categoryId,
-            Category.Electronics.categoryId
+            Category.All.id,
+            Category.Men.id,
+            Category.Women.id,
+            Category.Jewelery.id,
+            Category.Electronics.id
         )
     }
 

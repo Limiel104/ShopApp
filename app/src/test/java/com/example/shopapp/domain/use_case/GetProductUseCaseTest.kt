@@ -30,7 +30,7 @@ class GetProductUseCaseTest {
             title = Constants.productTitle,
             price = Constants.productPrice,
             description = Constants.productDescription,
-            category = Category.Women.categoryId,
+            category = Category.Women.id,
             imageUrl = Constants.productImageUrl
         )
     }
