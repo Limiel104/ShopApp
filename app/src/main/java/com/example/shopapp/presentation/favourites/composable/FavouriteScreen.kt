@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
 import com.example.shopapp.presentation.favourites.FavouriteEvent
 import com.example.shopapp.presentation.favourites.FavouriteUiEvent
 import com.example.shopapp.presentation.favourites.FavouriteViewModel
@@ -24,6 +25,7 @@ fun FavouriteScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val productList = viewModel.favouriteState.value.productList
+    val isUserLoggedIn = viewModel.favouriteState.value.isUserLoggedIn
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -36,12 +38,22 @@ fun FavouriteScreen(
         }
     }
 
-    FavouriteContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
-        productList = productList,
-        onProductSelected = { productId: String ->
-            viewModel.onEvent(FavouriteEvent.OnProductSelected(productId))
-        }
-    )
+    if(isUserLoggedIn) {
+        FavouriteContent(
+            scaffoldState = scaffoldState,
+            bottomBarHeight = bottomBarHeight,
+            productList = productList,
+            onProductSelected = { productId: String ->
+                viewModel.onEvent(FavouriteEvent.OnProductSelected(productId))
+            }
+        )
+    }
+    else {
+        UserNotLoggedInContent(
+            scaffoldState = scaffoldState,
+            bottomBarHeight = bottomBarHeight,
+            onLogin = {},
+            onSignup = {}
+        )
+    }
 }

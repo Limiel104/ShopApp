@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
-import com.example.shopapp.presentation.account.composable.AccountTopBar
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.LOGIN_BTN
 import com.example.shopapp.util.Constants.SIGNUP_BTN
@@ -35,9 +34,6 @@ fun UserNotLoggedInContent(
 ) {
 
     Scaffold(
-        topBar = { AccountTopBar(
-            userName = ""
-        ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +69,7 @@ fun UserNotLoggedInContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp)
+//                    .padding(bottom = 10.dp)
                     .weight(1f),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
