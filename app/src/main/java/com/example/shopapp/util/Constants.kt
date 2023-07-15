@@ -33,6 +33,14 @@ object Constants {
     const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
+    const val SIGNUP_EMAIL_TF: String = "Signup email"
+    const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
+    const val SIGNUP_PASSWORD_TF: String = "Signup password"
+    const val SIGNUP_PASSWORD_ERROR: String = "Signup password error"
+    const val SIGNUP_CONFIRM_PASSWORD_TF: String = "Signup confirm password"
+    const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
+    const val SIGNUP_BTN: String = "Signup button"
+    const val SIGNUP_CPI: String = "Signup circular progress indicator"
 
     //Content Description
     const val CART_BTN: String = "Cart button"

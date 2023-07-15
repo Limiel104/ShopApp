@@ -10,15 +10,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.common.composable.ShopTextFieldItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.SIGNUP_BTN
+import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_ERROR
+import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_TF
+import com.example.shopapp.util.Constants.SIGNUP_CPI
+import com.example.shopapp.util.Constants.SIGNUP_EMAIL_ERROR
+import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
+import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_ERROR
+import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
 
 @Composable
 fun SignupContent() {
@@ -39,7 +49,7 @@ fun SignupContent() {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
-            text = "Create an account",
+            text = stringResource(id = R.string.create_account),
             fontSize = 32.sp,
             color = MaterialTheme.colors.secondary,
             fontWeight = FontWeight.SemiBold
@@ -48,9 +58,9 @@ fun SignupContent() {
         Column() {
             ShopTextFieldItem(
                 text = email,
-                label = "email",
+                label = stringResource(id = R.string.email),
                 placeholder = "placeholder",
-                testTag = "tag",
+                testTag = SIGNUP_EMAIL_TF,
                 isError = emailError != null,
                 onValueChange = {},
                 keyboardOptions = KeyboardOptions(
@@ -61,7 +71,7 @@ fun SignupContent() {
             if(emailError != null) {
                 ErrorTextFieldItem(
                     errorMessage = emailError,
-                    testTag = "tag"
+                    testTag = SIGNUP_EMAIL_ERROR
                 )
             }
 
@@ -69,9 +79,9 @@ fun SignupContent() {
 
             ShopTextFieldItem(
                 text = password,
-                label = "password",
+                label = stringResource(id = R.string.password),
                 placeholder = "placeholder",
-                testTag = "tag",
+                testTag = SIGNUP_PASSWORD_TF,
                 isError = passwordError != null,
                 onValueChange = {},
                 keyboardOptions = KeyboardOptions(
@@ -82,7 +92,7 @@ fun SignupContent() {
             if(passwordError != null) {
                 ErrorTextFieldItem(
                     errorMessage = passwordError,
-                    testTag = "tag"
+                    testTag = SIGNUP_PASSWORD_ERROR
                 )
             }
 
@@ -90,9 +100,9 @@ fun SignupContent() {
 
             ShopTextFieldItem(
                 text = confirmPassword,
-                label = "confirmPassword",
+                label = stringResource(id = R.string.confirm_password),
                 placeholder = "placeholder",
-                testTag = "tag",
+                testTag = SIGNUP_CONFIRM_PASSWORD_TF,
                 isError = confirmPasswordError != null,
                 onValueChange = {},
                 keyboardOptions = KeyboardOptions(
@@ -103,15 +113,15 @@ fun SignupContent() {
             if(confirmPasswordError != null) {
                 ErrorTextFieldItem(
                     errorMessage = confirmPasswordError,
-                    testTag = "tag"
+                    testTag = SIGNUP_CONFIRM_PASSWORD_ERROR
                 )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
             ShopButtonItem(
-                text = "Signup",
-                testTag = "tag",
+                text = stringResource(id = R.string.signup),
+                testTag = SIGNUP_BTN,
                 onClick = {}
             )
         }
@@ -121,7 +131,7 @@ fun SignupContent() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .testTag("tag"),
+                .testTag(SIGNUP_CPI),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()

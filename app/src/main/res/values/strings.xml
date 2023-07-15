@@ -24,4 +24,8 @@
     <string name="account">Account</string>
     <string name="description">Description</string>
     <string name="add_to_cart">Add to Cart</string>
+    <string name="create_account">Create an account</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="not_logged_in">You are not logged in</string>
+    <string name="login_or_signup">Login or Signup</string>
 </resources>
