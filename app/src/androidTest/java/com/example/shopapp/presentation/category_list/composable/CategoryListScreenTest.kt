@@ -22,6 +22,7 @@ import com.example.shopapp.util.Constants.CATEGORY_NAME_1
 import com.example.shopapp.util.Constants.CATEGORY_NAME_2
 import com.example.shopapp.util.Constants.CATEGORY_NAME_3
 import com.example.shopapp.util.Constants.CATEGORY_NAME_4
+import com.example.shopapp.util.Constants.CATEGORY_NAME_5
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -87,7 +88,7 @@ class CategoryListScreenTest {
         composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(4)
+        assertThat(numberOfChildren).isEqualTo(5)
     }
 
     @Test
@@ -107,5 +108,9 @@ class CategoryListScreenTest {
         composeRule.onNodeWithTag(CATEGORY_NAME_4).assertExists()
         composeRule.onNodeWithTag(CATEGORY_NAME_4).assertIsDisplayed()
         composeRule.onNodeWithTag(CATEGORY_NAME_4).assertHasClickAction()
+
+        composeRule.onNodeWithTag(CATEGORY_NAME_5).assertExists()
+        composeRule.onNodeWithTag(CATEGORY_NAME_5).assertIsDisplayed()
+        composeRule.onNodeWithTag(CATEGORY_NAME_5).assertHasClickAction()
     }
 }

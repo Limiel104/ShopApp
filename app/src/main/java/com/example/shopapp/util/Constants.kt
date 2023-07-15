@@ -25,10 +25,11 @@ object Constants {
     const val CATEGORY_SORT_SECTION: String = "Category sort section"
     const val CATEGORY_LIST_TOP_BAR: String = "Category list top bar"
     const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list crazy column"
-    const val CATEGORY_NAME_1: String = "jewelery"
-    const val CATEGORY_NAME_2: String = "men's clothing"
-    const val CATEGORY_NAME_3: String = "women's clothing"
-    const val CATEGORY_NAME_4: String = "all"
+    const val CATEGORY_NAME_1: String = "All"
+    const val CATEGORY_NAME_2: String = "Men's clothing"
+    const val CATEGORY_NAME_3: String = "Women's clothing"
+    const val CATEGORY_NAME_4: String = "Jewelery"
+    const val CATEGORY_NAME_5: String = "Electronics"
     const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
@@ -48,7 +49,7 @@ object Constants {
     const val pointsToActivate: Int = 100
     const val categoryName: String = "men's clothing"
     const val productPrice: String = "15,59 PLN"
-    const val productName: String = "Shirt"
+    const val productTitle: String = "Shirt"
     const val productImageUrl: String = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
     const val errorMessage: String = "Error Message"
     const val testTag: String = "tag"
@@ -67,6 +68,7 @@ object Constants {
     const val favouriteTitle: String = "Favourite"
     const val productDescriptionTitle: String = "Description"
     const val addToCart: String = "Add to Cart"
+    const val all: String = "all"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180

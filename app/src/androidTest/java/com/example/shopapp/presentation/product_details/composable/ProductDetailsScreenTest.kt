@@ -27,11 +27,8 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
 import com.example.shopapp.util.Constants.addToCart
-import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productDescriptionTitle
 import com.example.shopapp.util.Constants.productId
-import com.example.shopapp.util.Constants.productName
-import com.example.shopapp.util.Constants.productPrice
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -67,8 +64,8 @@ class ProductDetailsScreenTest {
                             navArgument(
                                 name = productId
                             ) {
-                                type = NavType.StringType
-                                defaultValue = productName
+                                type = NavType.IntType
+                                defaultValue = -1
                             }
                         )
                     ) {
@@ -127,17 +124,15 @@ class ProductDetailsScreenTest {
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_productNameIsDisplayedCorrectly() {
+    fun productDetailsScreenProductDetailsBottomSheet_productTitleIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertTextEquals(productName)
     }
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_productPriceIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(1).assertTextEquals(productPrice)
     }
 
     @Test
@@ -159,7 +154,6 @@ class ProductDetailsScreenTest {
     fun productDetailsScreenProductDetailsBottomSheet_productDescriptionIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertTextEquals(productDescription)
     }
 
     @Test

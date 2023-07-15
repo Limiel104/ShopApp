@@ -18,19 +18,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.FAVOURITE_BTN
+import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productImageUrl
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
-import com.example.shopapp.util.Constants.productName
 import com.example.shopapp.util.Constants.productPrice
+import com.example.shopapp.util.Constants.productTitle
 
 @Composable
 fun ProductItem(
-    name: String,
-    price: String,
+    product: Product,
     isProductInFavourites: Boolean,
     onClick: () -> Unit
 ) {
@@ -41,7 +43,7 @@ fun ProductItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ImageItem(
-            imageUrl = productImageUrl,
+            imageUrl = product.imageUrl,
             width = productItemImageWidth,
             height = productItemImageHeight
         )
@@ -55,7 +57,7 @@ fun ProductItem(
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 Text(
-                    text = name,
+                    text = product.title,
                     fontWeight = FontWeight.Light,
                     fontSize = 12.sp,
                     maxLines = 1,
@@ -76,7 +78,7 @@ fun ProductItem(
 
             Row {
                 Text(
-                    text = price,
+                    text = product.price,
                     fontWeight = FontWeight.Bold,
                 )
             }
@@ -88,9 +90,17 @@ fun ProductItem(
 @Composable
 fun ProductItemFavouriteFalsePreview() {
     ShopAppTheme {
-        ProductItem(
-            name = productName,
+        val product = Product(
+            id = 1,
+            title = productTitle,
             price = productPrice,
+            description = productDescription,
+            category = Constants.categoryName,
+            imageUrl = productImageUrl
+        )
+
+        ProductItem(
+            product = product,
             isProductInFavourites = false,
             onClick = {}
         )
@@ -101,9 +111,17 @@ fun ProductItemFavouriteFalsePreview() {
 @Composable
 fun ProductItemFavouriteTruePreview() {
     ShopAppTheme {
-        ProductItem(
-            name = productName,
+        val product = Product(
+            id = 1,
+            title = productTitle,
             price = productPrice,
+            description = productDescription,
+            category = Constants.categoryName,
+            imageUrl = productImageUrl
+        )
+
+        ProductItem(
+            product = product,
             isProductInFavourites = true,
             onClick = {}
         )

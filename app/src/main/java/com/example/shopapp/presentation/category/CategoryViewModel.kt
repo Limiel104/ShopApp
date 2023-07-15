@@ -6,9 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.categoryId
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
     private val _categoryState = mutableStateOf(CategoryState())
@@ -28,34 +31,14 @@ class CategoryViewModel @Inject constructor(
 
     init {
         Log.i(TAG, CATEGORY_VM)
-        val productList = listOf(
-            "men's clothing",
-            "men's clothing",
-            "women's clothing",
-            "jewelery",
-            "men's clothing",
-            "women's clothing",
-            "jewelery",
-            "women's clothing"
-        )
 
         savedStateHandle.get<String>(categoryId)?.let { categoryId ->
-            val productsFromCategoryList = when(categoryId) {
-                 "all" -> {
-                    productList
-                }
-                else -> {
-                    productList.filter { product ->
-                        product == categoryId
-                    }
-                }
-            }
-
             _categoryState.value = categoryState.value.copy(
-                categoryId = categoryId,
-                productList = productsFromCategoryList
+                categoryId = categoryId
             )
         }
+
+        getProducts(_categoryState.value.categoryId)
     }
 
     fun onEvent(event: CategoryEvent) {
@@ -72,6 +55,26 @@ class CategoryViewModel @Inject constructor(
                 _categoryState.value = categoryState.value.copy(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
+            }
+        }
+    }
+
+    fun getProducts(categoryId: String) {
+        viewModelScope.launch {
+            shopUseCases.getProductsUseCase(categoryId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        response.data?.let { products ->
+                            _categoryState.value = categoryState.value.copy(
+                                productList = products
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                    }
+                }
             }
         }
     }

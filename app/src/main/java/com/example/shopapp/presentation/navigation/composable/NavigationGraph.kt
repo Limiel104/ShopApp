@@ -78,7 +78,7 @@ fun NavigationGraph(
                 navArgument(
                     name = productId
                 ) {
-                    type = NavType.StringType
+                    type = NavType.IntType
                 }
             )
         ) {

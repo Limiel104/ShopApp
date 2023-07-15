@@ -19,21 +19,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.FAVOURITE_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productName
+import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun ProductDetailsBottomSheet(
-    name: String,
-    price: String,
-    description: String,
+    product: Product,
     isProductInFavourites: Boolean
 ) {
     Column(
@@ -59,7 +59,7 @@ fun ProductDetailsBottomSheet(
         }
 
         Text(
-            text = name,
+            text = product.title,
             fontWeight = FontWeight.Light,
             fontSize = 14.sp,
             modifier = Modifier
@@ -74,7 +74,7 @@ fun ProductDetailsBottomSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = price,
+                text = product.price,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp
             )
@@ -96,7 +96,7 @@ fun ProductDetailsBottomSheet(
         )
 
         Text(
-            text = description,
+            text = product.description,
             fontWeight = FontWeight.Light,
             fontSize = 12.sp,
             modifier = Modifier
@@ -116,10 +116,17 @@ fun ProductDetailsBottomSheet(
 @Composable
 fun ProductDetailsBottomSheetPreview() {
     ShopAppTheme {
-        ProductDetailsBottomSheet(
-            name = productName,
+        val product = Product(
+            id = 1,
+            title = productTitle,
             price = productPrice,
             description = productDescription,
+            category = Constants.categoryName,
+            imageUrl = Constants.emptyString
+        )
+
+        ProductDetailsBottomSheet(
+            product = product,
             isProductInFavourites = true
         )
     }
@@ -129,10 +136,17 @@ fun ProductDetailsBottomSheetPreview() {
 @Composable
 fun ProductDetailsBottomSheetFalsePreview() {
     ShopAppTheme {
-        ProductDetailsBottomSheet(
-            name = productName,
+        val product = Product(
+            id = 1,
+            title = productTitle,
             price = productPrice,
             description = productDescription,
+            category = Constants.categoryName,
+            imageUrl = Constants.emptyString
+        )
+
+        ProductDetailsBottomSheet(
+            product = product,
             isProductInFavourites = false
         )
     }
