@@ -29,10 +29,16 @@ fun FavouriteScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG, FAVOURITE_SCREEN_LE)
             when(event) {
                 is FavouriteUiEvent.NavigateToProductDetails -> {
-                    Log.i(TAG, FAVOURITE_SCREEN_LE)
                     navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
+                }
+                is FavouriteUiEvent.NavigateToLogin -> {
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+                is FavouriteUiEvent.NavigateToSignup -> {
+                    navController.navigate(Screen.SignupScreen.route)
                 }
             }
         }
@@ -52,8 +58,8 @@ fun FavouriteScreen(
         UserNotLoggedInContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            onLogin = {},
-            onSignup = {}
+            onLogin = { viewModel.onEvent(FavouriteEvent.OnLogin) },
+            onSignup = { viewModel.onEvent(FavouriteEvent.OnSignup) }
         )
     }
 }

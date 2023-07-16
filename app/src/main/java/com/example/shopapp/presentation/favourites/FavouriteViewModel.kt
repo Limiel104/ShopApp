@@ -52,6 +52,17 @@ class FavouriteViewModel @Inject constructor(
                     _eventFlow.emit(FavouriteUiEvent.NavigateToProductDetails(event.value))
                 }
             }
+            is FavouriteEvent.OnLogin -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(FavouriteUiEvent.NavigateToLogin)
+                }
+
+            }
+            is FavouriteEvent.OnSignup -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(FavouriteUiEvent.NavigateToSignup)
+                }
+            }
         }
     }
 }

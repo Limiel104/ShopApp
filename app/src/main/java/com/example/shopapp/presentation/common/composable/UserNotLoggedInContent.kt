@@ -69,7 +69,6 @@ fun UserNotLoggedInContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .padding(bottom = 10.dp)
                     .weight(1f),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
