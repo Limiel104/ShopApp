@@ -39,6 +39,11 @@ class LoginViewModel(
                 )
                 Log.i(TAG,"password " + _loginState.value.password)
             }
+            is LoginEvent.OnSignupButtonSelected -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(LoginUiEvent.NavigateToSignup)
+                }
+            }
             is LoginEvent.Login -> {
                 login()
             }

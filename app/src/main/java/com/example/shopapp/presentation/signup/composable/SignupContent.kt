@@ -34,13 +34,16 @@ import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
 @Composable
 fun SignupContent(
     bottomBarHeight: Dp,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
     onSignup: () -> Unit
 ) {
-    val email = "email@email.com"
     val emailError = ""
-    val password = "password"
     val passwordError = ""
-    val confirmPassword = "confirmPassword"
     val confirmPasswordError = ""
     val isLoading = false
 
@@ -64,10 +67,10 @@ fun SignupContent(
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
-                placeholder = "placeholder",
+                placeholder = stringResource(id = R.string.email),
                 testTag = SIGNUP_EMAIL_TF,
                 isError = emailError != null,
-                onValueChange = {},
+                onValueChange = { onEmailChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 )
@@ -85,10 +88,10 @@ fun SignupContent(
             ShopTextFieldItem(
                 text = password,
                 label = stringResource(id = R.string.password),
-                placeholder = "placeholder",
+                placeholder = stringResource(id = R.string.password),
                 testTag = SIGNUP_PASSWORD_TF,
                 isError = passwordError != null,
-                onValueChange = {},
+                onValueChange = { onPasswordChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 )
@@ -106,10 +109,10 @@ fun SignupContent(
             ShopTextFieldItem(
                 text = confirmPassword,
                 label = stringResource(id = R.string.confirm_password),
-                placeholder = "placeholder",
+                placeholder = stringResource(id = R.string.confirm_password),
                 testTag = SIGNUP_CONFIRM_PASSWORD_TF,
                 isError = confirmPasswordError != null,
-                onValueChange = {},
+                onValueChange = { onConfirmPasswordChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 )
@@ -150,6 +153,12 @@ fun SignupContentPreview() {
     ShopAppTheme() {
         SignupContent(
             bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            password = "abcdef2+A",
+            confirmPassword = "abcdef2+A",
+            onEmailChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
             onSignup = {}
         )
     }
