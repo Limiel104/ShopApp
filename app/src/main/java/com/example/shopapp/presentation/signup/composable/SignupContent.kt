@@ -30,6 +30,9 @@ import com.example.shopapp.util.Constants.SIGNUP_EMAIL_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
+import com.example.shopapp.util.Constants.confirmPasswordError
+import com.example.shopapp.util.Constants.emailEmptyError
+import com.example.shopapp.util.Constants.passwordEmptyError
 
 @Composable
 fun SignupContent(
@@ -154,11 +157,31 @@ fun SignupContentPreview() {
         SignupContent(
             bottomBarHeight = 56.dp,
             email = "email@wp.com",
-            emailError = "",
+            emailError = null,
             password = "abcdef2+A",
-            passwordError = "",
+            passwordError = null,
             confirmPassword = "abcdef2+A",
-            confirmPasswordError = "",
+            confirmPasswordError = null,
+            onEmailChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
+            onSignup = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SignupContentErrorPreview() {
+    ShopAppTheme() {
+        SignupContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = emailEmptyError,
+            password = "abcdef2+A",
+            passwordError = passwordEmptyError,
+            confirmPassword = "abcdeff2+A",
+            confirmPasswordError = confirmPasswordError,
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},

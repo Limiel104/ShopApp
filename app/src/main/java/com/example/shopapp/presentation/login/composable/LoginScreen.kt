@@ -22,7 +22,9 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val email = viewModel.loginState.value.email
+    val emailError = viewModel.loginState.value.emailError
     val password = viewModel.loginState.value.password
+    val passwordError = viewModel.loginState.value.passwordError
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -43,7 +45,9 @@ fun LoginScreen(
     LoginContent(
         bottomBarHeight = bottomBarHeight,
         email = email,
+        emailError = emailError,
         password = password,
+        passwordError = passwordError,
         onEmailChange = { viewModel.onEvent(LoginEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) },
         onLogin = { viewModel.onEvent(LoginEvent.Login) },

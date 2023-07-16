@@ -31,19 +31,21 @@ import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
 import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
+import com.example.shopapp.util.Constants.emailEmptyError
+import com.example.shopapp.util.Constants.passwordEmptyError
 
 @Composable
 fun LoginContent(
     bottomBarHeight: Dp,
     email: String,
+    emailError: String?,
     password: String,
+    passwordError: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
-    val emailError = ""
-    val passwordError = ""
     val isLoading = false
 
     Column(
@@ -152,7 +154,27 @@ fun LoginContentPreview() {
         LoginContent(
             bottomBarHeight = 56.dp,
             email = "email@wp.com",
-            password = "abcdefg+A",
+            emailError = null,
+            password = "abcdef2+A",
+            passwordError = null,
+            onEmailChange = {},
+            onPasswordChange = {},
+            onLogin = {},
+            onSignup = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginContentErrorPreview() {
+    ShopAppTheme() {
+        LoginContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = emailEmptyError,
+            password = "abcdef2+A",
+            passwordError = passwordEmptyError,
             onEmailChange = {},
             onPasswordChange = {},
             onLogin = {},
