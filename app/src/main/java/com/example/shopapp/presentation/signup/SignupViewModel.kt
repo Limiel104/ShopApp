@@ -5,13 +5,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.SIGNUP_VM
 import com.example.shopapp.util.Constants.TAG
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignupViewModel(
+@HiltViewModel
+class SignupViewModel @Inject constructor(
+    private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
     private val _signupState = mutableStateOf(SignupState())
@@ -45,14 +50,48 @@ class SignupViewModel(
                 Log.i(TAG,"password " + _signupState.value.confirmPassword)
             }
             is SignupEvent.Signup -> {
-                signup()
+                val email = _signupState.value.email
+                val password = _signupState.value.password
+                val confirmPassword = _signupState.value.confirmPassword
+                signup(email,password,confirmPassword)
             }
         }
     }
 
-    private fun signup() {
+    private fun signup(email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
-            _eventFlow.emit(SignupUiEvent.Signup)
+            if(isValidationSuccessful(email,password,confirmPassword)){
+                _eventFlow.emit(SignupUiEvent.Signup)
+            }
+            else {
+                Log.i("TAG", "Invalid signup credentials")
+            }
         }
+    }
+
+    fun isValidationSuccessful(
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        val emailValidationResult = shopUseCases.validateEmailUseCase(email)
+        val passwordValidationResult = shopUseCases.validateSignupPasswordUseCase(password)
+        val confirmPasswordValidationResult = shopUseCases.validateConfirmPasswordUseCase(password, confirmPassword)
+
+        val hasError = listOf(
+            emailValidationResult,
+            passwordValidationResult,
+            confirmPasswordValidationResult
+        ).any { !it.isSuccessful }
+
+        if(hasError) {
+            _signupState.value = signupState.value.copy(
+                emailError =  emailValidationResult.errorMessage,
+                passwordError = passwordValidationResult.errorMessage,
+                confirmPasswordError = confirmPasswordValidationResult.errorMessage
+            )
+            return false
+        }
+        return true
     }
 }

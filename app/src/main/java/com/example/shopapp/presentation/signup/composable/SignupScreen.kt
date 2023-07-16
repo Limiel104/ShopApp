@@ -21,8 +21,11 @@ fun SignupScreen(
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     val email = viewModel.signupState.value.email
+    val emailError = viewModel.signupState.value.emailError
     val password = viewModel.signupState.value.password
+    val passwordError = viewModel.signupState.value.passwordError
     val confirmPassword = viewModel.signupState.value.confirmPassword
+    val confirmPasswordError = viewModel.signupState.value.confirmPasswordError
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -40,8 +43,11 @@ fun SignupScreen(
     SignupContent(
         bottomBarHeight = bottomBarHeight,
         email = email,
+        emailError = emailError,
         password = password,
+        passwordError = passwordError,
         confirmPassword = confirmPassword,
+        confirmPasswordError = confirmPasswordError,
         onEmailChange = { viewModel.onEvent(SignupEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(SignupEvent.EnteredPassword(it)) },
         onConfirmPasswordChange = { viewModel.onEvent(SignupEvent.EnteredConfirmPassword(it)) },

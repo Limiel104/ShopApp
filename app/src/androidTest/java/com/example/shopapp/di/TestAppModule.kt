@@ -10,6 +10,10 @@ import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
+import com.example.shopapp.domain.use_case.ValidateEmailUseCase
+import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
+import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +53,11 @@ object TestAppModule {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
             getCategoriesUseCase = GetCategoriesUseCase(),
-            getProductUseCase = GetProductUseCase(productRepository)
+            getProductUseCase = GetProductUseCase(productRepository),
+            validateEmailUseCase = ValidateEmailUseCase(),
+            validateLoginPasswordUseCase = ValidateLoginPasswordUseCase(),
+            validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
+            validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase()
         )
     }
 }

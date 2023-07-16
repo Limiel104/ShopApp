@@ -82,4 +82,14 @@ object Constants {
     const val PRODUCT_DETAILS_SCREEN_LE: String = "ProductDetailsScreen Launched Effect"
     const val LOGIN_SCREEN_LE: String = "LoginScreen ViewModel"
     const val SIGNUP_SCREEN_LE: String = "SignupScreen ViewModel"
+
+    //ERRORS
+    const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
+    const val emailEmptyError: String = "Email can't be empty"
+    const val passwordEmptyError: String = "Password can't be empty"
+    const val shortPasswordError: String = "Password is too short"
+    const val containsAtLeastOneDigitError: String = "Password should have at least one digit"
+    const val containsAtLeastOneCapitalLetterError: String = "Password should have at least one capital letter"
+    const val containsAtLeastOneSpecialCharError: String = "Password should have at least one special character"
+    const val confirmPasswordError: String = "Passwords don't mach"
 }

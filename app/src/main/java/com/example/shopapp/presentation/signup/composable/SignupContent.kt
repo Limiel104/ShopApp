@@ -35,16 +35,16 @@ import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
 fun SignupContent(
     bottomBarHeight: Dp,
     email: String,
+    emailError: String?,
     password: String,
+    passwordError: String?,
     confirmPassword: String,
+    confirmPasswordError: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
     onSignup: () -> Unit
 ) {
-    val emailError = ""
-    val passwordError = ""
-    val confirmPasswordError = ""
     val isLoading = false
 
     Column(
@@ -154,8 +154,11 @@ fun SignupContentPreview() {
         SignupContent(
             bottomBarHeight = 56.dp,
             email = "email@wp.com",
+            emailError = "",
             password = "abcdef2+A",
+            passwordError = "",
             confirmPassword = "abcdef2+A",
+            confirmPasswordError = "",
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
