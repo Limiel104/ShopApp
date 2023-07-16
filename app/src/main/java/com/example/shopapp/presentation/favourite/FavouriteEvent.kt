@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites
+package com.example.shopapp.presentation.favourite
 
 sealed class FavouriteEvent {
     data class OnProductSelected(val value: String): FavouriteEvent()

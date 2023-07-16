@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites.composable
+package com.example.shopapp.presentation.favourite.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

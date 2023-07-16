@@ -72,6 +72,7 @@ object Constants {
     const val FAVOURITE_VM: String = "Favourite ViewModel"
     const val HOME_VM: String = "Home ViewModel"
     const val PRODUCT_DETAILS_VM: String = "ProductDetails ViewModel"
+    const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
     const val FAVOURITE_SCREEN_LE: String = "FavouriteScreen Launched Effect"

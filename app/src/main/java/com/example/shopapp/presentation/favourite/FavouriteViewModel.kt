@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites
+package com.example.shopapp.presentation.favourite
 
 import android.util.Log
 import androidx.compose.runtime.State

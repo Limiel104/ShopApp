@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites.composable
+package com.example.shopapp.presentation.favourite.composable
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertContentDescriptionContains

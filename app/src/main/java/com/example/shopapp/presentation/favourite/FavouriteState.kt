@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites
+package com.example.shopapp.presentation.favourite
 
 data class FavouriteState (
     val productList: List<String> = emptyList(),

@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites
+package com.example.shopapp.presentation.favourite
 
 import com.example.shopapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat

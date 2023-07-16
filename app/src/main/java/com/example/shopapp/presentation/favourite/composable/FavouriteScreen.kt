@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourites.composable
+package com.example.shopapp.presentation.favourite.composable
 
 import android.util.Log
 import androidx.compose.material.rememberScaffoldState
@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.presentation.favourites.FavouriteEvent
-import com.example.shopapp.presentation.favourites.FavouriteUiEvent
-import com.example.shopapp.presentation.favourites.FavouriteViewModel
+import com.example.shopapp.presentation.favourite.FavouriteEvent
+import com.example.shopapp.presentation.favourite.FavouriteUiEvent
+import com.example.shopapp.presentation.favourite.FavouriteViewModel
 import com.example.shopapp.util.Constants.FAVOURITE_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.productId
