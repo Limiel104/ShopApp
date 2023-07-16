@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
@@ -31,7 +32,10 @@ import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
 
 @Composable
-fun SignupContent() {
+fun SignupContent(
+    bottomBarHeight: Dp,
+    onSignup: () -> Unit
+) {
     val email = "email@email.com"
     val emailError = ""
     val password = "password"
@@ -44,7 +48,8 @@ fun SignupContent() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .padding(bottom = bottomBarHeight),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -122,7 +127,7 @@ fun SignupContent() {
             ShopButtonItem(
                 text = stringResource(id = R.string.signup),
                 testTag = SIGNUP_BTN,
-                onClick = {}
+                onClick = { onSignup() }
             )
         }
     }
@@ -143,6 +148,9 @@ fun SignupContent() {
 @Composable
 fun SignupContentPreview() {
     ShopAppTheme() {
-        SignupContent()
+        SignupContent(
+            bottomBarHeight = 56.dp,
+            onSignup = {}
+        )
     }
 }

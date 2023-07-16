@@ -90,12 +90,18 @@ fun NavigationGraph(
         composable(
             route = Screen.LoginScreen.route
         ) {
-            LoginScreen()
+            LoginScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.SignupScreen.route
         ) {
-            SignupScreen()
+            SignupScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
     }
 }

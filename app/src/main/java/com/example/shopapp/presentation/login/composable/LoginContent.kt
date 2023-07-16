@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
@@ -32,10 +33,16 @@ import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
 import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
 
 @Composable
-fun LoginContent() {
-    val email = "email@email.com"
+fun LoginContent(
+    bottomBarHeight: Dp,
+    email: String,
+    password: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLogin: () -> Unit,
+    onSignup: () -> Unit
+) {
     val emailError = ""
-    val password = "password"
     val passwordError = ""
     val isLoading = false
 
@@ -43,7 +50,8 @@ fun LoginContent() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .padding(bottom = bottomBarHeight),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -58,10 +66,10 @@ fun LoginContent() {
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
-                placeholder = "placeholder",
+                placeholder = stringResource(id = R.string.email),
                 testTag = LOGIN_EMAIL_TF,
                 isError = emailError != null,
-                onValueChange = {},
+                onValueChange = { onEmailChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 )
@@ -79,10 +87,10 @@ fun LoginContent() {
             ShopTextFieldItem(
                 text = password,
                 label = stringResource(id = R.string.password),
-                placeholder = "placeholder",
+                placeholder = stringResource(id = R.string.password),
                 testTag = LOGIN_PASSWORD_TF,
                 isError = passwordError != null,
-                onValueChange = {},
+                onValueChange = { onPasswordChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
@@ -100,7 +108,7 @@ fun LoginContent() {
         ShopButtonItem(
             text = stringResource(id = R.string.login),
             testTag = LOGIN_BTN,
-            onClick = {}
+            onClick = { onLogin() }
         )
 
         Row(
@@ -119,7 +127,7 @@ fun LoginContent() {
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .clickable {}
+                    .clickable { onSignup() }
                     .testTag(LOGIN_SIGNUP_BTN)
             )
         }
@@ -141,6 +149,14 @@ fun LoginContent() {
 @Composable
 fun LoginContentPreview() {
     ShopAppTheme() {
-        LoginContent()
+        LoginContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            password = "abcdefg+A",
+            onEmailChange = {},
+            onPasswordChange = {},
+            onLogin = {},
+            onSignup = {}
+        )
     }
 }
