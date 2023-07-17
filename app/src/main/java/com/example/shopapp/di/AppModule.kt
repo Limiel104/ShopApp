@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.example.shopapp.data.local.ShopDatabase
 import com.example.shopapp.data.remote.FakeShopApi
+import com.example.shopapp.data.repository.AuthRepositoryImpl
 import com.example.shopapp.data.repository.ProductRepositoryImpl
+import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
@@ -14,6 +16,7 @@ import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +54,17 @@ object AppModule {
     @Singleton
     fun provideProductRepository(api: FakeShopApi, db: ShopDatabase): ProductRepository {
         return ProductRepositoryImpl(api,db.productDao)
+    }
+
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(firebaseAuth: FirebaseAuth): AuthRepository {
+        return AuthRepositoryImpl(firebaseAuth)
     }
 
     @Provides
