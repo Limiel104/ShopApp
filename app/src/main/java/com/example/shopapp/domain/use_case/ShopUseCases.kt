@@ -7,5 +7,9 @@ data class ShopUseCases(
     val validateEmailUseCase: ValidateEmailUseCase,
     val validateLoginPasswordUseCase: ValidateLoginPasswordUseCase,
     val validateSignupPasswordUseCase: ValidateSignupPasswordUseCase,
-    val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase
+    val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase,
+    val getCurrentUserUseCase: GetCurrentUserUseCase,
+    val loginUseCase: LoginUseCase,
+    val signupUseCase: SignupUseCase,
+    val logoutUseCase: LogoutUseCase
 )

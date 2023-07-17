@@ -9,9 +9,13 @@ import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
+import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
+import com.example.shopapp.domain.use_case.LoginUseCase
+import com.example.shopapp.domain.use_case.LogoutUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
@@ -69,7 +73,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideShopUseCases(productRepository: ProductRepository): ShopUseCases {
+    fun provideShopUseCases(
+        productRepository: ProductRepository,
+        authRepository: AuthRepository
+    ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
             getCategoriesUseCase = GetCategoriesUseCase(),
@@ -77,7 +84,11 @@ object AppModule {
             validateEmailUseCase = ValidateEmailUseCase(),
             validateLoginPasswordUseCase = ValidateLoginPasswordUseCase(),
             validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
-            validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase()
+            validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
+            getCurrentUserUseCase = GetCurrentUserUseCase(authRepository),
+            loginUseCase = LoginUseCase(authRepository),
+            signupUseCase = SignupUseCase(authRepository),
+            logoutUseCase = LogoutUseCase(authRepository)
         )
     }
 }
