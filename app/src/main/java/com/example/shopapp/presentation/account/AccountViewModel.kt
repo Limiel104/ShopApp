@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.ACCOUNT_VM
 import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-
+    private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
     private val _accountState = mutableStateOf(AccountState())
@@ -26,6 +27,8 @@ class AccountViewModel @Inject constructor(
 
     init {
         Log.i(TAG, ACCOUNT_VM)
+
+        checkIfUserIsLoggedIn()
 
         _accountState.value = accountState.value.copy(
             name = "John"
@@ -44,6 +47,15 @@ class AccountViewModel @Inject constructor(
                     _eventFlow.emit(AccountUiEvent.NavigateToSignup)
                 }
             }
+        }
+    }
+
+    private fun checkIfUserIsLoggedIn() {
+        viewModelScope.launch {
+            val currentUser = shopUseCases.getCurrentUserUseCase()
+            _accountState.value = accountState.value.copy(
+                isUserLoggedIn = currentUser != null
+            )
         }
     }
 }
