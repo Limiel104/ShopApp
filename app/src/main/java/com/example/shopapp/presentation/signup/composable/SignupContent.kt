@@ -59,14 +59,27 @@ fun SignupContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(
-            text = stringResource(id = R.string.create_account),
-            fontSize = 32.sp,
-            color = MaterialTheme.colors.secondary,
-            fontWeight = FontWeight.SemiBold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.create_account),
+                fontSize = 32.sp,
+                color = MaterialTheme.colors.secondary,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
 
-        Column() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2F),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
@@ -85,8 +98,6 @@ fun SignupContent(
                     testTag = SIGNUP_EMAIL_ERROR
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             ShopTextFieldItem(
                 text = password,
@@ -107,8 +118,6 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
             ShopTextFieldItem(
                 text = confirmPassword,
                 label = stringResource(id = R.string.confirm_password),
@@ -127,8 +136,6 @@ fun SignupContent(
                     testTag = SIGNUP_CONFIRM_PASSWORD_ERROR
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             ShopButtonItem(
                 text = stringResource(id = R.string.signup),

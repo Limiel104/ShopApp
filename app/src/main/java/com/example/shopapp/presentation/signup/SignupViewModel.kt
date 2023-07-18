@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.SIGNUP_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,37 +36,55 @@ class SignupViewModel @Inject constructor(
                 _signupState.value = signupState.value.copy(
                     email = event.value
                 )
-                Log.i(TAG,"login " + _signupState.value.email)
             }
             is SignupEvent.EnteredPassword -> {
                 _signupState.value = signupState.value.copy(
                     password = event.value
                 )
-                Log.i(TAG,"password " + _signupState.value.password)
             }
             is SignupEvent.EnteredConfirmPassword -> {
                 _signupState.value = signupState.value.copy(
                     confirmPassword = event.value
                 )
-                Log.i(TAG,"password " + _signupState.value.confirmPassword)
             }
             is SignupEvent.Signup -> {
                 val email = _signupState.value.email
                 val password = _signupState.value.password
                 val confirmPassword = _signupState.value.confirmPassword
-                signup(email,password,confirmPassword)
+
+                if(isValidationSuccessful(email,password,confirmPassword)){
+                    signup(email,password)
+                }
+                else {
+                    Log.i(TAG, "Form validation error")
+                }
             }
         }
     }
 
-    private fun signup(email: String, password: String, confirmPassword: String) {
+    private fun signup(email: String, password: String) {
         viewModelScope.launch {
-            if(isValidationSuccessful(email,password,confirmPassword)){
-                _eventFlow.emit(SignupUiEvent.Signup)
+            val signupResponse = shopUseCases.signupUseCase(email,password)
+
+            when(signupResponse) {
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    Log.i(TAG,"Signup was successful")
+                    _eventFlow.emit(SignupUiEvent.Signup)
+                }
+                is Resource.Error -> {
+                    Log.i(TAG, "Signup Error")
+                    _signupState.value = signupState.value.copy(
+                        emailError =  null,
+                        passwordError = null,
+                        confirmPasswordError = null
+                    )
+
+                    val errorMessage = signupResponse.message
+                    _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                }
             }
-            else {
-                Log.i("TAG", "Invalid signup credentials")
-            }
+
         }
     }
 

@@ -1,8 +1,10 @@
 package com.example.shopapp.presentation.signup.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -26,12 +28,15 @@ fun SignupScreen(
     val passwordError = viewModel.signupState.value.passwordError
     val confirmPassword = viewModel.signupState.value.confirmPassword
     val confirmPasswordError = viewModel.signupState.value.confirmPasswordError
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             Log.i(TAG,SIGNUP_SCREEN_LE)
             when(event) {
-                is SignupUiEvent.ShowErrorMessage -> {}
+                is SignupUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
                 is SignupUiEvent.Signup -> {
                     val destination = getLastDestination(navController)
                     navController.popBackStack(destination,false)
