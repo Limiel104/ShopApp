@@ -1,8 +1,10 @@
 package com.example.shopapp.presentation.login.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -25,12 +27,15 @@ fun LoginScreen(
     val emailError = viewModel.loginState.value.emailError
     val password = viewModel.loginState.value.password
     val passwordError = viewModel.loginState.value.passwordError
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             Log.i(Constants.TAG, LOGIN_SCREEN_LE)
             when(event) {
-                is LoginUiEvent.ShowErrorMessage -> {}
+                is LoginUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
                 is LoginUiEvent.Login -> {
                     val destination = getLastDestination(navController)
                     navController.popBackStack(destination,false)

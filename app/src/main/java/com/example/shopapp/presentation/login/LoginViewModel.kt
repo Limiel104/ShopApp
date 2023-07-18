@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.LOGIN_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,13 +36,11 @@ class LoginViewModel @Inject constructor(
                 _loginState.value = loginState.value.copy(
                     email = event.value
                 )
-                Log.i(TAG,"login " + _loginState.value.email)
             }
             is LoginEvent.EnteredPassword -> {
                 _loginState.value = loginState.value.copy(
                     password = event.value
                 )
-                Log.i(TAG,"password " + _loginState.value.password)
             }
             is LoginEvent.OnSignupButtonSelected -> {
                 viewModelScope.launch {
@@ -51,15 +50,38 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.Login -> {
                 val email = _loginState.value.email
                 val password = _loginState.value.password
-                login(email,password)
+
+                if(isValidationSuccessful(email,password)) {
+                    login(email,password)
+                }
+                else {
+                    Log.i(TAG, "Form validation error")
+                }
             }
         }
     }
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            if(isValidationSuccessful(email,password))
-            _eventFlow.emit(LoginUiEvent.Login)
+            val loginResponse = shopUseCases.loginUseCase(email,password)
+
+            when(loginResponse) {
+                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    Log.i(TAG,"Login was successful")
+                    _eventFlow.emit(LoginUiEvent.Login)
+                }
+                is Resource.Error -> {
+                    Log.i("TAG", "Login Error")
+                    _loginState.value = loginState.value.copy(
+                        emailError = null,
+                        passwordError = null
+                    )
+
+                    val errorMessage = loginResponse.message
+                    _eventFlow.emit(LoginUiEvent.ShowErrorMessage(errorMessage!!))
+                }
+            }
         }
     }
 

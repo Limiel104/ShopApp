@@ -57,14 +57,27 @@ fun LoginContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(
-            text = stringResource(id = R.string.login),
-            color = MaterialTheme.colors.secondary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.SemiBold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.login),
+                color = MaterialTheme.colors.secondary,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
 
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(2F),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
@@ -83,8 +96,6 @@ fun LoginContent(
                     testTag = LOGIN_EMAIL_ERROR
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             ShopTextFieldItem(
                 text = password,
@@ -105,33 +116,33 @@ fun LoginContent(
                     testTag = LOGIN_PASSWORD_ERROR
                 )
             }
-        }
 
-        ShopButtonItem(
-            text = stringResource(id = R.string.login),
-            testTag = LOGIN_BTN,
-            onClick = { onLogin() }
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(id = R.string.no_account_text)
+            ShopButtonItem(
+                text = stringResource(id = R.string.login),
+                testTag = LOGIN_BTN,
+                onClick = { onLogin() }
             )
 
-            Spacer(modifier = Modifier.width(5.dp))
-
-            Text(
-                text = stringResource(id = R.string.signup),
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.SemiBold,
+            Row(
                 modifier = Modifier
-                    .clickable { onSignup() }
-                    .testTag(LOGIN_SIGNUP_BTN)
-            )
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no_account_text)
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                Text(
+                    text = stringResource(id = R.string.signup),
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .clickable { onSignup() }
+                        .testTag(LOGIN_SIGNUP_BTN)
+                )
+            }
         }
     }
 
