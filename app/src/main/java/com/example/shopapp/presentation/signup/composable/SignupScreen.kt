@@ -28,6 +28,7 @@ fun SignupScreen(
     val passwordError = viewModel.signupState.value.passwordError
     val confirmPassword = viewModel.signupState.value.confirmPassword
     val confirmPasswordError = viewModel.signupState.value.confirmPasswordError
+    val isLoading = viewModel.signupState.value.isLoading
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -53,6 +54,7 @@ fun SignupScreen(
         passwordError = passwordError,
         confirmPassword = confirmPassword,
         confirmPasswordError = confirmPasswordError,
+        isLoading = isLoading,
         onEmailChange = { viewModel.onEvent(SignupEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(SignupEvent.EnteredPassword(it)) },
         onConfirmPasswordChange = { viewModel.onEvent(SignupEvent.EnteredConfirmPassword(it)) },

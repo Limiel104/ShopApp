@@ -64,27 +64,31 @@ class SignupViewModel @Inject constructor(
 
     private fun signup(email: String, password: String) {
         viewModelScope.launch {
-            val signupResponse = shopUseCases.signupUseCase(email,password)
+            shopUseCases.signupUseCase(email,password).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading = ${response.isLoading}")
+                       _signupState.value = signupState.value.copy(
+                           isLoading = response.isLoading
+                       )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Signup was successful")
+                        _eventFlow.emit(SignupUiEvent.Signup)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, "Signup Error")
+                        _signupState.value = signupState.value.copy(
+                            emailError =  null,
+                            passwordError = null,
+                            confirmPasswordError = null
+                        )
 
-            when(signupResponse) {
-                is Resource.Loading -> {}
-                is Resource.Success -> {
-                    Log.i(TAG,"Signup was successful")
-                    _eventFlow.emit(SignupUiEvent.Signup)
-                }
-                is Resource.Error -> {
-                    Log.i(TAG, "Signup Error")
-                    _signupState.value = signupState.value.copy(
-                        emailError =  null,
-                        passwordError = null,
-                        confirmPasswordError = null
-                    )
-
-                    val errorMessage = signupResponse.message
-                    _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                        val errorMessage = response.message
+                        _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                    }
                 }
             }
-
         }
     }
 

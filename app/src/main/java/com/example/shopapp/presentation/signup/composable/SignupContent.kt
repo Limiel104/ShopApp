@@ -43,13 +43,12 @@ fun SignupContent(
     passwordError: String?,
     confirmPassword: String,
     confirmPasswordError: String?,
+    isLoading: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
     onSignup: () -> Unit
 ) {
-    val isLoading = false
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -169,6 +168,7 @@ fun SignupContentPreview() {
             passwordError = null,
             confirmPassword = "abcdef2+A",
             confirmPasswordError = null,
+            isLoading = false,
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
@@ -189,6 +189,7 @@ fun SignupContentErrorPreview() {
             passwordError = passwordEmptyError,
             confirmPassword = "abcdeff2+A",
             confirmPasswordError = confirmPasswordError,
+            isLoading = false,
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},

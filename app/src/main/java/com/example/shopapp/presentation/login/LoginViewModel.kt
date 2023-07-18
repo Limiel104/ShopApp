@@ -63,23 +63,28 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            val loginResponse = shopUseCases.loginUseCase(email,password)
-
-            when(loginResponse) {
-                is Resource.Loading -> {}
-                is Resource.Success -> {
+            shopUseCases.loginUseCase(email,password).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading = ${response.isLoading}")
+                        _loginState.value = loginState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
                     Log.i(TAG,"Login was successful")
                     _eventFlow.emit(LoginUiEvent.Login)
-                }
-                is Resource.Error -> {
-                    Log.i("TAG", "Login Error")
-                    _loginState.value = loginState.value.copy(
-                        emailError = null,
-                        passwordError = null
-                    )
+                    }
+                    is Resource.Error -> {
+                        Log.i("TAG", "Login Error")
+                        _loginState.value = loginState.value.copy(
+                            emailError = null,
+                            passwordError = null
+                        )
 
-                    val errorMessage = loginResponse.message
-                    _eventFlow.emit(LoginUiEvent.ShowErrorMessage(errorMessage!!))
+                        val errorMessage = response.message
+                        _eventFlow.emit(LoginUiEvent.ShowErrorMessage(errorMessage!!))
+                    }
                 }
             }
         }

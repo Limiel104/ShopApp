@@ -43,11 +43,10 @@ fun LoginContent(
     passwordError: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    isLoading: Boolean,
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
-    val isLoading = false
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -170,6 +169,7 @@ fun LoginContentPreview() {
             passwordError = null,
             onEmailChange = {},
             onPasswordChange = {},
+            isLoading = false,
             onLogin = {},
             onSignup = {}
         )
@@ -188,6 +188,7 @@ fun LoginContentErrorPreview() {
             passwordError = passwordEmptyError,
             onEmailChange = {},
             onPasswordChange = {},
+            isLoading = false,
             onLogin = {},
             onSignup = {}
         )

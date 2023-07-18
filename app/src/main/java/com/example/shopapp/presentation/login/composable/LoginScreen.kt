@@ -27,6 +27,7 @@ fun LoginScreen(
     val emailError = viewModel.loginState.value.emailError
     val password = viewModel.loginState.value.password
     val passwordError = viewModel.loginState.value.passwordError
+    val isLoading = viewModel.loginState.value.isLoading
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -55,6 +56,7 @@ fun LoginScreen(
         passwordError = passwordError,
         onEmailChange = { viewModel.onEvent(LoginEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) },
+        isLoading = isLoading,
         onLogin = { viewModel.onEvent(LoginEvent.Login) },
         onSignup = { viewModel.onEvent(LoginEvent.OnSignupButtonSelected) }
     )
