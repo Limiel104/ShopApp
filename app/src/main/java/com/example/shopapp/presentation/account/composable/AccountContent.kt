@@ -21,13 +21,15 @@ import com.example.shopapp.R
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
+import com.example.shopapp.util.Constants.LOGOUT_BTN
 
 @Composable
 fun AccountContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
     userName: String,
-    userClubPoints: Int
+    userClubPoints: Int,
+    onLogout: () -> Unit
 ) {
     val coupons = listOf(10,20,50)
 
@@ -81,6 +83,14 @@ fun AccountContent(
                 testTag = ORDERS_AND_RETURNS_BTN,
                 onClick = {}
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            ShopButtonItem(
+                text = stringResource(id = R.string.logout),
+                testTag = LOGOUT_BTN,
+                onClick = { onLogout() }
+            )
         }
     }
 }
@@ -93,7 +103,8 @@ fun AccountContentPreview() {
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             userName = "John",
-            userClubPoints = 234
+            userClubPoints = 234,
+            onLogout = {}
         )
     }
 }

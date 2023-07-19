@@ -47,6 +47,11 @@ class AccountViewModel @Inject constructor(
                     _eventFlow.emit(AccountUiEvent.NavigateToSignup)
                 }
             }
+            is AccountEvent.OnLogout -> {
+                viewModelScope.launch {
+                    logout()
+                }
+            }
         }
     }
 
@@ -57,5 +62,12 @@ class AccountViewModel @Inject constructor(
                 isUserLoggedIn = currentUser != null
             )
         }
+    }
+
+    private fun logout() {
+        shopUseCases.logoutUseCase()
+        _accountState.value = accountState.value.copy(
+            isUserLoggedIn = false
+        )
     }
 }

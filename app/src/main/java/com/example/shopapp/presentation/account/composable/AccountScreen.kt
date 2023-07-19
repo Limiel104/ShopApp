@@ -45,7 +45,8 @@ fun AccountScreen(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
             userName = name,
-            userClubPoints = 234
+            userClubPoints = 234,
+            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }
         )
     }
     else {
