@@ -40,7 +40,9 @@ fun SignupScreen(
                 }
                 is SignupUiEvent.Signup -> {
                     val destination = getLastDestination(navController)
-                    navController.popBackStack(destination,false)
+                    navController.navigate(destination) {
+                        popUpTo(destination) { inclusive = true }
+                    }
                 }
             }
         }
