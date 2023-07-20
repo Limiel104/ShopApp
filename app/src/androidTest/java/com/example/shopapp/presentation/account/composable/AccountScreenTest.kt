@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.account.composable
 
 import androidx.activity.compose.setContent
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -61,8 +62,12 @@ class AccountScreenTest {
                     composable(
                         route = Screen.AccountScreen.route
                     ) {
-                        AccountScreen(
-                            bottomBarHeight = bottomBarHeight.dp
+                        AccountContent(
+                            scaffoldState = rememberScaffoldState(),
+                            bottomBarHeight = bottomBarHeight.dp,
+                            userName = "John",
+                            userClubPoints = 234,
+                            onLogout = {}
                         )
                     }
                 }
