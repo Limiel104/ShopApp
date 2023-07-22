@@ -10,6 +10,7 @@ import com.example.shopapp.data.repository.UserStorageRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddUserUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
@@ -87,7 +88,8 @@ object AppModule {
     @Singleton
     fun provideShopUseCases(
         productRepository: ProductRepository,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        userStorageRepository: UserStorageRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -100,7 +102,8 @@ object AppModule {
             getCurrentUserUseCase = GetCurrentUserUseCase(authRepository),
             loginUseCase = LoginUseCase(authRepository),
             signupUseCase = SignupUseCase(authRepository),
-            logoutUseCase = LogoutUseCase(authRepository)
+            logoutUseCase = LogoutUseCase(authRepository),
+            addUserUseCase = AddUserUseCase(userStorageRepository)
         )
     }
 }

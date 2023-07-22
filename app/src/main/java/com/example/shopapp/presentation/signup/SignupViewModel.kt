@@ -74,7 +74,7 @@ class SignupViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Signup was successful")
-                        _eventFlow.emit(SignupUiEvent.Signup)
+                        addUser()
                     }
                     is Resource.Error -> {
                         Log.i(TAG, "Signup Error")
@@ -84,6 +84,31 @@ class SignupViewModel @Inject constructor(
                             confirmPasswordError = null
                         )
 
+                        val errorMessage = response.message
+                        _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addUser() {
+        viewModelScope.launch {
+            val userUID = shopUseCases.getCurrentUserUseCase()!!.uid
+
+            shopUseCases.addUserUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading = ${response.isLoading}")
+                        _signupState.value = signupState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Added user successfully")
+                        _eventFlow.emit(SignupUiEvent.Signup)
+                    }
+                    is Resource.Error -> {
                         val errorMessage = response.message
                         _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
                     }

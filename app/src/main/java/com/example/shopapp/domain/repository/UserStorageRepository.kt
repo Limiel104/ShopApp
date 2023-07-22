@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserStorageRepository {
 
-    suspend fun addUser(userUID: String): Resource<Boolean>
+    suspend fun addUser(userUID: String): Flow<Resource<Boolean>>
 
     suspend fun getUser(userUID: String): Flow<Resource<List<User>>>
 
-    suspend fun updateUser(user: User): Resource<Boolean>
+    suspend fun updateUser(user: User): Flow<Resource<Boolean>>
 }

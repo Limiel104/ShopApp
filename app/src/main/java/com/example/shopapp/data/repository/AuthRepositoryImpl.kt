@@ -18,8 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Flow<Resource<FirebaseUser>> {
         return flow {
-
-            emit(Resource.Loading(isLoading = true))
+            emit(Resource.Loading(true))
 
             try {
                 val result = firebaseAuth.signInWithEmailAndPassword(email,password).await()
@@ -36,8 +35,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signup(email: String, password: String): Flow<Resource<FirebaseUser>> {
         return flow {
-
-            emit(Resource.Loading(isLoading = true))
+            emit(Resource.Loading(true))
 
             try {
                 val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()

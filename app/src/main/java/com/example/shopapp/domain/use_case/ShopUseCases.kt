@@ -11,5 +11,6 @@ data class ShopUseCases(
     val getCurrentUserUseCase: GetCurrentUserUseCase,
     val loginUseCase: LoginUseCase,
     val signupUseCase: SignupUseCase,
-    val logoutUseCase: LogoutUseCase
+    val logoutUseCase: LogoutUseCase,
+    val addUserUseCase: AddUserUseCase
 )
