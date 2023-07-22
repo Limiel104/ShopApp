@@ -62,7 +62,7 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    private fun signup(email: String, password: String) {
+    fun signup(email: String, password: String) {
         viewModelScope.launch {
             shopUseCases.signupUseCase(email,password).collect { response ->
                 when(response) {
@@ -92,7 +92,7 @@ class SignupViewModel @Inject constructor(
         }
     }
 
-    private fun addUser() {
+    fun addUser() {
         viewModelScope.launch {
             val userUID = shopUseCases.getCurrentUserUseCase()!!.uid
 

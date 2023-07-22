@@ -18,7 +18,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -182,15 +181,13 @@ class LoginViewModelTest {
         val email = "email@email.com"
         val password = "Qwerty1+"
 
-        runBlocking {
-            coEvery {
-                shopUseCases.loginUseCase(email,password)
-            } returns flowOf(Resource.Success(user))
+        coEvery {
+            shopUseCases.loginUseCase(email,password)
+        } returns flowOf(Resource.Success(user))
 
-            loginViewModel.login(email,password)
+        loginViewModel.login(email,password)
 
-            coVerify { shopUseCases.loginUseCase(email,password) }
-        }
+        coVerify { shopUseCases.loginUseCase(email,password) }
     }
 
     @Test
@@ -198,20 +195,18 @@ class LoginViewModelTest {
         val email = "email@email.com"
         val password = "Qwerty1+"
 
-        runBlocking {
-            coEvery {
-                shopUseCases.loginUseCase(email,password)
-            } returns flowOf(Resource.Loading(true))
+        coEvery {
+            shopUseCases.loginUseCase(email,password)
+        } returns flowOf(Resource.Loading(true))
 
-            val initialLoginState = getCurrentLoginState().isLoading
+        val initialLoginState = getCurrentLoginState().isLoading
 
-            loginViewModel.login(email,password)
-            val loadingState = getCurrentLoginState().isLoading
+        loginViewModel.login(email,password)
+        val loadingState = getCurrentLoginState().isLoading
 
-            coVerify { shopUseCases.loginUseCase(email,password) }
-            assertThat(initialLoginState).isFalse()
-            assertThat(loadingState).isTrue()
-        }
+        coVerify { shopUseCases.loginUseCase(email,password) }
+        assertThat(initialLoginState).isFalse()
+        assertThat(loadingState).isTrue()
     }
 
     @Test
@@ -289,7 +284,6 @@ class LoginViewModelTest {
             shopUseCases.validateLoginPasswordUseCase(password)
             shopUseCases.loginUseCase(email,password)
         }
-
         assertThat(loginState.email).isEqualTo(email)
         assertThat(loginState.password).isEqualTo(password)
         assertThat(loginState.emailError).isNull()
@@ -298,7 +292,7 @@ class LoginViewModelTest {
 
     @Test
     fun `event login is not successful when email is blank`() {
-        val email = "email@email.com"
+        val email = ""
         val password = "Qwerty1+"
 
         every {
@@ -310,9 +304,6 @@ class LoginViewModelTest {
         every {
             shopUseCases.validateLoginPasswordUseCase(password)
         } returns ValidationResult(isSuccessful = true)
-        coEvery {
-            shopUseCases.loginUseCase(email,password)
-        } returns flowOf(Resource.Error("Error"))
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
@@ -324,7 +315,6 @@ class LoginViewModelTest {
             shopUseCases.validateEmailUseCase(email)
             shopUseCases.validateLoginPasswordUseCase(password)
         }
-
         assertThat(loginState.email).isEqualTo(email)
         assertThat(loginState.password).isEqualTo(password)
         assertThat(loginState.emailError).isEqualTo(emailEmptyError)
@@ -334,20 +324,17 @@ class LoginViewModelTest {
     @Test
     fun `event login is not successful when password is blank`() {
         val email = "email@email.com"
-        val password = "Qwerty1+"
+        val password = ""
 
         every {
             shopUseCases.validateEmailUseCase(email)
-        } returns ValidationResult(
-            isSuccessful = false,
-            errorMessage = emailEmptyError
-        )
+        } returns ValidationResult(isSuccessful = true)
         every {
             shopUseCases.validateLoginPasswordUseCase(password)
-        } returns ValidationResult(isSuccessful = true)
-        coEvery {
-            shopUseCases.loginUseCase(email,password)
-        } returns flowOf(Resource.Error("Error"))
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = passwordEmptyError
+        )
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
@@ -359,7 +346,6 @@ class LoginViewModelTest {
             shopUseCases.validateEmailUseCase(email)
             shopUseCases.validateLoginPasswordUseCase(password)
         }
-
         assertThat(loginState.email).isEqualTo(email)
         assertThat(loginState.password).isEqualTo(password)
         assertThat(loginState.emailError).isNull()
@@ -383,9 +369,6 @@ class LoginViewModelTest {
             isSuccessful = false,
             errorMessage = passwordEmptyError
         )
-        coEvery {
-            shopUseCases.loginUseCase(email,password)
-        } returns flowOf(Resource.Error("Error"))
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
@@ -397,7 +380,6 @@ class LoginViewModelTest {
             shopUseCases.validateEmailUseCase(email)
             shopUseCases.validateLoginPasswordUseCase(password)
         }
-
         assertThat(loginState.email).isEqualTo(email)
         assertThat(loginState.password).isEqualTo(password)
         assertThat(loginState.emailError).isEqualTo(emailEmptyError)
