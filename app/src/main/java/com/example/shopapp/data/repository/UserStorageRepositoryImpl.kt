@@ -70,10 +70,10 @@ class UserStorageRepositoryImpl @Inject constructor(
                         "points" to 0
                     )
                 ).await()
-                Resource.Success(true)
+                emit(Resource.Success(true))
             }
             catch (e: Exception) {
-                Resource.Error(e.localizedMessage as String)
+                emit(Resource.Error(e.localizedMessage as String))
             }
 
             emit(Resource.Loading(false))

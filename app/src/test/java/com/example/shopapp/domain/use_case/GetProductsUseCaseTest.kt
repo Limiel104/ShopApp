@@ -7,12 +7,14 @@ import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Resource
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -62,6 +64,11 @@ class GetProductsUseCaseTest {
                 imageUrl = "imageUrl"
             )
         )
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
     @Test

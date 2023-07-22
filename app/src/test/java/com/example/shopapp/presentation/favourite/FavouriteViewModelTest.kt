@@ -5,9 +5,11 @@ import com.example.shopapp.util.MainDispatcherRule
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,6 +41,11 @@ class FavouriteViewModelTest {
             "jewelery 2",
             "women's clothing 3"
         )
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
     private fun setViewModel(): FavouriteViewModel {
