@@ -93,4 +93,7 @@ object Constants {
     const val containsAtLeastOneCapitalLetterError: String = "Password should have at least one capital letter"
     const val containsAtLeastOneSpecialCharError: String = "Password should have at least one special character"
     const val confirmPasswordError: String = "Passwords don't mach"
+
+    //FIREBASE
+    const val USERS_COLLECTION: String = "users"
 }

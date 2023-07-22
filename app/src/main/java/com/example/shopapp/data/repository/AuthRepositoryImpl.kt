@@ -4,7 +4,6 @@ import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -36,14 +35,12 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signup(email: String, password: String): Flow<Resource<FirebaseUser>> {
-
         return flow {
 
             emit(Resource.Loading(isLoading = true))
 
             try {
                 val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()
-                result?.user?.updateProfile(UserProfileChangeRequest.Builder().build())
                 emit(Resource.Success(result.user!!))
             }
             catch (e: Exception) {

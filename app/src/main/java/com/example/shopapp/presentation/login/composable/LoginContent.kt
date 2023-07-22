@@ -74,8 +74,7 @@ fun LoginContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(2F),
-            verticalArrangement = Arrangement.SpaceEvenly
+                .weight(1F)
         ) {
             ShopTextFieldItem(
                 text = email,
@@ -96,6 +95,8 @@ fun LoginContent(
                 )
             }
 
+            Spacer(modifier = Modifier.height(10.dp))
+
             ShopTextFieldItem(
                 text = password,
                 label = stringResource(id = R.string.password),
@@ -115,7 +116,14 @@ fun LoginContent(
                     testTag = LOGIN_PASSWORD_ERROR
                 )
             }
+        }
 
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F),
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
             ShopButtonItem(
                 text = stringResource(id = R.string.login),
                 testTag = LOGIN_BTN,
