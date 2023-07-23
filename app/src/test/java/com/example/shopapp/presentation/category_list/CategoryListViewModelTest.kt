@@ -68,10 +68,34 @@ class CategoryListViewModelTest {
 
         categoryListViewModel = setViewModel()
 
-        val categories= getCurrentCategoryListState().categoryList
-        assertThat(categories).isEmpty()
+        val categories = getCurrentCategoryListState().categoryList
 
-        verify { shopUseCases.getCategoriesUseCase() }
+        assertThat(categories).isEmpty()
+        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
+    }
+
+    @Test
+    fun `getCategories returns empty list`() {
+        every { shopUseCases.getCategoriesUseCase() } returns emptyList()
+
+        categoryListViewModel = setViewModel()
+        categoryListViewModel.getCategories()
+        val categories = getCurrentCategoryListState().categoryList
+
+        assertThat(categories).isEmpty()
+        verify(exactly = 2) { shopUseCases.getCategoriesUseCase() }
+    }
+
+    @Test
+    fun `getCategories returns category list`() {
+        every { shopUseCases.getCategoriesUseCase() } returns getCategory()
+
+        categoryListViewModel = setViewModel()
+        categoryListViewModel.getCategories()
+        val categories = getCurrentCategoryListState().categoryList
+
+        assertThat(categories).isEqualTo(categoryList)
+        verify(exactly = 2) { shopUseCases.getCategoriesUseCase() }
     }
 
     @Test
@@ -81,11 +105,11 @@ class CategoryListViewModelTest {
         categoryListViewModel = setViewModel()
 
         val categories = getCurrentCategoryListState().categoryList
+
         assertThat(categories).isNotEmpty()
         assertThat(categories.size).isEqualTo(5)
         assertThat(categories).isEqualTo(categoryList)
-
-        verify { shopUseCases.getCategoriesUseCase() }
+        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
     }
 
     @Test
@@ -100,9 +124,9 @@ class CategoryListViewModelTest {
         categoryListViewModel.onEvent(CategoryListEvent.OnCategorySelected("men's clothing"))
 
         val resultId = getCurrentCategoryListState().categoryId
+
         assertThat(resultId).isEqualTo("men's clothing")
         assertThat(categoryIdList).contains(resultId)
-
-        verify { shopUseCases.getCategoriesUseCase() }
+        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
     }
 }
