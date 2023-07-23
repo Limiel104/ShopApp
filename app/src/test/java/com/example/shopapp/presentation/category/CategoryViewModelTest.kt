@@ -12,7 +12,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
@@ -36,6 +35,7 @@ class CategoryViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
 
         productList = listOf(
             Product(
@@ -80,7 +80,6 @@ class CategoryViewModelTest {
 
     @Test
     fun `category id is set correctly on init`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -92,12 +91,11 @@ class CategoryViewModelTest {
         val categoryId = getCurrentCategoryState().categoryId
         assertThat(categoryId).isEqualTo("men's clothing")
 
-        verify { savedStateHandle.get<String>(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `get products result is success`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -109,12 +107,11 @@ class CategoryViewModelTest {
         val products = getCurrentCategoryState().productList
         assertThat(products).isEqualTo(productList)
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `get products result is error`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -126,12 +123,11 @@ class CategoryViewModelTest {
         val products = getCurrentCategoryState().productList
         assertThat(products).isEmpty()
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `get products result is loading`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -141,14 +137,15 @@ class CategoryViewModelTest {
         categoryViewModel = setViewModel()
 
         val products = getCurrentCategoryState().productList
-        assertThat(products).isEmpty()
+        val loadingState = getCurrentCategoryState().isLoading
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        assertThat(products).isEmpty()
+        assertThat(loadingState).isTrue()
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `event onProductSelected sets state with selected product`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -165,12 +162,11 @@ class CategoryViewModelTest {
         val resultProductId = getCurrentCategoryState().productId
         assertThat(resultProductId).isEqualTo(0)
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `event toggleSortSection reverses sort section state `() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -187,12 +183,11 @@ class CategoryViewModelTest {
         val resultToggleState = getCurrentCategoryState().isSortSectionVisible
         assertThat(resultToggleState).isEqualTo(true)
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 
     @Test
     fun `event toggleSortSection reverses sort section state 6 times`() {
-        every { savedStateHandle.get<String>(any()) } returns "men's clothing"
         coEvery {
             shopUseCases.getProductsUseCase(any())
         } returns flowOf(
@@ -218,6 +213,6 @@ class CategoryViewModelTest {
         val secondCheckOfToggleState = getCurrentCategoryState().isSortSectionVisible
         assertThat(secondCheckOfToggleState).isEqualTo(false)
 
-        coVerify { shopUseCases.getProductsUseCase(any()) }
+        coVerify(exactly = 1) { shopUseCases.getProductsUseCase(any()) }
     }
 }

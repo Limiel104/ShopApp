@@ -31,6 +31,7 @@ object Constants {
     const val CATEGORY_NAME_3: String = "Women's clothing"
     const val CATEGORY_NAME_4: String = "Jewelery"
     const val CATEGORY_NAME_5: String = "Electronics"
+    const val CATEGORY_CPI: String = "Category circular progress indicator"
     const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"

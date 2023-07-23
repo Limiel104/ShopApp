@@ -63,7 +63,12 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             shopUseCases.getProductsUseCase(categoryId).collect { response ->
                 when(response) {
-                    is Resource.Loading -> {}
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading: ${response.isLoading}")
+                        _categoryState.value = categoryState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
                     is Resource.Success -> {
                         response.data?.let { products ->
                             _categoryState.value = categoryState.value.copy(
@@ -73,6 +78,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
