@@ -27,6 +27,7 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.COUPON_ITEM_10
 import com.example.shopapp.util.Constants.COUPON_ITEM_20
 import com.example.shopapp.util.Constants.COUPON_ITEM_50
+import com.example.shopapp.util.Constants.LOGOUT_BTN
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
@@ -131,5 +132,8 @@ class AccountScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_AND_RETURNS_BTN).assertIsDisplayed()
         composeRule.onNodeWithTag(ORDERS_AND_RETURNS_BTN).assertHasClickAction()
+
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertHasClickAction()
     }
 }

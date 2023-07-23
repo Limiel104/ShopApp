@@ -8,6 +8,10 @@ import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
+import io.mockk.runs
+import io.mockk.verify
+import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -29,6 +33,8 @@ class AccountViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        every { shopUseCases.getCurrentUserUseCase() } returns user
+        this.accountViewModel = AccountViewModel(shopUseCases)
     }
 
     @After
@@ -36,21 +42,52 @@ class AccountViewModelTest {
         clearAllMocks()
     }
 
-    private fun setViewModel(): AccountViewModel {
-        return AccountViewModel(shopUseCases)
-    }
-
     private fun getCurrentAccountState(): AccountState {
         return accountViewModel.accountState.value
     }
 
     @Test
+    fun `checkIfUserIsLoggedIn is successful`() {
+        accountViewModel.checkIfUserIsLoggedIn()
+
+        val isUserLoggedIn = accountViewModel.accountState.value.isUserLoggedIn
+
+        assertThat(isUserLoggedIn).isTrue()
+        verify(exactly = 2) {
+            shopUseCases.getCurrentUserUseCase
+        }
+    }
+
+    @Test
     fun `user name is set correctly on init`() {
-        every { shopUseCases.getCurrentUserUseCase() } returns user
-
-        accountViewModel = setViewModel()
-
         val name = getCurrentAccountState().name
+
         assertThat(name).isEqualTo("John")
+
+        verify(exactly = 1) { shopUseCases.getCurrentUserUseCase }
+    }
+
+    @Test
+    fun `logout is successful`() {
+        every { shopUseCases.logoutUseCase() } just runs
+
+        accountViewModel.logout()
+
+        verifySequence {
+            shopUseCases.getCurrentUserUseCase
+            shopUseCases.logoutUseCase
+        }
+    }
+
+    @Test
+    fun `event logout is successful`() {
+        every { shopUseCases.logoutUseCase() } just runs
+
+        accountViewModel.onEvent(AccountEvent.OnLogout)
+
+        verifySequence {
+            shopUseCases.getCurrentUserUseCase
+            shopUseCases.logoutUseCase
+        }
     }
 }

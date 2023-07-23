@@ -55,7 +55,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    private fun checkIfUserIsLoggedIn() {
+    fun checkIfUserIsLoggedIn() {
         viewModelScope.launch {
             val currentUser = shopUseCases.getCurrentUserUseCase()
             _accountState.value = accountState.value.copy(
@@ -64,7 +64,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    private fun logout() {
+    fun logout() {
         shopUseCases.logoutUseCase()
         _accountState.value = accountState.value.copy(
             isUserLoggedIn = false
