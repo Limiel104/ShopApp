@@ -8,6 +8,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -30,6 +31,8 @@ class FavouriteViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        every { shopUseCases.getCurrentUserUseCase() } returns user
+        this.favouriteViewModel = FavouriteViewModel(shopUseCases)
 
         productList = listOf(
             "men's clothing 1",
@@ -48,36 +51,38 @@ class FavouriteViewModelTest {
         clearAllMocks()
     }
 
-    private fun setViewModel(): FavouriteViewModel {
-        return FavouriteViewModel(shopUseCases)
-    }
-
     private fun getCurrentFavouriteState(): FavouriteState {
         return favouriteViewModel.favouriteState.value
     }
 
     @Test
+    fun `checkIfUserIsLoggedIn is successful`() {
+        favouriteViewModel.checkIfUserIsLoggedIn()
+
+        val isUserLoggedIn = favouriteViewModel.favouriteState.value.isUserLoggedIn
+
+        assertThat(isUserLoggedIn).isTrue()
+        verify(exactly = 2) { shopUseCases.getCurrentUserUseCase() }
+    }
+
+    @Test
     fun `product list is set correctly on init`() {
-        every { shopUseCases.getCurrentUserUseCase() } returns user
-
-        favouriteViewModel = setViewModel()
-
         val favourites = getCurrentFavouriteState().productList
+
         assertThat(favourites).isEqualTo(productList)
+        verify(exactly = 1) { shopUseCases.getCurrentUserUseCase() }
     }
 
     @Test
     fun `event onProductSelected sets product id state correctly`() {
-        every { shopUseCases.getCurrentUserUseCase() } returns user
-
-        favouriteViewModel = setViewModel()
-
         val initialProductId = getCurrentFavouriteState().productId
-        assertThat(initialProductId).isEqualTo("")
 
         favouriteViewModel.onEvent(FavouriteEvent.OnProductSelected("men's clothing 2"))
 
         val resultProductId = getCurrentFavouriteState().productId
+
+        assertThat(initialProductId).isEqualTo("")
         assertThat(resultProductId).isEqualTo("men's clothing 2")
+        verify(exactly = 1) { shopUseCases.getCurrentUserUseCase() }
     }
 }

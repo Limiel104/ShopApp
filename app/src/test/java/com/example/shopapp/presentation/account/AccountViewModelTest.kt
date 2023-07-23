@@ -53,9 +53,7 @@ class AccountViewModelTest {
         val isUserLoggedIn = accountViewModel.accountState.value.isUserLoggedIn
 
         assertThat(isUserLoggedIn).isTrue()
-        verify(exactly = 2) {
-            shopUseCases.getCurrentUserUseCase
-        }
+        verify(exactly = 2) { shopUseCases.getCurrentUserUseCase }
     }
 
     @Test
@@ -64,7 +62,7 @@ class AccountViewModelTest {
 
         assertThat(name).isEqualTo("John")
 
-        verify(exactly = 1) { shopUseCases.getCurrentUserUseCase }
+        verify(exactly = 1) { shopUseCases.getCurrentUserUseCase() }
     }
 
     @Test
@@ -74,8 +72,8 @@ class AccountViewModelTest {
         accountViewModel.logout()
 
         verifySequence {
-            shopUseCases.getCurrentUserUseCase
-            shopUseCases.logoutUseCase
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.logoutUseCase()
         }
     }
 
@@ -86,8 +84,8 @@ class AccountViewModelTest {
         accountViewModel.onEvent(AccountEvent.OnLogout)
 
         verifySequence {
-            shopUseCases.getCurrentUserUseCase
-            shopUseCases.logoutUseCase
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.logoutUseCase()
         }
     }
 }

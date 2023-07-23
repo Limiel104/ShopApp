@@ -70,7 +70,7 @@ class FavouriteViewModel @Inject constructor(
         }
     }
 
-    private fun checkIfUserIsLoggedIn() {
+    fun checkIfUserIsLoggedIn() {
         viewModelScope.launch {
             val currentUser = shopUseCases.getCurrentUserUseCase()
             _favouriteState.value = favouriteState.value.copy(
