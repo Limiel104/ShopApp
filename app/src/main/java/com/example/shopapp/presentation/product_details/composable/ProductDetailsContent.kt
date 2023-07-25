@@ -10,11 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.categoryName
-import com.example.shopapp.util.Constants.emptyString
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productTitle
-import com.example.shopapp.util.Constants.productPrice
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -60,11 +56,11 @@ fun ProductDetailsContentPreview() {
 
         val product = Product(
             id = 1,
-            title = productTitle,
-            price = productPrice,
+            title = "Shirt",
+            price = "195,59 PLN",
             description = productDescription,
-            category = categoryName,
-            imageUrl = emptyString
+            category = "men's clothing",
+            imageUrl = ""
         )
 
         ProductDetailsContent(

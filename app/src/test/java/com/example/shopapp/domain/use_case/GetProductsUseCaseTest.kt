@@ -5,17 +5,16 @@ import com.example.shopapp.domain.repository.ProductRepository
 import com.google.common.truth.Truth.assertThat
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productImageUrl
-import com.example.shopapp.util.Constants.productPrice
-import com.example.shopapp.util.Constants.productTitle
 import com.example.shopapp.util.Resource
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -34,37 +33,42 @@ class GetProductsUseCaseTest {
         productList = listOf(
             Product(
                 id = 1,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Women.id,
-                imageUrl = productImageUrl
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 2,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Men.id,
-                imageUrl = productImageUrl
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 3,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Jewelery.id,
-                imageUrl = productImageUrl
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 4,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Men.id,
-                imageUrl = productImageUrl
+                imageUrl = "imageUrl"
             )
         )
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
     @Test

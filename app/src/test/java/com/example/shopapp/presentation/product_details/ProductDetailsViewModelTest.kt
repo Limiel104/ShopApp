@@ -36,6 +36,7 @@ class ProductDetailsViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
+        every { savedStateHandle.get<Int>(any()) } returns 1
 
         product = Product(
             id = 1,
@@ -62,7 +63,6 @@ class ProductDetailsViewModelTest {
 
     @Test
     fun `product id is set correctly on init`() {
-        every { savedStateHandle.get<Int>(any()) } returns 1
         coEvery {
             shopUseCases.getProductUseCase(any())
         } returns Resource.Success(product)
@@ -70,14 +70,13 @@ class ProductDetailsViewModelTest {
         productDetailsViewModel = setViewModel()
 
         val productId = getCurrentProductDetailsState().productId
-        assertThat(productId).isEqualTo(1)
 
+        assertThat(productId).isEqualTo(1)
         verify { savedStateHandle.get<String>(any()) }
     }
 
     @Test
     fun `get product result is success`() {
-        every { savedStateHandle.get<Int>(any()) } returns 1
         coEvery {
             shopUseCases.getProductUseCase(any())
         } returns Resource.Success(product)
@@ -92,14 +91,13 @@ class ProductDetailsViewModelTest {
             category = getCurrentProductDetailsState().category,
             imageUrl = getCurrentProductDetailsState().imageUrl
         )
-        assertThat(productToCheck).isEqualTo(product)
 
+        assertThat(productToCheck).isEqualTo(product)
         coVerify { shopUseCases.getProductUseCase(any()) }
     }
 
     @Test
     fun `get product result is error`() {
-        every { savedStateHandle.get<Int>(any()) } returns 1
         coEvery {
             shopUseCases.getProductUseCase(any())
         } returns Resource.Error("Error")
@@ -129,7 +127,6 @@ class ProductDetailsViewModelTest {
 
     @Test
     fun `get product result is loading`() {
-        every { savedStateHandle.get<Int>(any()) } returns 1
         coEvery {
             shopUseCases.getProductUseCase(any())
         } returns Resource.Loading(true)

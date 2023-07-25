@@ -27,7 +27,6 @@ import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.categoryId
-import com.example.shopapp.util.Constants.categoryName
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -64,7 +63,7 @@ class CategoryScreenTest {
                                 name = categoryId
                             ) {
                                 type = NavType.StringType
-                                defaultValue = categoryName
+                                defaultValue = "men's clothing"
                             }
                         )
                     ) {
@@ -91,7 +90,7 @@ class CategoryScreenTest {
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertExists()
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertTextContains(categoryName)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertTextContains("men's clothing")
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 

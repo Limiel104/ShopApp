@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
@@ -30,39 +31,58 @@ import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
 import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
-import com.example.shopapp.util.Constants.placeholder
+import com.example.shopapp.util.Constants.emailEmptyError
+import com.example.shopapp.util.Constants.passwordEmptyError
 
 @Composable
-fun LoginContent() {
-    val email = "email@email.com"
-    val emailError = ""
-    val password = "password"
-    val passwordError = ""
-    val isLoading = false
-
+fun LoginContent(
+    bottomBarHeight: Dp,
+    email: String,
+    emailError: String?,
+    password: String,
+    passwordError: String?,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    isLoading: Boolean,
+    onLogin: () -> Unit,
+    onSignup: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .padding(bottom = bottomBarHeight),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(
-            text = stringResource(id = R.string.login),
-            color = MaterialTheme.colors.secondary,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.SemiBold
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(id = R.string.login),
+                color = MaterialTheme.colors.secondary,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
 
-        Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1F)
+        ) {
             ShopTextFieldItem(
                 text = email,
                 label = stringResource(id = R.string.email),
-                placeholder = placeholder,
+                placeholder = stringResource(id = R.string.email),
                 testTag = LOGIN_EMAIL_TF,
                 isError = emailError != null,
-                onValueChange = {},
+                onValueChange = { onEmailChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
                 )
@@ -80,10 +100,10 @@ fun LoginContent() {
             ShopTextFieldItem(
                 text = password,
                 label = stringResource(id = R.string.password),
-                placeholder = placeholder,
+                placeholder = stringResource(id = R.string.password),
                 testTag = LOGIN_PASSWORD_TF,
                 isError = passwordError != null,
-                onValueChange = {},
+                onValueChange = { onPasswordChange(it) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
@@ -98,31 +118,38 @@ fun LoginContent() {
             }
         }
 
-        ShopButtonItem(
-            text = stringResource(id = R.string.login),
-            testTag = LOGIN_BTN,
-            onClick = {}
-        )
-
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .weight(1F),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = stringResource(id = R.string.no_account_text)
+            ShopButtonItem(
+                text = stringResource(id = R.string.login),
+                testTag = LOGIN_BTN,
+                onClick = { onLogin() }
             )
 
-            Spacer(modifier = Modifier.width(5.dp))
-
-            Text(
-                text = stringResource(id = R.string.signup),
-                color = MaterialTheme.colors.primary,
-                fontWeight = FontWeight.SemiBold,
+            Row(
                 modifier = Modifier
-                    .clickable {}
-                    .testTag(LOGIN_SIGNUP_BTN)
-            )
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no_account_text)
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                Text(
+                    text = stringResource(id = R.string.signup),
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .clickable { onSignup() }
+                        .testTag(LOGIN_SIGNUP_BTN)
+                )
+            }
         }
     }
 
@@ -142,6 +169,36 @@ fun LoginContent() {
 @Composable
 fun LoginContentPreview() {
     ShopAppTheme() {
-        LoginContent()
+        LoginContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = null,
+            password = "abcdef2+A",
+            passwordError = null,
+            onEmailChange = {},
+            onPasswordChange = {},
+            isLoading = false,
+            onLogin = {},
+            onSignup = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginContentErrorPreview() {
+    ShopAppTheme() {
+        LoginContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = emailEmptyError,
+            password = "abcdef2+A",
+            passwordError = passwordEmptyError,
+            onEmailChange = {},
+            onPasswordChange = {},
+            isLoading = false,
+            onLogin = {},
+            onSignup = {}
+        )
     }
 }

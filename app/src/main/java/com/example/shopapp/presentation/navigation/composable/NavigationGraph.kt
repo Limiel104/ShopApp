@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.example.shopapp.presentation.account.composable.AccountScreen
 import com.example.shopapp.presentation.category.composable.CategoryScreen
 import com.example.shopapp.presentation.category_list.composable.CategoryListScreen
-import com.example.shopapp.presentation.favourites.composable.FavouriteScreen
+import com.example.shopapp.presentation.favourite.composable.FavouriteScreen
 import com.example.shopapp.presentation.home.composable.HomeScreen
 import com.example.shopapp.presentation.login.composable.LoginScreen
 import com.example.shopapp.presentation.product_details.composable.ProductDetailsScreen
@@ -70,7 +70,10 @@ fun NavigationGraph(
         composable(
             route = Screen.AccountScreen.route
         ) {
-            AccountScreen(bottomBarHeight = bottomBarHeight)
+            AccountScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.ProductDetailsScreen.route + productId + "={$productId}",
@@ -87,12 +90,18 @@ fun NavigationGraph(
         composable(
             route = Screen.LoginScreen.route
         ) {
-            LoginScreen()
+            LoginScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
         composable(
             route = Screen.SignupScreen.route
         ) {
-            SignupScreen()
+            SignupScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
         }
     }
 }

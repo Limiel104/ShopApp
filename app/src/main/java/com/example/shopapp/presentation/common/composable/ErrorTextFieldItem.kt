@@ -10,8 +10,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.errorMessage
-import com.example.shopapp.util.Constants.testTag
 
 @Composable
 fun ErrorTextFieldItem(
@@ -34,8 +32,8 @@ fun ErrorTextFieldItem(
 fun ErrorTextFieldItemPreview() {
     ShopAppTheme {
         ErrorTextFieldItem(
-            errorMessage = errorMessage,
-            testTag = testTag
+            errorMessage = "Error",
+            testTag = "tag"
         )
     }
 }

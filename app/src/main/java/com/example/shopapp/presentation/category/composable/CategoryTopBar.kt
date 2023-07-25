@@ -19,7 +19,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
-import com.example.shopapp.util.Constants.categoryName
 
 @Composable
 fun CategoryTopBar(
@@ -66,7 +65,7 @@ fun CategoryTopBar(
 fun CategoryTopBarPreview() {
     ShopAppTheme {
         CategoryTopBar(
-            categoryName = categoryName,
+            categoryName = "men's clothing",
             onSortSelected = {},
             onCartSelected = {}
         )

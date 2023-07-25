@@ -14,7 +14,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
-import com.example.shopapp.util.Constants.emptyString
 
 @Composable
 fun ProductDetailsImageItem(
@@ -55,7 +54,7 @@ fun ProductDetailsImageItem(
 fun ProductDetailsImageItemPreview() {
     ShopAppTheme() {
         ProductDetailsImageItem(
-            imageUrl = emptyString,
+            imageUrl = "",
             onNavigateBack = {}
         )
     }

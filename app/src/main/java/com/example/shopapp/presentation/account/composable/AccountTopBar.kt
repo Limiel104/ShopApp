@@ -22,11 +22,10 @@ import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ACCOUNT_TOP_BAR
 import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.customerName
 
 @Composable
 fun AccountTopBar(
-    customerName: String
+    userName: String
 ) {
     Row(
         modifier = Modifier
@@ -38,7 +37,7 @@ fun AccountTopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = stringResource(id = R.string.hi) + " $customerName",
+            text = stringResource(id = R.string.hi) + " $userName",
             fontWeight = FontWeight.SemiBold
         )
 
@@ -56,7 +55,7 @@ fun AccountTopBar(
 fun AccountTopBarPreview() {
     ShopAppTheme {
         AccountTopBar(
-            customerName = customerName
+            userName = "John"
         )
     }
 }

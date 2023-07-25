@@ -6,22 +6,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.categoryName
+import com.example.shopapp.util.Constants.CATEGORY_CPI
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productImageUrl
-import com.example.shopapp.util.Constants.productTitle
-import com.example.shopapp.util.Constants.productPrice
 
 @Composable
 fun CategoryContent(
@@ -30,6 +30,7 @@ fun CategoryContent(
     categoryName: String,
     productList: List<Product>,
     isSortSectionVisible: Boolean,
+    isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit
 ) {
@@ -76,6 +77,17 @@ fun CategoryContent(
                 }
             }
         }
+
+        if(isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(CATEGORY_CPI),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
 
@@ -86,44 +98,45 @@ fun CategoryContentPreview() {
         val productList = listOf(
             Product(
                 id = 1,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 2,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 3,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 4,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             )
         )
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
-            categoryName = categoryName,
+            categoryName = "men's clothing",
             productList = productList,
             isSortSectionVisible = false,
+            isLoading = false,
             onProductSelected = {},
             onSortSelected = {}
         )
@@ -137,44 +150,45 @@ fun CategoryContentToggleTruePreview() {
         val productList = listOf(
             Product(
                 id = 1,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 2,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 3,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             ),
             Product(
                 id = 4,
-                title = productTitle,
-                price = productPrice,
+                title = "Shirt",
+                price = "195,59 PLN",
                 description = productDescription,
-                category = categoryName,
-                imageUrl = productImageUrl
+                category = "men's clothing",
+                imageUrl = "imageUrl"
             )
         )
 
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
-            categoryName = categoryName,
+            categoryName = "men's clothing",
             productList = productList,
             isSortSectionVisible = true,
+            isLoading = false,
             onProductSelected = {},
             onSortSelected = {}
         )

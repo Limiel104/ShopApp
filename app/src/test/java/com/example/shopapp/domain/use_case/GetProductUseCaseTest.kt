@@ -7,10 +7,12 @@ import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -27,12 +29,17 @@ class GetProductUseCaseTest {
         this.getProductUseCase = GetProductUseCase(productRepository)
         product = Product(
             id = 1,
-            title = Constants.productTitle,
-            price = Constants.productPrice,
+            title = "Shirt",
+            price = "195,59 PLN",
             description = Constants.productDescription,
             category = Category.Women.id,
-            imageUrl = Constants.productImageUrl
+            imageUrl = "imageUrl"
         )
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
     @Test

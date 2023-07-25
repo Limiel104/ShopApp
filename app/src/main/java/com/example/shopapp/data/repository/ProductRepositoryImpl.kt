@@ -6,7 +6,6 @@ import com.example.shopapp.data.mapper.toProductEntity
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
-import com.example.shopapp.util.Constants.all
 import com.example.shopapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -27,7 +26,7 @@ class ProductRepositoryImpl @Inject constructor(
 
             val products =
                 when(categoryId) {
-                    all -> dao.getProducts().map { it.toProduct() }
+                    "all" -> dao.getProducts().map { it.toProduct() }
                     else -> dao.getProductsFromCategory(categoryId).map { it.toProduct() }
                 }
 
@@ -57,7 +56,7 @@ class ProductRepositoryImpl @Inject constructor(
                 dao.deleteProducts()
                 dao.insertProducts(productList.map { it.toProductEntity() })
                 when(categoryId) {
-                    all -> emit(Resource.Success(dao.getProducts().map { it.toProduct() }))
+                    "all" -> emit(Resource.Success(dao.getProducts().map { it.toProduct() }))
                     else -> emit(Resource.Success(dao.getProductsFromCategory(categoryId).map { it.toProduct() }))
                 }
             }

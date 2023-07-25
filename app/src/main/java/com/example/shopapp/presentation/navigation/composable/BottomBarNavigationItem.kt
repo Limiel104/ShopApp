@@ -16,7 +16,6 @@ import com.example.shopapp.domain.model.BottomBarItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.badgeCount
 import com.example.shopapp.util.Constants.badgeCountZero
-import com.example.shopapp.util.Constants.emptyString
 
 @Composable
 fun BottomBarNavigationItem(
@@ -73,7 +72,7 @@ fun BottomBarNavigationItemPreview() {
         BottomBarNavigationItem(
             BottomBarItem(
                 name = stringResource(id = R.string.favourite),
-                route = emptyString,
+                route = "",
                 icon = Icons.Outlined.FavoriteBorder,
                 badgeCount = badgeCountZero
             )
@@ -88,7 +87,7 @@ fun BottomBarNavigationItemCountPreview() {
         BottomBarNavigationItem(
             BottomBarItem(
                 name = stringResource(id = R.string.favourite),
-                route = emptyString,
+                route = "",
                 icon = Icons.Outlined.FavoriteBorder,
                 badgeCount = badgeCount
             )

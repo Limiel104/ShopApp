@@ -5,6 +5,7 @@ object Constants {
     const val ACTIVATE_COUPON_BTN: String = "Activate coupon button"
     const val MY_PROFILE_BTN: String = "My profile button"
     const val ORDERS_AND_RETURNS_BTN: String = "Orders and returns button"
+    const val LOGOUT_BTN: String = "Sign out button"
     const val LOGIN_EMAIL_TF: String = "Login email"
     const val LOGIN_EMAIL_ERROR: String = "Login email error"
     const val LOGIN_PASSWORD_TF: String = "Login password"
@@ -30,9 +31,18 @@ object Constants {
     const val CATEGORY_NAME_3: String = "Women's clothing"
     const val CATEGORY_NAME_4: String = "Jewelery"
     const val CATEGORY_NAME_5: String = "Electronics"
+    const val CATEGORY_CPI: String = "Category circular progress indicator"
     const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
+    const val SIGNUP_EMAIL_TF: String = "Signup email"
+    const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
+    const val SIGNUP_PASSWORD_TF: String = "Signup password"
+    const val SIGNUP_PASSWORD_ERROR: String = "Signup password error"
+    const val SIGNUP_CONFIRM_PASSWORD_TF: String = "Signup confirm password"
+    const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
+    const val SIGNUP_BTN: String = "Signup button"
+    const val SIGNUP_CPI: String = "Signup circular progress indicator"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -43,32 +53,10 @@ object Constants {
     const val ADD_TO_CART_BTN: String = "Add to cart button"
 
     //TEST VALUES
-    const val customerName: String = "John"
-    const val customerPoints: Int = 234
-    const val discountAmount: Int = 10
-    const val pointsToActivate: Int = 100
-    const val categoryName: String = "men's clothing"
-    const val productPrice: String = "15,59 PLN"
-    const val productTitle: String = "Shirt"
-    const val productImageUrl: String = "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg"
-    const val errorMessage: String = "Error Message"
-    const val testTag: String = "tag"
-    const val emptyString: String = ""
-    const val text: String = "Text"
-    const val placeholder: String = "placeholder"
-    const val offerDescription: String = "All clothes for women now 10% cheaper"
     const val badgeCount: Int = 10
     const val badgeCountZero: Int = 0
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
     const val bottomBarHeight: Int = 56
-    const val shopName: String = "Shop Name"
-    const val hi: String = "Hi "
-    const val shopClub: String = "Shop Club"
-    const val customerClubPoints: String = "234 points"
-    const val favouriteTitle: String = "Favourite"
-    const val productDescriptionTitle: String = "Description"
-    const val addToCart: String = "Add to Cart"
-    const val all: String = "all"
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
@@ -86,9 +74,27 @@ object Constants {
     const val FAVOURITE_VM: String = "Favourite ViewModel"
     const val HOME_VM: String = "Home ViewModel"
     const val PRODUCT_DETAILS_VM: String = "ProductDetails ViewModel"
+    const val LOGIN_VM: String = "LoginScreen ViewModel"
+    const val SIGNUP_VM: String = "SignupScreen ViewModel"
+    const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
     const val FAVOURITE_SCREEN_LE: String = "FavouriteScreen Launched Effect"
     const val HOME_SCREEN_LE: String = "HomeScreen Launched Effect"
     const val PRODUCT_DETAILS_SCREEN_LE: String = "ProductDetailsScreen Launched Effect"
+    const val LOGIN_SCREEN_LE: String = "LoginScreen ViewModel"
+    const val SIGNUP_SCREEN_LE: String = "SignupScreen ViewModel"
+
+    //ERRORS
+    const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
+    const val emailEmptyError: String = "Email can't be empty"
+    const val passwordEmptyError: String = "Password can't be empty"
+    const val shortPasswordError: String = "Password is too short"
+    const val containsAtLeastOneDigitError: String = "Password should have at least one digit"
+    const val containsAtLeastOneCapitalLetterError: String = "Password should have at least one capital letter"
+    const val containsAtLeastOneSpecialCharError: String = "Password should have at least one special character"
+    const val confirmPasswordError: String = "Passwords don't mach"
+
+    //FIREBASE
+    const val USERS_COLLECTION: String = "users"
 }

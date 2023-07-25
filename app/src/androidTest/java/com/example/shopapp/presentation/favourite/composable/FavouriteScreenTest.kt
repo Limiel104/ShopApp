@@ -1,6 +1,7 @@
-package com.example.shopapp.presentation.favourites.composable
+package com.example.shopapp.presentation.favourite.composable
 
 import androidx.activity.compose.setContent
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -17,10 +18,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.FAVOURITE_TOP_BAR
-import com.example.shopapp.util.Constants.favouriteTitle
+import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -53,9 +53,20 @@ class FavouriteScreenTest {
                     composable(
                         route = Screen.FavouriteScreen.route
                     ) {
-                        FavouriteScreen(
-                            navController = navController,
-                            bottomBarHeight = Constants.bottomBarHeight.dp
+                        FavouriteContent(
+                            scaffoldState = rememberScaffoldState(),
+                            bottomBarHeight = bottomBarHeight.dp,
+                            productList = listOf(
+                                "men's clothing 1",
+                                "men's clothing 2",
+                                "women's clothing 1",
+                                "jewelery 1",
+                                "men's clothing 3",
+                                "women's clothing 2",
+                                "jewelery 2",
+                                "women's clothing 3"
+                            ),
+                            onProductSelected = {}
                         )
                     }
                 }
@@ -75,7 +86,7 @@ class FavouriteScreenTest {
     fun favouriteScreenTopBar_titleIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertTextContains(favouriteTitle)
+        composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertTextContains("Favourite")
         composeRule.onNodeWithTag(FAVOURITE_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 

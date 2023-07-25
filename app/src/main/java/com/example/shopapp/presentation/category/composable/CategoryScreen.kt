@@ -1,9 +1,11 @@
 package com.example.shopapp.presentation.category.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -26,6 +28,8 @@ fun CategoryScreen(
     val categoryId = viewModel.categoryState.value.categoryId
     val productList = viewModel.categoryState.value.productList
     val isSortSectionVisible = viewModel.categoryState.value.isSortSectionVisible
+    val isLoading = viewModel.categoryState.value.isLoading
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -33,6 +37,9 @@ fun CategoryScreen(
                 is CategoryUiEvent.NavigateToProductDetails -> {
                     Log.i(TAG, CATEGORY_SCREEN_LE)
                     navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
+                }
+                is CategoryUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -44,6 +51,7 @@ fun CategoryScreen(
         categoryName = categoryId,
         productList = productList,
         isSortSectionVisible = isSortSectionVisible,
+        isLoading = isLoading,
         onProductSelected = { productId: Int ->
             viewModel.onEvent(CategoryEvent.OnProductSelected(productId))
         },

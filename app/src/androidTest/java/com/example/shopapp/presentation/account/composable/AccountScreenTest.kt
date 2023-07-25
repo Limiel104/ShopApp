@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.account.composable
 
 import androidx.activity.compose.setContent
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -26,13 +27,10 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.COUPON_ITEM_10
 import com.example.shopapp.util.Constants.COUPON_ITEM_20
 import com.example.shopapp.util.Constants.COUPON_ITEM_50
+import com.example.shopapp.util.Constants.LOGOUT_BTN
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
-import com.example.shopapp.util.Constants.customerClubPoints
-import com.example.shopapp.util.Constants.customerName
-import com.example.shopapp.util.Constants.hi
-import com.example.shopapp.util.Constants.shopClub
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -65,8 +63,12 @@ class AccountScreenTest {
                     composable(
                         route = Screen.AccountScreen.route
                     ) {
-                        AccountScreen(
-                            bottomBarHeight = bottomBarHeight.dp
+                        AccountContent(
+                            scaffoldState = rememberScaffoldState(),
+                            bottomBarHeight = bottomBarHeight.dp,
+                            userName = "John",
+                            userClubPoints = 234,
+                            onLogout = {}
                         )
                     }
                 }
@@ -83,10 +85,10 @@ class AccountScreenTest {
     }
 
     @Test
-    fun accountScreenTopBar_customerNameIsDisplayedCorrectly() {
+    fun accountScreenTopBar_userNameIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertTextContains(hi+ customerName)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertTextContains("Hi John")
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 
@@ -104,8 +106,8 @@ class AccountScreenTest {
         composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).onChildAt(0).assertTextContains(shopClub)
-        composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).onChildAt(1).assertTextContains(customerClubPoints)
+        composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).onChildAt(0).assertTextContains("Shop Club")
+        composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).onChildAt(1).assertTextContains("234 points")
     }
 
     @Test
@@ -130,5 +132,8 @@ class AccountScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_AND_RETURNS_BTN).assertIsDisplayed()
         composeRule.onNodeWithTag(ORDERS_AND_RETURNS_BTN).assertHasClickAction()
+
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertHasClickAction()
     }
 }
