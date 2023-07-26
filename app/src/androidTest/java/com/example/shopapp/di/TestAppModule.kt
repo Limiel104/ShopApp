@@ -5,9 +5,11 @@ import androidx.room.Room
 import com.example.shopapp.data.local.ShopDatabase
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.data.repository.AuthRepositoryImpl
+import com.example.shopapp.data.repository.FavouritesRepositoryImpl
 import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.data.repository.UserStorageRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
+import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
 import com.example.shopapp.domain.use_case.AddUserUseCase
@@ -78,6 +80,13 @@ object TestAppModule {
     fun provideUserStorageRepository(): UserStorageRepository {
         val usersRef = Firebase.firestore.collection(Constants.USERS_COLLECTION)
         return UserStorageRepositoryImpl(usersRef)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouritesStorageRepository(): FavouritesRepository {
+        val usersRef = Firebase.firestore.collection(Constants.FAVOURITES_COLLECTION)
+        return FavouritesRepositoryImpl(usersRef)
     }
 
     @Provides

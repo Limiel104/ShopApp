@@ -97,4 +97,5 @@ object Constants {
 
     //FIREBASE
     const val USERS_COLLECTION: String = "users"
+    const val FAVOURITES_COLLECTION: String = "favourites"
 }
