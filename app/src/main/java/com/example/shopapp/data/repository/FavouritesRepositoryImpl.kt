@@ -14,7 +14,7 @@ import javax.inject.Inject
 class FavouritesRepositoryImpl @Inject constructor(
     private val favouritesRef: CollectionReference
 ): FavouritesRepository {
-    override suspend fun addFavouriteProduct(
+    override suspend fun addProductToFavourites(
         productId: Int,
         userUID: String
     ): Flow<Resource<Boolean>> {
@@ -38,7 +38,7 @@ class FavouritesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserFavourites(userUID: String)= callbackFlow {
+    override suspend fun getUserFavourites(userUID: String) = callbackFlow {
         val snapshotListener = favouritesRef
             .whereEqualTo("userUID", userUID)
             .addSnapshotListener { snapshot, e ->
@@ -57,7 +57,7 @@ class FavouritesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserFavouriteId(productId: Int, userUID: String)= callbackFlow {
+    override suspend fun getFavouriteId(productId: Int, userUID: String) = callbackFlow {
         val snapshotListener = favouritesRef
             .whereEqualTo("productId",productId)
             .whereEqualTo("userUID", userUID)
@@ -77,14 +77,14 @@ class FavouritesRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteFavouriteProduct(
-        userFavouriteId: String
+    override suspend fun deleteProductFromFavourites(
+        favouriteId: String
     ): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
 
             try {
-                favouritesRef.document(userFavouriteId)
+                favouritesRef.document(favouriteId)
                     .delete()
                     .await()
                 emit(Resource.Success(true))

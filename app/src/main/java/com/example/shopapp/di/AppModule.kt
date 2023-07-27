@@ -12,11 +12,15 @@ import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddProductToFavouritesUseCase
 import com.example.shopapp.domain.use_case.AddUserUseCase
+import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
+import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
+import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
@@ -99,7 +103,8 @@ object AppModule {
     fun provideShopUseCases(
         productRepository: ProductRepository,
         authRepository: AuthRepository,
-        userStorageRepository: UserStorageRepository
+        userStorageRepository: UserStorageRepository,
+        favouritesRepository: FavouritesRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -113,7 +118,11 @@ object AppModule {
             loginUseCase = LoginUseCase(authRepository),
             signupUseCase = SignupUseCase(authRepository),
             logoutUseCase = LogoutUseCase(authRepository),
-            addUserUseCase = AddUserUseCase(userStorageRepository)
+            addUserUseCase = AddUserUseCase(userStorageRepository),
+            addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository),
+            getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository),
+            getFavouriteIdUseCase = GetFavouriteIdUseCase(favouritesRepository),
+            deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository)
         )
     }
 }
