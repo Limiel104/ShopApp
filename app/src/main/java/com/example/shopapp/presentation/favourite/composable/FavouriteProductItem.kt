@@ -37,7 +37,8 @@ fun FavouriteProductItem(
             ImageItem(
                 imageUrl = "imageUrl",
                 width = productItemImageWidth,
-                height = productItemImageHeight
+                height = productItemImageHeight,
+                onClick = {  }
             )
 
             IconButtonCard(

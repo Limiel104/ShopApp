@@ -32,7 +32,8 @@ fun CategoryContent(
     isSortSectionVisible: Boolean,
     isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
-    onSortSelected: () -> Unit
+    onSortSelected: () -> Unit,
+    onFavourite: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -71,8 +72,8 @@ fun CategoryContent(
                 itemsIndexed(productList) { index, product ->
                     ProductItem(
                         product = product,
-                        isProductInFavourites = index%3 == 0,
-                        onClick = { onProductSelected(product.id) }
+                        onImageClick = { onProductSelected(product.id) },
+                        onFavourite = { onFavourite(product.id) }
                     )
                 }
             }
@@ -102,7 +103,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 2,
@@ -110,7 +112,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             ),
             Product(
                 id = 3,
@@ -118,7 +121,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 4,
@@ -126,7 +130,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             )
         )
 
@@ -138,7 +143,8 @@ fun CategoryContentPreview() {
             isSortSectionVisible = false,
             isLoading = false,
             onProductSelected = {},
-            onSortSelected = {}
+            onSortSelected = {},
+            onFavourite = {}
         )
     }
 }
@@ -154,7 +160,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             ),
             Product(
                 id = 2,
@@ -162,7 +169,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 3,
@@ -170,7 +178,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 4,
@@ -178,7 +187,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             )
         )
 
@@ -190,7 +200,8 @@ fun CategoryContentToggleTruePreview() {
             isSortSectionVisible = true,
             isLoading = false,
             onProductSelected = {},
-            onSortSelected = {}
+            onSortSelected = {},
+            onFavourite = {}
         )
     }
 }

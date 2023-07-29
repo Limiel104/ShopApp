@@ -52,9 +52,8 @@ fun CategoryScreen(
         productList = productList,
         isSortSectionVisible = isSortSectionVisible,
         isLoading = isLoading,
-        onProductSelected = { productId: Int ->
-            viewModel.onEvent(CategoryEvent.OnProductSelected(productId))
-        },
-        onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) }
+        onProductSelected = { viewModel.onEvent(CategoryEvent.OnProductSelected(it)) },
+        onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) },
+        onFavourite = { viewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(it)) }
     )
 }

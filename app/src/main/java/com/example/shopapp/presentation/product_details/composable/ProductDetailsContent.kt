@@ -60,7 +60,8 @@ fun ProductDetailsContentPreview() {
             price = "195,59 PLN",
             description = productDescription,
             category = "men's clothing",
-            imageUrl = ""
+            imageUrl = "",
+            isInFavourites = true
         )
 
         ProductDetailsContent(

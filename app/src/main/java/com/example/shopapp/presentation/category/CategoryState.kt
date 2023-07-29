@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.category
 
+import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 
 data class CategoryState (
@@ -7,5 +8,7 @@ data class CategoryState (
     val productList: List<Product> = emptyList(),
     val isSortSectionVisible: Boolean = false,
     val productId: Int = -1,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val userFavourites: List<Favourite> = emptyList(),
+    val userUID: String? = null
 )

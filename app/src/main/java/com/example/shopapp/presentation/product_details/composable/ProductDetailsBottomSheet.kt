@@ -119,7 +119,8 @@ fun ProductDetailsBottomSheetPreview() {
             price = "195,59 PLN",
             description = productDescription,
             category = "men's clothing",
-            imageUrl = ""
+            imageUrl = "",
+            isInFavourites = true
         )
 
         ProductDetailsBottomSheet(
@@ -139,7 +140,8 @@ fun ProductDetailsBottomSheetFalsePreview() {
             price = "195,59 PLN",
             description = productDescription,
             category = "men's clothing",
-            imageUrl = ""
+            imageUrl = "",
+            isInFavourites = false
         )
 
         ProductDetailsBottomSheet(

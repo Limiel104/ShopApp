@@ -15,6 +15,5 @@ data class ShopUseCases(
     val addUserUseCase: AddUserUseCase,
     val addProductToFavouritesUseCase: AddProductToFavouritesUseCase,
     val getUserFavouritesUseCase: GetUserFavouritesUseCase,
-    val getFavouriteIdUseCase: GetFavouriteIdUseCase,
     val deleteProductFromFavouritesUseCase: DeleteProductFromFavouritesUseCase
 )

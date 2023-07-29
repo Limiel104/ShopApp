@@ -14,7 +14,8 @@ fun ProductDto.toProduct(): Product {
         price = mappedPrice,
         description = description,
         category = category,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        isInFavourites = false
     )
 }
 
@@ -28,7 +29,8 @@ fun ProductEntity.toProduct(): Product {
         price = mappedPrice,
         description = description,
         category = category,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        isInFavourites = isInFavourites
     )
 }
 
@@ -42,6 +44,7 @@ fun Product.toProductEntity(): ProductEntity {
         price = priceOnlyDigits.toDouble(),
         description = description,
         category = category,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        isInFavourites = isInFavourites
     )
 }

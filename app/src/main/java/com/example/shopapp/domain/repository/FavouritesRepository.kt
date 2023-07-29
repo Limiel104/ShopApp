@@ -10,7 +10,5 @@ interface FavouritesRepository {
 
     suspend fun getUserFavourites(userUID: String): Flow<Resource<List<Favourite>>>
 
-    suspend fun getFavouriteId(productId: Int, userUID: String): Flow<Resource<String>>
-
     suspend fun deleteProductFromFavourites(favouriteId: String): Flow<Resource<Boolean>>
 }

@@ -29,19 +29,19 @@ import com.example.shopapp.util.Constants.productItemImageWidth
 @Composable
 fun ProductItem(
     product: Product,
-    isProductInFavourites: Boolean,
-    onClick: () -> Unit
+    onImageClick: () -> Unit,
+    onFavourite: () -> Unit
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .clickable { onClick() },
+            .background(MaterialTheme.colors.background),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ImageItem(
             imageUrl = product.imageUrl,
             width = productItemImageWidth,
-            height = productItemImageHeight
+            height = productItemImageHeight,
+            onClick = { onImageClick() }
         )
 
         Column(
@@ -63,12 +63,12 @@ fun ProductItem(
                 )
 
                 Icon(
-                    imageVector = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                    tint = if(isProductInFavourites) Color.Red else Color.Gray,
+                    imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                    tint = if(product.isInFavourites) Color.Red else Color.Gray,
                     contentDescription = FAVOURITE_BTN,
                     modifier = Modifier
                         .weight(1F)
-                        .clickable {}
+                        .clickable { onFavourite() }
                 )
             }
 
@@ -92,13 +92,14 @@ fun ProductItemFavouriteFalsePreview() {
             price = "195,59 PLN",
             description = productDescription,
             category = "men's clothing",
-            imageUrl = "imageUrl"
+            imageUrl = "imageUrl",
+            isInFavourites = false
         )
 
         ProductItem(
             product = product,
-            isProductInFavourites = false,
-            onClick = {}
+            onImageClick = {},
+            onFavourite = {}
         )
     }
 }
@@ -113,13 +114,14 @@ fun ProductItemFavouriteTruePreview() {
             price = "195,59 PLN",
             description = productDescription,
             category = "men's clothing",
-            imageUrl = "imageUrl"
+            imageUrl = "imageUrl",
+            isInFavourites = true
         )
 
         ProductItem(
             product = product,
-            isProductInFavourites = true,
-            onClick = {}
+            onImageClick = {},
+            onFavourite = {}
         )
     }
 }

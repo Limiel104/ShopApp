@@ -22,8 +22,10 @@ class FavouritesRepositoryImpl @Inject constructor(
             emit(Resource.Loading(true))
 
             try {
-                favouritesRef.document().set(
+                val documentId = favouritesRef.document().id
+                favouritesRef.document(documentId).set(
                     mapOf(
+                        "favouriteId" to documentId,
                         "userUID" to userUID,
                         "productId" to productId
                     )
@@ -45,26 +47,6 @@ class FavouritesRepositoryImpl @Inject constructor(
                 val response = if (snapshot != null) {
                     val userFavourites = snapshot.toObjects(Favourite::class.java)
                     Resource.Success(userFavourites)
-                }
-                else {
-                    Resource.Error(e!!.localizedMessage as String)
-                }
-                trySend(response)
-            }
-
-        awaitClose {
-            snapshotListener.remove()
-        }
-    }
-
-    override suspend fun getFavouriteId(productId: Int, userUID: String) = callbackFlow {
-        val snapshotListener = favouritesRef
-            .whereEqualTo("productId",productId)
-            .whereEqualTo("userUID", userUID)
-            .addSnapshotListener { snapshot, e ->
-                val response = if (snapshot != null) {
-                    val userFavouriteId = snapshot.documents[0].id
-                    Resource.Success(userFavouriteId)
                 }
                 else {
                     Resource.Error(e!!.localizedMessage as String)

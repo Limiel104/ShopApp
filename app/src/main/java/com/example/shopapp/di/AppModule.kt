@@ -17,7 +17,6 @@ import com.example.shopapp.domain.use_case.AddUserUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
-import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
@@ -121,7 +120,6 @@ object AppModule {
             addUserUseCase = AddUserUseCase(userStorageRepository),
             addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository),
             getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository),
-            getFavouriteIdUseCase = GetFavouriteIdUseCase(favouritesRepository),
             deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository)
         )
     }
