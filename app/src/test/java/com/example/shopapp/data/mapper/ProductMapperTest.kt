@@ -31,7 +31,8 @@ class ProductMapperTest {
             price = "159,99 PLN",
             description = "Product description",
             category = "men's clothing",
-            imageUrl = "imageUrl"
+            imageUrl = "imageUrl",
+            isInFavourites = false
         )
 
         productEntity = ProductEntity(
@@ -40,7 +41,8 @@ class ProductMapperTest {
             price = 159.99,
             description = "Product description",
             category = "men's clothing",
-            imageUrl = "imageUrl"
+            imageUrl = "imageUrl",
+            isInFavourites = false
         )
     }
 

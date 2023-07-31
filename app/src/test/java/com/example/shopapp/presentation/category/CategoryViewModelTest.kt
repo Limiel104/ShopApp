@@ -1,11 +1,13 @@
 package com.example.shopapp.presentation.category
 
 import androidx.lifecycle.SavedStateHandle
+import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
+import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -31,11 +33,44 @@ class CategoryViewModelTest {
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var productList: List<Product>
+    @MockK
+    private lateinit var user: FirebaseUser
+    private lateinit var userFavourites: List<Favourite>
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         every { savedStateHandle.get<String>(any()) } returns "men's clothing"
+        every { shopUseCases.getCurrentUserUseCase() } returns user
+        every { user.uid } returns "userUID"
+
+        userFavourites = listOf(
+            Favourite(
+                favouriteId = "favourite1",
+                productId = 9,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite7",
+                productId = 7,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite8",
+                productId = 3,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite12",
+                productId = 1,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite17",
+                productId = 15,
+                userUID = "userUID"
+            )
+        )
 
         productList = listOf(
             Product(
@@ -44,7 +79,8 @@ class CategoryViewModelTest {
                 price = "123,99 PLN",
                 description = "description of a product 1",
                 category = "men's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = true
             ),
             Product(
                 id = 2,
@@ -52,7 +88,8 @@ class CategoryViewModelTest {
                 price = "41,99 PLN",
                 description = "description of a product 2",
                 category = "women's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             ),
             Product(
                 id = 3,
@@ -60,7 +97,8 @@ class CategoryViewModelTest {
                 price = "34,99 PLN",
                 description = "description of a product 3",
                 category = "men's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = true
             )
         )
     }
@@ -85,6 +123,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(productList)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -101,6 +147,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(productList)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -117,6 +171,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Error("Error")
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns emptyList()
 
         categoryViewModel = setViewModel()
 
@@ -133,6 +195,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Loading(true)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Loading(true)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns emptyList()
 
         categoryViewModel = setViewModel()
 
@@ -151,6 +221,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(productList)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -172,6 +250,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(productList)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -193,6 +279,14 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(productList)
         )
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 

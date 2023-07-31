@@ -1,73 +1,55 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.domain.repository.FavouritesRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.model.Favourite
 import com.google.common.truth.Truth.assertThat
-import io.mockk.MockKAnnotations
-import io.mockk.clearAllMocks
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 class GetFavouriteIdUseCaseTest {
 
-    @MockK
-    private lateinit var favouritesRepository: FavouritesRepository
     private lateinit var getFavouriteIdUseCase: GetFavouriteIdUseCase
+    private lateinit var favourites: List<Favourite>
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this)
-        this.getFavouriteIdUseCase = GetFavouriteIdUseCase(favouritesRepository)
-    }
+        getFavouriteIdUseCase = GetFavouriteIdUseCase()
 
-    @After
-    fun tearDown() {
-        clearAllMocks()
-    }
-
-    @Test
-    fun `getting favourite id was successfully`() {
-        runBlocking {
-            val productId = 1
-            val userUID = "userUID"
-            val favouriteId = "favouriteId"
-            val result = Resource.Success(favouriteId)
-
-            coEvery { favouritesRepository.getFavouriteId(productId,userUID) } returns flowOf(result)
-
-            val response = getFavouriteIdUseCase(productId,userUID).first()
-
-            coVerify(exactly = 1) { getFavouriteIdUseCase(productId,userUID) }
-            assertThat(response).isEqualTo(result)
-            assertThat(response.data).isEqualTo(favouriteId)
-            assertThat(response.message).isNull()
-        }
-    }
-
-    @Test
-    fun `getting favourite id was not successful and error message was returned`() {
-        runBlocking {
-            val productId = 1
-            val userUID = "userUID"
-
-            coEvery {
-                favouritesRepository.getFavouriteId(productId,userUID)
-            } returns flowOf(
-                Resource.Error("Error")
+        favourites = listOf(
+            Favourite(
+                favouriteId = "favourite1",
+                productId = 9,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite7",
+                productId = 7,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite8",
+                productId = 3,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite12",
+                productId = 1,
+                userUID = "userUID"
+            ),
+            Favourite(
+                favouriteId = "favourite17",
+                productId = 15,
+                userUID = "userUID"
             )
+        )
+    }
 
-            val response = getFavouriteIdUseCase(productId,userUID).first()
+    @Test
+    fun `get favourite's id`() {
+        val productId = 1
+        val favouriteId = "favourite12"
 
-            coVerify(exactly = 1) { getFavouriteIdUseCase(productId,userUID) }
-            assertThat(response.message).isEqualTo("Error")
-            assertThat(response.data).isNull()
-        }
+        val result = getFavouriteIdUseCase(favourites, productId)
+
+        assertThat(favouriteId).isEqualTo(result)
     }
 }

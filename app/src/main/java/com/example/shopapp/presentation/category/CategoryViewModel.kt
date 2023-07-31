@@ -39,6 +39,7 @@ class CategoryViewModel @Inject constructor(
         }
 
         getProducts(_categoryState.value.categoryId)
+
         shopUseCases.getCurrentUserUseCase()?.let {
             _categoryState.value = categoryState.value.copy(
                 userUID = it.uid
