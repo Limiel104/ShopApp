@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
@@ -68,10 +67,9 @@ class CategoryViewModel @Inject constructor(
                     Log.i(TAG,"User is not logged in - login or signup")
                 }
                 else if(isProductInFavourites) {
-                    val favourite = _categoryState.value.userFavourites.find { favourite ->
-                        favourite.productId == selectedProductId
-                    }
-                    favourite?.let { deleteProductFromUserFavourites(it.favouriteId) }
+                    val favourites = _categoryState.value.userFavourites
+                    val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
+                    deleteProductFromUserFavourites(favouriteId)
                 }
                 else {
                     addProductToUserFavourites(selectedProductId,userUID)
@@ -142,30 +140,9 @@ class CategoryViewModel @Inject constructor(
     fun setUserFavourites() {
         val products = _categoryState.value.productList
         val favourites = _categoryState.value.userFavourites
-        val productsWithUserFavourites: MutableList<Product> = mutableListOf()
-
-        val indexes: MutableList<Int> = mutableListOf()
-
-        for(favourite in favourites) {
-            indexes.add(favourite.productId)
-        }
-
-        for(product in products) {
-            productsWithUserFavourites.add(
-                Product(
-                    id = product.id,
-                    title = product.title,
-                    price = product.price,
-                    description = product.description,
-                    category = product.category,
-                    imageUrl = product.imageUrl,
-                    isInFavourites = indexes.contains(product.id)
-                )
-            )
-        }
 
         _categoryState.value = categoryState.value.copy(
-            productList = productsWithUserFavourites
+            productList = shopUseCases.setUserFavouritesUseCase(products,favourites)
         )
     }
 

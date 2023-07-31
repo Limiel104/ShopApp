@@ -17,11 +17,13 @@ import com.example.shopapp.domain.use_case.AddUserUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
+import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
+import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
@@ -120,7 +122,9 @@ object AppModule {
             addUserUseCase = AddUserUseCase(userStorageRepository),
             addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository),
             getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository),
-            deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository)
+            deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository),
+            setUserFavouritesUseCase = SetUserFavouritesUseCase(),
+            getFavouriteIdUseCase = GetFavouriteIdUseCase()
         )
     }
 }
