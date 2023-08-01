@@ -11,16 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
 
 @Composable
 fun FavouriteProductItem(
-    title: String,
+    product:Product,
     onClick: () -> Unit
 ) {
     Column(
@@ -35,10 +37,10 @@ fun FavouriteProductItem(
             contentAlignment = Alignment.TopEnd
         ) {
             ImageItem(
-                imageUrl = "imageUrl",
+                imageUrl = product.imageUrl,
                 width = productItemImageWidth,
                 height = productItemImageHeight,
-                onClick = {  }
+                onClick = { onClick() }
             )
 
             IconButtonCard(
@@ -49,8 +51,8 @@ fun FavouriteProductItem(
         }
 
         ProductItemTitle(
-            name = title,
-            price = "195,59 PLN"
+            name = product.title,
+            price = product.price
         )
     }
 }
@@ -58,9 +60,19 @@ fun FavouriteProductItem(
 @Preview
 @Composable
 fun FavouriteProductItemPreview() {
+    val product = Product(
+        id = 1,
+        title = "Shirt",
+        price = "195,59 PLN",
+        description = productDescription,
+        category = "men's clothing",
+        imageUrl = "imageUrl",
+        isInFavourites = true
+    )
+
     ShopAppTheme {
         FavouriteProductItem(
-            title = "Shirt",
+            product = product,
             onClick = {}
         )
     }

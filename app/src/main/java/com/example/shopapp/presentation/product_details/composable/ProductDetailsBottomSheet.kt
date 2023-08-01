@@ -23,7 +23,7 @@ import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.FAVOURITE_BTN
+import com.example.shopapp.util.Constants.FAVOURITES_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.productDescription
@@ -78,7 +78,7 @@ fun ProductDetailsBottomSheet(
 
             IconButtonCard(
                 icon = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                description = FAVOURITE_BTN,
+                description = FAVOURITES_BTN,
                 color = if(isProductInFavourites) Color.Red else Color.Gray,
                 onClick = {}
             )

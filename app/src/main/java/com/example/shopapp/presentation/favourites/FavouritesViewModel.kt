@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.FAVOURITE_VM
+import com.example.shopapp.util.Category
+import com.example.shopapp.util.Constants.FAVOURITES_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -26,24 +28,13 @@ class FavouritesViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        Log.i(TAG, FAVOURITE_VM)
+        Log.i(TAG, FAVOURITES_VM)
 
         checkIfUserIsLoggedIn()
 
-        val productList = listOf(
-            "men's clothing 1",
-            "men's clothing 2",
-            "women's clothing 1",
-            "jewelery 1",
-            "men's clothing 3",
-            "women's clothing 2",
-            "jewelery 2",
-            "women's clothing 3"
-        )
-
-        _favouritesState.value = favouritesState.value.copy(
-            productList = productList
-        )
+        if(_favouritesState.value.isUserLoggedIn) {
+            getUserFavourites(_favouritesState.value.userUID)
+        }
     }
 
     fun onEvent(event: FavouritesEvent) {
@@ -73,9 +64,79 @@ class FavouritesViewModel @Inject constructor(
     fun checkIfUserIsLoggedIn() {
         viewModelScope.launch {
             val currentUser = shopUseCases.getCurrentUserUseCase()
+
             _favouritesState.value = favouritesState.value.copy(
-                    isUserLoggedIn = currentUser != null
+                isUserLoggedIn = currentUser != null
+            )
+
+            if(currentUser != null) {
+                _favouritesState.value = favouritesState.value.copy(
+                    userUID = currentUser.uid
                 )
+            }
         }
+    }
+
+    fun getUserFavourites(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserFavouritesUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading favourites: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { favourites ->
+                            _favouritesState.value = favouritesState.value.copy(
+                                favouriteList = favourites
+                            )
+                            getProducts(Category.All.id)
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getProducts(categoryId: String) {
+        viewModelScope.launch {
+            shopUseCases.getProductsUseCase(categoryId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { products ->
+                            _favouritesState.value = favouritesState.value.copy(
+                                productList = products
+                            )
+                            getFavouriteProducts()
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getFavouriteProducts() {
+        val products = _favouritesState.value.productList
+        val favourites = _favouritesState.value.favouriteList
+
+        _favouritesState.value = favouritesState.value.copy(
+            favouriteProducts = shopUseCases.filterProductsByUserFavouritesUseCase(products,favourites)
+        )
     }
 }

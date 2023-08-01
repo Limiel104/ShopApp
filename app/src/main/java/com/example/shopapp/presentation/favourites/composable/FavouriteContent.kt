@@ -2,29 +2,37 @@ package com.example.shopapp.presentation.favourites.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.FAVOURITES_CPI
+import com.example.shopapp.util.Constants.productDescription
 
 @Composable
 fun FavouriteContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    productList: List<String>,
-    onProductSelected: (String) -> Unit
+    productList: List<Product>,
+    isLoading: Boolean,
+    onProductSelected: (Int) -> Unit
 ) {
     Scaffold(
         topBar = { FavouriteTopBar() },
@@ -48,10 +56,21 @@ fun FavouriteContent(
             ) {
                 itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(
-                        title = product,
-                        onClick = { onProductSelected(product) }
+                        product = product,
+                        onClick = { onProductSelected(product.id) }
                     )
                 }
+            }
+        }
+
+        if(isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(FAVOURITES_CPI),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
     }
@@ -62,17 +81,40 @@ fun FavouriteContent(
 fun FavouriteContentPreview() {
     ShopAppTheme {
         val productList = listOf(
-            "Shirt with regular line",
-            "Shorts with flowers",
-            "Jumper with regular line",
-            "Skirt in black",
-            "Shirt with irregular line"
+            Product(
+                id = 1,
+                title = "Shirt",
+                price = "195,59 PLN",
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 2,
+                title = "Shirt",
+                price = "195,59 PLN",
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 3,
+                title = "Shirt",
+                price = "195,59 PLN",
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
         )
 
         FavouriteContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             productList = productList,
+            isLoading = false,
             onProductSelected = {}
         )
     }

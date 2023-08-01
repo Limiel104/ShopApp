@@ -21,7 +21,7 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
-import com.example.shopapp.util.Constants.FAVOURITE_BTN
+import com.example.shopapp.util.Constants.FAVOURITES_BTN
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
@@ -137,7 +137,7 @@ class ProductDetailsScreenTest {
     fun productDetailsScreenProductDetailsBottomSheet_favouriteButtonIsDisplayedCorrectly() {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertContentDescriptionContains(FAVOURITE_BTN)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertContentDescriptionContains(FAVOURITES_BTN)
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertHasClickAction()
     }
 
