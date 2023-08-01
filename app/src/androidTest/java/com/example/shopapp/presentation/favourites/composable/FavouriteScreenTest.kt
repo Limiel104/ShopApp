@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite.composable
+package com.example.shopapp.presentation.favourites.composable
 
 import androidx.activity.compose.setContent
 import androidx.compose.material.rememberScaffoldState

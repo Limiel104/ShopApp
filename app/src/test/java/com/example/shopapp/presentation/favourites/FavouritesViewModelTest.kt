@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite
+package com.example.shopapp.presentation.favourites
 
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.MainDispatcherRule
@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class FavouriteViewModelTest {
+class FavouritesViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
@@ -23,7 +23,7 @@ class FavouriteViewModelTest {
 
     @MockK
     private lateinit var shopUseCases: ShopUseCases
-    private lateinit var favouriteViewModel: FavouriteViewModel
+    private lateinit var favouritesViewModel: FavouritesViewModel
     private lateinit var productList: List<String>
     @MockK
     private lateinit var user: FirebaseUser
@@ -32,7 +32,7 @@ class FavouriteViewModelTest {
     fun setUp() {
         MockKAnnotations.init(this)
         every { shopUseCases.getCurrentUserUseCase() } returns user
-        this.favouriteViewModel = FavouriteViewModel(shopUseCases)
+        this.favouritesViewModel = FavouritesViewModel(shopUseCases)
 
         productList = listOf(
             "men's clothing 1",
@@ -51,15 +51,15 @@ class FavouriteViewModelTest {
         clearAllMocks()
     }
 
-    private fun getCurrentFavouriteState(): FavouriteState {
-        return favouriteViewModel.favouriteState.value
+    private fun getCurrentFavouriteState(): FavouritesState {
+        return favouritesViewModel.favouritesState.value
     }
 
     @Test
     fun `checkIfUserIsLoggedIn is successful`() {
-        favouriteViewModel.checkIfUserIsLoggedIn()
+        favouritesViewModel.checkIfUserIsLoggedIn()
 
-        val isUserLoggedIn = favouriteViewModel.favouriteState.value.isUserLoggedIn
+        val isUserLoggedIn = favouritesViewModel.favouritesState.value.isUserLoggedIn
 
         assertThat(isUserLoggedIn).isTrue()
         verify(exactly = 2) { shopUseCases.getCurrentUserUseCase() }
@@ -77,7 +77,7 @@ class FavouriteViewModelTest {
     fun `event onProductSelected sets product id state correctly`() {
         val initialProductId = getCurrentFavouriteState().productId
 
-        favouriteViewModel.onEvent(FavouriteEvent.OnProductSelected("men's clothing 2"))
+        favouritesViewModel.onEvent(FavouritesEvent.OnProductSelected("men's clothing 2"))
 
         val resultProductId = getCurrentFavouriteState().productId
 

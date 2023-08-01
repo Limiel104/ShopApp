@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite.composable
+package com.example.shopapp.presentation.favourites.composable
 
 import android.util.Log
 import androidx.compose.material.rememberScaffoldState
@@ -8,9 +8,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.presentation.favourite.FavouriteEvent
-import com.example.shopapp.presentation.favourite.FavouriteUiEvent
-import com.example.shopapp.presentation.favourite.FavouriteViewModel
+import com.example.shopapp.presentation.favourites.FavouritesEvent
+import com.example.shopapp.presentation.favourites.FavouritesUiEvent
+import com.example.shopapp.presentation.favourites.FavouritesViewModel
 import com.example.shopapp.util.Constants.FAVOURITE_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.productId
@@ -21,23 +21,23 @@ import kotlinx.coroutines.flow.collectLatest
 fun FavouriteScreen(
     navController: NavController,
     bottomBarHeight: Dp,
-    viewModel: FavouriteViewModel = hiltViewModel()
+    viewModel: FavouritesViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
-    val productList = viewModel.favouriteState.value.productList
-    val isUserLoggedIn = viewModel.favouriteState.value.isUserLoggedIn
+    val productList = viewModel.favouritesState.value.productList
+    val isUserLoggedIn = viewModel.favouritesState.value.isUserLoggedIn
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             Log.i(TAG, FAVOURITE_SCREEN_LE)
             when(event) {
-                is FavouriteUiEvent.NavigateToProductDetails -> {
+                is FavouritesUiEvent.NavigateToProductDetails -> {
                     navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
                 }
-                is FavouriteUiEvent.NavigateToLogin -> {
+                is FavouritesUiEvent.NavigateToLogin -> {
                     navController.navigate(Screen.LoginScreen.route)
                 }
-                is FavouriteUiEvent.NavigateToSignup -> {
+                is FavouritesUiEvent.NavigateToSignup -> {
                     navController.navigate(Screen.SignupScreen.route)
                 }
             }
@@ -50,7 +50,7 @@ fun FavouriteScreen(
             bottomBarHeight = bottomBarHeight,
             productList = productList,
             onProductSelected = { productId: String ->
-                viewModel.onEvent(FavouriteEvent.OnProductSelected(productId))
+                viewModel.onEvent(FavouritesEvent.OnProductSelected(productId))
             }
         )
     }
@@ -58,8 +58,8 @@ fun FavouriteScreen(
         UserNotLoggedInContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            onLogin = { viewModel.onEvent(FavouriteEvent.OnLogin) },
-            onSignup = { viewModel.onEvent(FavouriteEvent.OnSignup) }
+            onLogin = { viewModel.onEvent(FavouritesEvent.OnLogin) },
+            onSignup = { viewModel.onEvent(FavouritesEvent.OnSignup) }
         )
     }
 }

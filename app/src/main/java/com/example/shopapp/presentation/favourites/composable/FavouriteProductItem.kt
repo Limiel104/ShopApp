@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite.composable
+package com.example.shopapp.presentation.favourites.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

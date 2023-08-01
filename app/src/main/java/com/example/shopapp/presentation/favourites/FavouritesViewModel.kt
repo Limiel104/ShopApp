@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite
+package com.example.shopapp.presentation.favourites
 
 import android.util.Log
 import androidx.compose.runtime.State
@@ -15,14 +15,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteViewModel @Inject constructor(
+class FavouritesViewModel @Inject constructor(
     private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
-    private val _favouriteState = mutableStateOf(FavouriteState())
-    val favouriteState: State<FavouriteState> = _favouriteState
+    private val _favouritesState = mutableStateOf(FavouritesState())
+    val favouritesState: State<FavouritesState> = _favouritesState
 
-    private val _eventFlow = MutableSharedFlow<FavouriteUiEvent>()
+    private val _eventFlow = MutableSharedFlow<FavouritesUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
@@ -41,30 +41,30 @@ class FavouriteViewModel @Inject constructor(
             "women's clothing 3"
         )
 
-        _favouriteState.value = favouriteState.value.copy(
+        _favouritesState.value = favouritesState.value.copy(
             productList = productList
         )
     }
 
-    fun onEvent(event: FavouriteEvent) {
+    fun onEvent(event: FavouritesEvent) {
         when(event) {
-            is FavouriteEvent.OnProductSelected -> {
+            is FavouritesEvent.OnProductSelected -> {
                 viewModelScope.launch {
-                    _favouriteState.value = favouriteState.value.copy(
+                    _favouritesState.value = favouritesState.value.copy(
                         productId = event.value
                     )
-                    _eventFlow.emit(FavouriteUiEvent.NavigateToProductDetails(event.value))
+                    _eventFlow.emit(FavouritesUiEvent.NavigateToProductDetails(event.value))
                 }
             }
-            is FavouriteEvent.OnLogin -> {
+            is FavouritesEvent.OnLogin -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouriteUiEvent.NavigateToLogin)
+                    _eventFlow.emit(FavouritesUiEvent.NavigateToLogin)
                 }
 
             }
-            is FavouriteEvent.OnSignup -> {
+            is FavouritesEvent.OnSignup -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouriteUiEvent.NavigateToSignup)
+                    _eventFlow.emit(FavouritesUiEvent.NavigateToSignup)
                 }
             }
         }
@@ -73,7 +73,7 @@ class FavouriteViewModel @Inject constructor(
     fun checkIfUserIsLoggedIn() {
         viewModelScope.launch {
             val currentUser = shopUseCases.getCurrentUserUseCase()
-            _favouriteState.value = favouriteState.value.copy(
+            _favouritesState.value = favouritesState.value.copy(
                     isUserLoggedIn = currentUser != null
                 )
         }
