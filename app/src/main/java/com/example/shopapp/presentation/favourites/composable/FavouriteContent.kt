@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.FAVOURITES_CPI
+import com.example.shopapp.util.Constants.FAVOURITE_LAZY_VERTICAL_GRID
 import com.example.shopapp.util.Constants.productDescription
 
 @Composable
@@ -52,7 +53,9 @@ fun FavouriteContent(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalArrangement = Arrangement.spacedBy(25.dp)
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                modifier = Modifier
+                    .testTag(FAVOURITE_LAZY_VERTICAL_GRID)
             ) {
                 itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(

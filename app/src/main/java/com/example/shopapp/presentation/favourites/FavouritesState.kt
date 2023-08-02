@@ -10,5 +10,4 @@ data class FavouritesState (
     val userUID: String = "",
     val isLoading: Boolean = false,
     val favouriteList: List<Favourite> = emptyList(),
-    val favouriteProducts: List<Product> = emptyList()
 )

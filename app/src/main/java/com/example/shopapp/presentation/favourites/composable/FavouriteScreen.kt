@@ -28,7 +28,6 @@ fun FavouriteScreen(
     val scaffoldState = rememberScaffoldState()
     val productList = viewModel.favouritesState.value.productList
     val isUserLoggedIn = viewModel.favouritesState.value.isUserLoggedIn
-    val favouriteProducts = viewModel.favouritesState.value.favouriteProducts
     val isLoading = viewModel.favouritesState.value.isLoading
     val context = LocalContext.current
 
@@ -56,7 +55,7 @@ fun FavouriteScreen(
         FavouriteContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            productList = favouriteProducts,
+            productList = productList,
             isLoading = isLoading,
             onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) }
         )

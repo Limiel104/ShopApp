@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.FAVOURITES_VM
@@ -92,7 +93,9 @@ class FavouritesViewModel @Inject constructor(
                             _favouritesState.value = favouritesState.value.copy(
                                 favouriteList = favourites
                             )
-                            getProducts(Category.All.id)
+                            if(favourites.isNotEmpty()) {
+                                getProducts(Category.All.id)
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -116,10 +119,9 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         response.data?.let { products ->
-                            _favouritesState.value = favouritesState.value.copy(
-                                productList = products
-                            )
-                            getFavouriteProducts()
+                            if(products.isNotEmpty()) {
+                                getFavouriteProducts(products)
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -131,12 +133,11 @@ class FavouritesViewModel @Inject constructor(
         }
     }
 
-    fun getFavouriteProducts() {
-        val products = _favouritesState.value.productList
+    fun getFavouriteProducts(products: List<Product>) {
         val favourites = _favouritesState.value.favouriteList
 
         _favouritesState.value = favouritesState.value.copy(
-            favouriteProducts = shopUseCases.filterProductsByUserFavouritesUseCase(products,favourites)
+            productList = shopUseCases.filterProductsByUserFavouritesUseCase(products,favourites)
         )
     }
 }
