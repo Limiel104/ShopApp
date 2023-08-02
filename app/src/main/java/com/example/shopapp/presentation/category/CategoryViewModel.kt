@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Favourite
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
@@ -38,14 +40,7 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        getProducts(_categoryState.value.categoryId)
-
-        shopUseCases.getCurrentUserUseCase()?.let {
-            _categoryState.value = categoryState.value.copy(
-                userUID = it.uid
-            )
-            getUserFavourites(it.uid)
-        }
+        checkIfUserIsLoggedIn()
     }
 
     fun onEvent(event: CategoryEvent) {
@@ -84,7 +79,23 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun getProducts(categoryId: String) {
+    fun checkIfUserIsLoggedIn() {
+        val user = shopUseCases.getCurrentUserUseCase()
+        if(user != null) {
+            _categoryState.value = categoryState.value.copy(
+                userUID = user.uid
+            )
+            getUserFavourites(user.uid)
+        }
+        else {
+            getProducts()
+        }
+    }
+
+    fun getProducts(
+        categoryId: String = _categoryState.value.categoryId,
+        userFavourites: List<Favourite> = _categoryState.value.userFavourites
+    ) {
         viewModelScope.launch {
             shopUseCases.getProductsUseCase(categoryId).collect { response ->
                 when(response) {
@@ -96,9 +107,8 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         response.data?.let { products ->
-                            _categoryState.value = categoryState.value.copy(
-                                productList = products
-                            )
+                            Log.i(TAG, "Products: $products")
+                            setUserFavourites(products,userFavourites)
                         }
                     }
                     is Resource.Error -> {
@@ -127,7 +137,7 @@ class CategoryViewModel @Inject constructor(
                                 userFavourites = favourites
                             )
                         }
-                        setUserFavourites()
+                        getProducts()
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
@@ -138,21 +148,19 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun setUserFavourites() {
-        val products = _categoryState.value.productList
-        val favourites = _categoryState.value.userFavourites
-
+    fun setUserFavourites(products: List<Product>,favourites: List<Favourite>) {
         _categoryState.value = categoryState.value.copy(
             productList = shopUseCases.setUserFavouritesUseCase(products,favourites)
         )
     }
 
     fun isProductInFavourites(productId: Int): Boolean {
-        val favourites = _categoryState.value.userFavourites
-        val result = favourites.find { favourite ->
-            favourite.productId == productId
+        val products = _categoryState.value.productList
+        val product = products.find { product ->
+            product.id == productId
         }
-        return result != null
+
+        return product!!.isInFavourites
     }
     fun addProductToUserFavourites(productId: Int, userUID: String) {
         viewModelScope.launch {
