@@ -54,21 +54,9 @@ class CategoryViewModel @Inject constructor(
                 }
             }
             is CategoryEvent.OnFavouriteButtonSelected -> {
-                val selectedProductId = event.value
-                val isProductInFavourites = isProductInFavourites(selectedProductId)
-                val userUID = _categoryState.value.userUID
-
-                if(userUID == null) {
-//                    TODO dialog informing that user is not logged in and needs an account to do this
-                    Log.i(TAG,"User is not logged in - login or signup")
-                }
-                else if(isProductInFavourites) {
-                    val favourites = _categoryState.value.userFavourites
-                    val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
-                    deleteProductFromUserFavourites(favouriteId)
-                }
-                else {
-                    addProductToUserFavourites(selectedProductId,userUID)
+                if(!_categoryState.value.isButtonLocked) {
+                    changeButtonLockState(true)
+                    onFavouriteBattonClicked(event.value)
                 }
             }
             is CategoryEvent.ToggleSortSection -> {
@@ -76,6 +64,25 @@ class CategoryViewModel @Inject constructor(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
             }
+        }
+    }
+
+    fun onFavouriteBattonClicked(selectedProductId: Int) {
+        val isProductInFavourites = isProductInFavourites(selectedProductId)
+        val userUID = _categoryState.value.userUID
+
+        if(userUID == null) {
+//                    TODO dialog informing that user is not logged in and needs an account to do this
+            Log.i(TAG,"User is not logged in - login or signup")
+            changeButtonLockState(false)
+        }
+        else if(isProductInFavourites) {
+            val favourites = _categoryState.value.userFavourites
+            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
+            deleteProductFromUserFavourites(favouriteId)
+        }
+        else {
+            addProductToUserFavourites(selectedProductId,userUID)
         }
     }
 
@@ -108,7 +115,9 @@ class CategoryViewModel @Inject constructor(
                     is Resource.Success -> {
                         response.data?.let { products ->
                             Log.i(TAG, "Products: $products")
-                            setUserFavourites(products,userFavourites)
+                            if(products.isNotEmpty()) {
+                                setUserFavourites(products, userFavourites)
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -180,6 +189,7 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
+                changeButtonLockState(false)
             }
         }
     }
@@ -202,7 +212,15 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
+                changeButtonLockState(false)
             }
         }
+    }
+
+    fun changeButtonLockState(value: Boolean) {
+        Log.i(TAG,"LOCK - $value")
+        _categoryState.value = categoryState.value.copy(
+            isButtonLocked = value
+        )
     }
 }

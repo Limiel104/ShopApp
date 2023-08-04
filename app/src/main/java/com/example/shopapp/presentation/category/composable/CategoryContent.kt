@@ -31,6 +31,7 @@ fun CategoryContent(
     productList: List<Product>,
     isSortSectionVisible: Boolean,
     isLoading: Boolean,
+    isButtonLocked: Boolean,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
     onFavourite: (Int) -> Unit
@@ -69,9 +70,10 @@ fun CategoryContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                itemsIndexed(productList) { index, product ->
+                itemsIndexed(productList) { _, product ->
                     ProductItem(
                         product = product,
+                        isButtonLocked = isButtonLocked,
                         onImageClick = { onProductSelected(product.id) },
                         onFavourite = { onFavourite(product.id) }
                     )
@@ -142,6 +144,7 @@ fun CategoryContentPreview() {
             productList = productList,
             isSortSectionVisible = false,
             isLoading = false,
+            isButtonLocked = false,
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {}
@@ -199,6 +202,7 @@ fun CategoryContentToggleTruePreview() {
             productList = productList,
             isSortSectionVisible = true,
             isLoading = false,
+            isButtonLocked = false,
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {}

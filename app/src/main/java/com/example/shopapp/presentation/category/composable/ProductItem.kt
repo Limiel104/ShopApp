@@ -29,6 +29,7 @@ import com.example.shopapp.util.Constants.productItemImageWidth
 @Composable
 fun ProductItem(
     product: Product,
+    isButtonLocked: Boolean,
     onImageClick: () -> Unit,
     onFavourite: () -> Unit
 ) {
@@ -68,7 +69,7 @@ fun ProductItem(
                     contentDescription = FAVOURITES_BTN,
                     modifier = Modifier
                         .weight(1F)
-                        .clickable { onFavourite() }
+                        .clickable { if(!isButtonLocked) { onFavourite() } }
                 )
             }
 
@@ -98,6 +99,7 @@ fun ProductItemFavouriteFalsePreview() {
 
         ProductItem(
             product = product,
+            isButtonLocked = false,
             onImageClick = {},
             onFavourite = {}
         )
@@ -120,6 +122,7 @@ fun ProductItemFavouriteTruePreview() {
 
         ProductItem(
             product = product,
+            isButtonLocked = false,
             onImageClick = {},
             onFavourite = {}
         )

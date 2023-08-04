@@ -10,5 +10,6 @@ data class CategoryState (
     val productId: Int = -1,
     val isLoading: Boolean = false,
     val userFavourites: List<Favourite> = emptyList(),
-    val userUID: String? = null
+    val userUID: String? = null,
+    val isButtonLocked: Boolean = false
 )

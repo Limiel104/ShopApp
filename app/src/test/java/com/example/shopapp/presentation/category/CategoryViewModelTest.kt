@@ -161,9 +161,6 @@ class CategoryViewModelTest {
         } returns flowOf(
             Resource.Success(emptyList())
         )
-        every {
-            shopUseCases.setUserFavouritesUseCase(any(),any())
-        } returns emptyList()
 
         categoryViewModel = setViewModel()
 
@@ -174,7 +171,6 @@ class CategoryViewModelTest {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
-            shopUseCases.setUserFavouritesUseCase(any(),any())
         }
     }
 
@@ -522,6 +518,34 @@ class CategoryViewModelTest {
     }
 
     @Test
+    fun `changeButtonLockState sets button lock state correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(emptyList())
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(emptyList())
+        )
+
+        categoryViewModel = setViewModel()
+
+        val initialSate = getCurrentCategoryState().isButtonLocked
+        categoryViewModel.changeButtonLockState(!initialSate)
+        val resultState = getCurrentCategoryState().isButtonLocked
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+        }
+        assertThat(initialSate).isFalse()
+        assertThat(resultState).isTrue()
+    }
+
+    @Test
     fun `event onProductSelected sets state with selected product`() {
         coEvery {
             shopUseCases.getUserFavouritesUseCase(any())
@@ -702,5 +726,43 @@ class CategoryViewModelTest {
             shopUseCases.setUserFavouritesUseCase(any(),any())
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         }
+    }
+
+    @Test
+    fun `event onFavouriteButtonSelected sets button lock state correctly when it runs`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        coEvery {
+            shopUseCases.addProductToFavouritesUseCase(any(),any())
+        } returns flowOf(
+            Resource.Success(true)
+        )
+
+        categoryViewModel = setViewModel()
+
+        val initialState = getCurrentCategoryState().isButtonLocked
+        categoryViewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(2))
+        val resultState = getCurrentCategoryState().isButtonLocked
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.addProductToFavouritesUseCase(any(),any())
+        }
+        assertThat(initialState).isFalse()
+        assertThat(resultState).isFalse()
     }
 }
