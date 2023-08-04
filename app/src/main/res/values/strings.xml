@@ -32,4 +32,6 @@
     <string name="dialog_title">Not logged in</string>
     <string name="dialog_text">You need to be logged in to add product to favourites</string>
     <string name="dismiss">Dismiss</string>
+    <string name="add">Add</string>
+    <string name="no_favourites">You have no favourites yet…</string>
 </resources>

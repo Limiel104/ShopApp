@@ -59,6 +59,11 @@ class FavouritesViewModel @Inject constructor(
                     _eventFlow.emit(FavouritesUiEvent.NavigateToSignup)
                 }
             }
+            is FavouritesEvent.OnDelete -> {
+                val favourites = _favouritesState.value.favouriteList
+                val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites, event.value)
+                deleteProductFromFavourites(favouriteId)
+            }
         }
     }
 
@@ -95,6 +100,11 @@ class FavouritesViewModel @Inject constructor(
                             )
                             if(favourites.isNotEmpty()) {
                                 getProducts(Category.All.id)
+                            }
+                            else {
+                                _favouritesState.value = favouritesState.value.copy(
+                                    productList = emptyList()
+                                )
                             }
                         }
                     }
@@ -139,5 +149,27 @@ class FavouritesViewModel @Inject constructor(
         _favouritesState.value = favouritesState.value.copy(
             productList = shopUseCases.filterProductsByUserFavouritesUseCase(products,favourites)
         )
+    }
+
+    fun deleteProductFromFavourites(favouriteId: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteProductFromFavouritesUseCase(favouriteId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete favourite: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Deleted product from favourites")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
     }
 }

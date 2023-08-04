@@ -159,6 +159,35 @@ class CategoryViewModel @Inject constructor(
 
         return product!!.isInFavourites
     }
+
+    fun changeButtonLockState(value: Boolean) {
+        Log.i(TAG,"LOCK - $value")
+        _categoryState.value = categoryState.value.copy(
+            isButtonLocked = value
+        )
+    }
+
+    fun onFavouriteBattonClicked(selectedProductId: Int) {
+        val isProductInFavourites = isProductInFavourites(selectedProductId)
+        val userUID = _categoryState.value.userUID
+
+        if(userUID == null) {
+            Log.i(TAG,"User is not logged in - login or signup")
+            _categoryState.value = categoryState.value.copy(
+                isDialogActivated = true
+            )
+            changeButtonLockState(false)
+        }
+        else if(isProductInFavourites) {
+            val favourites = _categoryState.value.userFavourites
+            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
+            deleteProductFromUserFavourites(favouriteId)
+        }
+        else {
+            addProductToUserFavourites(selectedProductId,userUID)
+        }
+    }
+
     fun addProductToUserFavourites(productId: Int, userUID: String) {
         viewModelScope.launch {
             shopUseCases.addProductToFavouritesUseCase(productId,userUID).collect { response ->
@@ -203,33 +232,5 @@ class CategoryViewModel @Inject constructor(
                 changeButtonLockState(false)
             }
         }
-    }
-
-    fun onFavouriteBattonClicked(selectedProductId: Int) {
-        val isProductInFavourites = isProductInFavourites(selectedProductId)
-        val userUID = _categoryState.value.userUID
-
-        if(userUID == null) {
-            Log.i(TAG,"User is not logged in - login or signup")
-            _categoryState.value = categoryState.value.copy(
-                isDialogActivated = true
-            )
-            changeButtonLockState(false)
-        }
-        else if(isProductInFavourites) {
-            val favourites = _categoryState.value.userFavourites
-            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
-            deleteProductFromUserFavourites(favouriteId)
-        }
-        else {
-            addProductToUserFavourites(selectedProductId,userUID)
-        }
-    }
-
-    fun changeButtonLockState(value: Boolean) {
-        Log.i(TAG,"LOCK - $value")
-        _categoryState.value = categoryState.value.copy(
-            isButtonLocked = value
-        )
     }
 }

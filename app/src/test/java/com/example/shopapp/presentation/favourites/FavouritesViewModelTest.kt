@@ -351,6 +351,78 @@ class FavouritesViewModelTest {
     }
 
     @Test
+    fun `delete product from favourites result is successful`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+        } returns favouriteProducts
+        coEvery {
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(true)
+        )
+
+        favouritesViewModel = setViewModel()
+
+        favouritesViewModel.deleteProductFromFavourites("favouriteId")
+        val loadingState = getCurrentFavouriteState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        }
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `delete product from favourites result is loading`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+        } returns favouriteProducts
+        coEvery {
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Loading(true)
+        )
+
+        favouritesViewModel = setViewModel()
+
+        favouritesViewModel.deleteProductFromFavourites("favouriteId")
+        val loadingState = getCurrentFavouriteState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
     fun `event onProductSelected sets product id state correctly`() {
         coEvery {
             shopUseCases.getUserFavouritesUseCase(any())
@@ -380,5 +452,45 @@ class FavouritesViewModelTest {
         }
         assertThat(initialProductId).isEqualTo(-1)
         assertThat(resultProductId).isEqualTo(1)
+    }
+
+    @Test
+    fun `event onDelete`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+        } returns favouriteProducts
+        every {
+            shopUseCases.getFavouriteIdUseCase(any(),any())
+        } returns "favouriteId"
+        coEvery {
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(true)
+        )
+
+        favouritesViewModel = setViewModel()
+
+        favouritesViewModel.onEvent(FavouritesEvent.OnDelete(1))
+        val loadingState = getCurrentFavouriteState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.filterProductsByUserFavouritesUseCase(any(),any())
+            shopUseCases.getFavouriteIdUseCase(any(),any())
+            shopUseCases.deleteProductFromFavouritesUseCase(any())
+        }
+        assertThat(loadingState).isFalse()
     }
 }

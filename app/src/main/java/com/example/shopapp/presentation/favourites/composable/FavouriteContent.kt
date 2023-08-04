@@ -13,14 +13,17 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.FAVOURITES_CPI
@@ -33,7 +36,8 @@ fun FavouriteContent(
     bottomBarHeight: Dp,
     productList: List<Product>,
     isLoading: Boolean,
-    onProductSelected: (Int) -> Unit
+    onProductSelected: (Int) -> Unit,
+    onDelete: (Int) -> Unit
 ) {
     Scaffold(
         topBar = { FavouriteTopBar() },
@@ -60,6 +64,7 @@ fun FavouriteContent(
                 itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(
                         product = product,
+                        onDelete = { onDelete(product.id) },
                         onClick = { onProductSelected(product.id) }
                     )
                 }
@@ -74,6 +79,19 @@ fun FavouriteContent(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+            }
+        }
+
+        if(productList.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(FAVOURITES_CPI),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no_favourites)
+                )
             }
         }
     }
@@ -118,7 +136,21 @@ fun FavouriteContentPreview() {
             bottomBarHeight = 56.dp,
             productList = productList,
             isLoading = false,
-            onProductSelected = {}
+            onProductSelected = {},
+            onDelete = {}
         )
     }
+}
+
+@Preview
+@Composable
+fun FavouriteContentEmptyListPreview() {
+    FavouriteContent(
+        scaffoldState = rememberScaffoldState(),
+        bottomBarHeight = 56.dp,
+        productList = emptyList(),
+        isLoading = false,
+        onProductSelected = {},
+        onDelete = {}
+    )
 }

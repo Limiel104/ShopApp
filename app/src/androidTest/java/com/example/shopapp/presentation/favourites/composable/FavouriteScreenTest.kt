@@ -88,7 +88,8 @@ class FavouriteScreenTest {
                                 ),
                             ),
                             isLoading = false,
-                            onProductSelected = {}
+                            onProductSelected = {},
+                            onDelete = {}
                         )
                     }
                 }

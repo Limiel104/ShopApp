@@ -53,6 +53,7 @@ object Constants {
     const val IMAGE: String = "Image"
     const val GO_BACK_BTN: String = "Go back button"
     const val ADD_TO_CART_BTN: String = "Add to cart button"
+    const val DELETE_BTN: String = "Delete button"
 
     //TEST VALUES
     const val badgeCount: Int = 10

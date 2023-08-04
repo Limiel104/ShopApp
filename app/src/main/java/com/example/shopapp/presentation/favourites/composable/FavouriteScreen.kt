@@ -57,7 +57,8 @@ fun FavouriteScreen(
             bottomBarHeight = bottomBarHeight,
             productList = productList,
             isLoading = isLoading,
-            onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) }
+            onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) },
+            onDelete = { viewModel.onEvent(FavouritesEvent.OnDelete(it)) }
         )
     }
     else {
