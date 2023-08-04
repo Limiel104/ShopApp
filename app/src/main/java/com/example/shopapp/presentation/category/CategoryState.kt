@@ -11,5 +11,6 @@ data class CategoryState (
     val isLoading: Boolean = false,
     val userFavourites: List<Favourite> = emptyList(),
     val userUID: String? = null,
-    val isButtonLocked: Boolean = false
+    val isButtonLocked: Boolean = false,
+    val isDialogActivated: Boolean = false
 )

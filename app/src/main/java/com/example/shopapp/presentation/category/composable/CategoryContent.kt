@@ -32,9 +32,11 @@ fun CategoryContent(
     isSortSectionVisible: Boolean,
     isLoading: Boolean,
     isButtonLocked: Boolean,
+    isDialogActivated: Boolean,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
-    onFavourite: (Int) -> Unit
+    onFavourite: (Int) -> Unit,
+    onDismiss: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -91,6 +93,18 @@ fun CategoryContent(
                 CircularProgressIndicator()
             }
         }
+
+        if(isDialogActivated) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                NotLoggedInDialog(
+                    onDismiss = { onDismiss() }
+                )
+            }
+        }
     }
 }
 
@@ -145,9 +159,11 @@ fun CategoryContentPreview() {
             isSortSectionVisible = false,
             isLoading = false,
             isButtonLocked = false,
+            isDialogActivated = false,
             onProductSelected = {},
             onSortSelected = {},
-            onFavourite = {}
+            onFavourite = {},
+            onDismiss = {}
         )
     }
 }
@@ -203,9 +219,11 @@ fun CategoryContentToggleTruePreview() {
             isSortSectionVisible = true,
             isLoading = false,
             isButtonLocked = false,
+            isDialogActivated = false,
             onProductSelected = {},
             onSortSelected = {},
-            onFavourite = {}
+            onFavourite = {},
+            onDismiss = {}
         )
     }
 }

@@ -64,25 +64,13 @@ class CategoryViewModel @Inject constructor(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
             }
-        }
-    }
-
-    fun onFavouriteBattonClicked(selectedProductId: Int) {
-        val isProductInFavourites = isProductInFavourites(selectedProductId)
-        val userUID = _categoryState.value.userUID
-
-        if(userUID == null) {
-//                    TODO dialog informing that user is not logged in and needs an account to do this
-            Log.i(TAG,"User is not logged in - login or signup")
-            changeButtonLockState(false)
-        }
-        else if(isProductInFavourites) {
-            val favourites = _categoryState.value.userFavourites
-            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
-            deleteProductFromUserFavourites(favouriteId)
-        }
-        else {
-            addProductToUserFavourites(selectedProductId,userUID)
+            is CategoryEvent.OnDialogDismissed -> {
+                viewModelScope.launch {
+                    _categoryState.value = categoryState.value.copy(
+                        isDialogActivated = false
+                    )
+                }
+            }
         }
     }
 
@@ -214,6 +202,27 @@ class CategoryViewModel @Inject constructor(
                 }
                 changeButtonLockState(false)
             }
+        }
+    }
+
+    fun onFavouriteBattonClicked(selectedProductId: Int) {
+        val isProductInFavourites = isProductInFavourites(selectedProductId)
+        val userUID = _categoryState.value.userUID
+
+        if(userUID == null) {
+            Log.i(TAG,"User is not logged in - login or signup")
+            _categoryState.value = categoryState.value.copy(
+                isDialogActivated = true
+            )
+            changeButtonLockState(false)
+        }
+        else if(isProductInFavourites) {
+            val favourites = _categoryState.value.userFavourites
+            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
+            deleteProductFromUserFavourites(favouriteId)
+        }
+        else {
+            addProductToUserFavourites(selectedProductId,userUID)
         }
     }
 

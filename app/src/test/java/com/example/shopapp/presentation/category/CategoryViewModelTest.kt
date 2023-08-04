@@ -765,4 +765,36 @@ class CategoryViewModelTest {
         assertThat(initialState).isFalse()
         assertThat(resultState).isFalse()
     }
+
+    @Test
+    fun `event onDialogDismissed sets is dialog activated state correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+
+        categoryViewModel = setViewModel()
+
+        val initialState = getCurrentCategoryState().isDialogActivated
+        categoryViewModel.onEvent(CategoryEvent.OnDialogDismissed)
+        val resultState = getCurrentCategoryState().isDialogActivated
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        }
+        assertThat(initialState).isFalse()
+        assertThat(resultState).isFalse()
+    }
 }

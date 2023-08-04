@@ -29,4 +29,7 @@
     <string name="not_logged_in">You are not logged in</string>
     <string name="login_or_signup">Login or Signup</string>
     <string name="logout">Logout</string>
+    <string name="dialog_title">Not logged in</string>
+    <string name="dialog_text">You need to be logged in to add product to favourites</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
