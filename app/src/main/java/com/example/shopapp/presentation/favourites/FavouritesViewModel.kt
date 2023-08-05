@@ -67,7 +67,7 @@ class FavouritesViewModel @Inject constructor(
         }
     }
 
-    fun checkIfUserIsLoggedIn() {
+    private fun checkIfUserIsLoggedIn() {
         viewModelScope.launch {
             val currentUser = shopUseCases.getCurrentUserUseCase()
 
@@ -83,7 +83,7 @@ class FavouritesViewModel @Inject constructor(
         }
     }
 
-    fun getUserFavourites(userUID: String) {
+    private fun getUserFavourites(userUID: String) {
         viewModelScope.launch {
             shopUseCases.getUserFavouritesUseCase(userUID).collect { response ->
                 when(response) {
@@ -143,7 +143,7 @@ class FavouritesViewModel @Inject constructor(
         }
     }
 
-    fun getFavouriteProducts(products: List<Product>) {
+    private fun getFavouriteProducts(products: List<Product>) {
         val favourites = _favouritesState.value.favouriteList
 
         _favouritesState.value = favouritesState.value.copy(

@@ -33,6 +33,7 @@ fun FavouriteProductItem(
     Column(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
+            .padding(bottom = 5.dp)
             .clickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

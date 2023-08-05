@@ -74,7 +74,7 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun checkIfUserIsLoggedIn() {
+    private fun checkIfUserIsLoggedIn() {
         val user = shopUseCases.getCurrentUserUseCase()
         if(user != null) {
             _categoryState.value = categoryState.value.copy(
@@ -117,7 +117,7 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun getUserFavourites(userUID: String) {
+    private fun getUserFavourites(userUID: String) {
         viewModelScope.launch {
             shopUseCases.getUserFavouritesUseCase(userUID).collect { response ->
                 when(response) {
@@ -145,7 +145,7 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    fun setUserFavourites(products: List<Product>,favourites: List<Favourite>) {
+    private fun setUserFavourites(products: List<Product>, favourites: List<Favourite>) {
         _categoryState.value = categoryState.value.copy(
             productList = shopUseCases.setUserFavouritesUseCase(products,favourites)
         )
@@ -167,7 +167,7 @@ class CategoryViewModel @Inject constructor(
         )
     }
 
-    fun onFavouriteBattonClicked(selectedProductId: Int) {
+    private fun onFavouriteBattonClicked(selectedProductId: Int) {
         val isProductInFavourites = isProductInFavourites(selectedProductId)
         val userUID = _categoryState.value.userUID
 
