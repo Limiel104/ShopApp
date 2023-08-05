@@ -11,5 +11,6 @@ data class ProductEntity(
     val price: Double,
     val description: String,
     val category: String,
-    val imageUrl: String
+    val imageUrl: String,
+    val isInFavourites: Boolean
 )

@@ -25,14 +25,16 @@ object Constants {
     const val CATEGORY_TOP_BAR: String = "Category top bar"
     const val CATEGORY_SORT_SECTION: String = "Category sort section"
     const val CATEGORY_LIST_TOP_BAR: String = "Category list top bar"
-    const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list crazy column"
+    const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list lazy column"
     const val CATEGORY_NAME_1: String = "All"
     const val CATEGORY_NAME_2: String = "Men's clothing"
     const val CATEGORY_NAME_3: String = "Women's clothing"
     const val CATEGORY_NAME_4: String = "Jewelery"
     const val CATEGORY_NAME_5: String = "Electronics"
     const val CATEGORY_CPI: String = "Category circular progress indicator"
-    const val FAVOURITE_TOP_BAR: String = "Favourite top bar"
+    const val FAVOURITES_TOP_BAR: String = "Favourites top bar"
+    const val FAVOURITE_LAZY_VERTICAL_GRID: String = "Favourite lazy vertical grid"
+    const val FAVOURITES_CPI: String = "Favourites circular progress indicator"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
     const val SIGNUP_EMAIL_TF: String = "Signup email"
@@ -47,10 +49,11 @@ object Constants {
     //Content Description
     const val CART_BTN: String = "Cart button"
     const val SORT_BTN: String = "Sort button"
-    const val FAVOURITE_BTN: String = "Favourite button"
+    const val FAVOURITES_BTN: String = "Favourite button"
     const val IMAGE: String = "Image"
     const val GO_BACK_BTN: String = "Go back button"
     const val ADD_TO_CART_BTN: String = "Add to cart button"
+    const val DELETE_BTN: String = "Delete button"
 
     //TEST VALUES
     const val badgeCount: Int = 10
@@ -71,7 +74,7 @@ object Constants {
     const val ACCOUNT_VM: String = "Account ViewModel"
     const val CATEGORY_VM: String = "Category ViewModel"
     const val CATEGORY_LIST_VM: String = "CategoryList ViewModel"
-    const val FAVOURITE_VM: String = "Favourite ViewModel"
+    const val FAVOURITES_VM: String = "Favourite ViewModel"
     const val HOME_VM: String = "Home ViewModel"
     const val PRODUCT_DETAILS_VM: String = "ProductDetails ViewModel"
     const val LOGIN_VM: String = "LoginScreen ViewModel"
@@ -79,7 +82,7 @@ object Constants {
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
-    const val FAVOURITE_SCREEN_LE: String = "FavouriteScreen Launched Effect"
+    const val FAVOURITES_SCREEN_LE: String = "FavouriteScreen Launched Effect"
     const val HOME_SCREEN_LE: String = "HomeScreen Launched Effect"
     const val PRODUCT_DETAILS_SCREEN_LE: String = "ProductDetailsScreen Launched Effect"
     const val LOGIN_SCREEN_LE: String = "LoginScreen ViewModel"
@@ -97,4 +100,5 @@ object Constants {
 
     //FIREBASE
     const val USERS_COLLECTION: String = "users"
+    const val FAVOURITES_COLLECTION: String = "favourites"
 }

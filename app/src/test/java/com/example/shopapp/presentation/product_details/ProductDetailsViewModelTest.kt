@@ -44,7 +44,8 @@ class ProductDetailsViewModelTest {
             price = "123,99 PLN",
             description = "description of a product 1",
             category = "men's clothing",
-            imageUrl = "url"
+            imageUrl = "url",
+            isInFavourites = false
         )
     }
 
@@ -89,7 +90,8 @@ class ProductDetailsViewModelTest {
             price = getCurrentProductDetailsState().price,
             description = getCurrentProductDetailsState().description,
             category = getCurrentProductDetailsState().category,
-            imageUrl = getCurrentProductDetailsState().imageUrl
+            imageUrl = getCurrentProductDetailsState().imageUrl,
+            isInFavourites = false
         )
 
         assertThat(productToCheck).isEqualTo(product)

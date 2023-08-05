@@ -28,7 +28,7 @@ class GetProductsUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.getProductsUseCase = GetProductsUseCase(productRepository)
+        getProductsUseCase = GetProductsUseCase(productRepository)
 
         productList = listOf(
             Product(
@@ -37,7 +37,8 @@ class GetProductsUseCaseTest {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Women.id,
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 2,
@@ -45,7 +46,8 @@ class GetProductsUseCaseTest {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Men.id,
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 3,
@@ -53,7 +55,8 @@ class GetProductsUseCaseTest {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Jewelery.id,
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 4,
@@ -61,7 +64,8 @@ class GetProductsUseCaseTest {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = Category.Men.id,
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             )
         )
     }
@@ -98,7 +102,13 @@ class GetProductsUseCaseTest {
             val products = getProductsUseCase(Category.Men.id).first().data
 
             coVerify(exactly = 1) { getProductsUseCase(Category.Men.id) }
+            assertThat(products).isNotNull()
             assertThat(products?.size).isEqualTo(2)
+            if (products != null) {
+                for(product in products) {
+                    assertThat(product.category).isEqualTo(Category.Men.id)
+                }
+            }
         }
     }
 

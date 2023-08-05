@@ -3,7 +3,7 @@ package com.example.shopapp.domain.use_case
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants
+import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
@@ -26,14 +26,16 @@ class GetProductUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.getProductUseCase = GetProductUseCase(productRepository)
+        getProductUseCase = GetProductUseCase(productRepository)
+
         product = Product(
             id = 1,
             title = "Shirt",
             price = "195,59 PLN",
-            description = Constants.productDescription,
+            description = productDescription,
             category = Category.Women.id,
-            imageUrl = "imageUrl"
+            imageUrl = "imageUrl",
+            isInFavourites = false
         )
     }
 

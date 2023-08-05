@@ -35,7 +35,8 @@ fun ProductDetailsScreen(
         price = viewModel.productDetailsState.value.price,
         description = viewModel.productDetailsState.value.description,
         category = viewModel.productDetailsState.value.category,
-        imageUrl = viewModel.productDetailsState.value.imageUrl
+        imageUrl = viewModel.productDetailsState.value.imageUrl,
+        isInFavourites = viewModel.productDetailsState.value.isInFavourites
     )
 
     LaunchedEffect(key1 = true) {

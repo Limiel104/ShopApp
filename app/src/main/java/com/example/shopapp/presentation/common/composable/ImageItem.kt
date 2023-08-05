@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.common.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
@@ -23,7 +24,8 @@ import com.example.shopapp.util.Constants.productItemImageWidth
 fun ImageItem(
     imageUrl: String,
     width: Int? = null,
-    height: Int? = null
+    height: Int? = null,
+    onClick: () -> Unit
 ) {
     Card(
         modifier =
@@ -44,7 +46,9 @@ fun ImageItem(
             contentDescription = IMAGE,
             fallback = painterResource(R.drawable.ic_no_image),
             error = painterResource(R.drawable.ic_no_image),
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .clickable { onClick() }
         )
     }
 }
@@ -56,7 +60,8 @@ fun ImageItemPreview() {
         ImageItem(
             imageUrl = "",
             width = productItemImageWidth,
-            height = productItemImageHeight
+            height = productItemImageHeight,
+            onClick = {}
         )
     }
 }
@@ -66,7 +71,8 @@ fun ImageItemPreview() {
 fun ImageItemNullPreview() {
     ShopAppTheme() {
         ImageItem(
-            imageUrl = ""
+            imageUrl = "",
+            onClick = {}
         )
     }
 }

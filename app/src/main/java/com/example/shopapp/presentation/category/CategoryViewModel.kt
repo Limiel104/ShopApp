@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Favourite
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
@@ -38,7 +40,7 @@ class CategoryViewModel @Inject constructor(
             )
         }
 
-        getProducts(_categoryState.value.categoryId)
+        checkIfUserIsLoggedIn()
     }
 
     fun onEvent(event: CategoryEvent) {
@@ -51,29 +53,59 @@ class CategoryViewModel @Inject constructor(
                     _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
+            is CategoryEvent.OnFavouriteButtonSelected -> {
+                if(!_categoryState.value.isButtonLocked) {
+                    changeButtonLockState(true)
+                    onFavouriteBattonClicked(event.value)
+                }
+            }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
                 )
             }
+            is CategoryEvent.OnDialogDismissed -> {
+                viewModelScope.launch {
+                    _categoryState.value = categoryState.value.copy(
+                        isDialogActivated = false
+                    )
+                }
+            }
         }
     }
 
-    fun getProducts(categoryId: String) {
+    private fun checkIfUserIsLoggedIn() {
+        val user = shopUseCases.getCurrentUserUseCase()
+        if(user != null) {
+            _categoryState.value = categoryState.value.copy(
+                userUID = user.uid
+            )
+            getUserFavourites(user.uid)
+        }
+        else {
+            getProducts()
+        }
+    }
+
+    fun getProducts(
+        categoryId: String = _categoryState.value.categoryId,
+        userFavourites: List<Favourite> = _categoryState.value.userFavourites
+    ) {
         viewModelScope.launch {
             shopUseCases.getProductsUseCase(categoryId).collect { response ->
                 when(response) {
                     is Resource.Loading -> {
-                        Log.i(TAG,"Loading: ${response.isLoading}")
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
                         _categoryState.value = categoryState.value.copy(
                             isLoading = response.isLoading
                         )
                     }
                     is Resource.Success -> {
                         response.data?.let { products ->
-                            _categoryState.value = categoryState.value.copy(
-                                productList = products
-                            )
+                            Log.i(TAG, "Products: $products")
+                            if(products.isNotEmpty()) {
+                                setUserFavourites(products, userFavourites)
+                            }
                         }
                     }
                     is Resource.Error -> {
@@ -81,6 +113,123 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
+            }
+        }
+    }
+
+    private fun getUserFavourites(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserFavouritesUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading user favourites: ${response.isLoading}")
+                        _categoryState.value = categoryState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Favourites: ${response.data}")
+                        response.data?.let { favourites ->
+                            _categoryState.value = categoryState.value.copy(
+                                userFavourites = favourites
+                            )
+                        }
+                        getProducts()
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUserFavourites(products: List<Product>, favourites: List<Favourite>) {
+        _categoryState.value = categoryState.value.copy(
+            productList = shopUseCases.setUserFavouritesUseCase(products,favourites)
+        )
+    }
+
+    fun isProductInFavourites(productId: Int): Boolean {
+        val products = _categoryState.value.productList
+        val product = products.find { product ->
+            product.id == productId
+        }
+
+        return product!!.isInFavourites
+    }
+
+    fun changeButtonLockState(value: Boolean) {
+        Log.i(TAG,"LOCK - $value")
+        _categoryState.value = categoryState.value.copy(
+            isButtonLocked = value
+        )
+    }
+
+    private fun onFavouriteBattonClicked(selectedProductId: Int) {
+        val isProductInFavourites = isProductInFavourites(selectedProductId)
+        val userUID = _categoryState.value.userUID
+
+        if(userUID == null) {
+            Log.i(TAG,"User is not logged in - login or signup")
+            _categoryState.value = categoryState.value.copy(
+                isDialogActivated = true
+            )
+            changeButtonLockState(false)
+        }
+        else if(isProductInFavourites) {
+            val favourites = _categoryState.value.userFavourites
+            val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites,selectedProductId)
+            deleteProductFromUserFavourites(favouriteId)
+        }
+        else {
+            addProductToUserFavourites(selectedProductId,userUID)
+        }
+    }
+
+    fun addProductToUserFavourites(productId: Int, userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.addProductToFavouritesUseCase(productId,userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading add favourite: ${response.isLoading}")
+                        _categoryState.value = categoryState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Added product to favourites")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                changeButtonLockState(false)
+            }
+        }
+    }
+
+    fun deleteProductFromUserFavourites(favouriteId: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteProductFromFavouritesUseCase(favouriteId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete favourite: ${response.isLoading}")
+                        _categoryState.value = categoryState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Deleted product from favourites")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                changeButtonLockState(false)
             }
         }
     }

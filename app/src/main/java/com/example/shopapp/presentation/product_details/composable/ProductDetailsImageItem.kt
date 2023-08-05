@@ -26,7 +26,8 @@ fun ProductDetailsImageItem(
             .testTag(PRODUCT_DETAILS_IMAGE_ITEM)
     ) {
         ImageItem(
-            imageUrl = imageUrl
+            imageUrl = imageUrl,
+            onClick = {}
         )
 
         Row(

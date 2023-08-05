@@ -36,7 +36,8 @@ class ProductDaoTest {
                 price = 123.99,
                 description = "description of a product 1",
                 category = "men's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             ),
             ProductEntity(
                 id = 2,
@@ -44,7 +45,8 @@ class ProductDaoTest {
                 price = 41.99,
                 description = "description of a product 2",
                 category = "women's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             ),
             ProductEntity(
                 id = 3,
@@ -52,7 +54,8 @@ class ProductDaoTest {
                 price = 34.99,
                 description = "description of a product 3",
                 category = "men's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             ),
             ProductEntity(
                 id = 4,
@@ -60,7 +63,8 @@ class ProductDaoTest {
                 price = 100.12,
                 description = "description of a product 4",
                 category = "men's clothing",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             ),
             ProductEntity(
                 id = 5,
@@ -68,7 +72,8 @@ class ProductDaoTest {
                 price = 44.38,
                 description = "description of a product 5",
                 category = "jewelery",
-                imageUrl = "url"
+                imageUrl = "url",
+                isInFavourites = false
             )
         )
     }

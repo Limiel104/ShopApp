@@ -5,18 +5,26 @@ import androidx.room.Room
 import com.example.shopapp.data.local.ShopDatabase
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.data.repository.AuthRepositoryImpl
+import com.example.shopapp.data.repository.FavouritesRepositoryImpl
 import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.data.repository.UserStorageRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
+import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddProductToFavouritesUseCase
 import com.example.shopapp.domain.use_case.AddUserUseCase
+import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
+import com.example.shopapp.domain.use_case.FilterProductsByUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
+import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
+import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
+import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
@@ -81,10 +89,18 @@ object TestAppModule {
     }
 
     @Provides
+    @Singleton
+    fun provideFavouritesStorageRepository(): FavouritesRepository {
+        val usersRef = Firebase.firestore.collection(Constants.FAVOURITES_COLLECTION)
+        return FavouritesRepositoryImpl(usersRef)
+    }
+
+    @Provides
     fun provideShopUseCases(
         productRepository: ProductRepository,
         authRepository: AuthRepository,
-        userStorageRepository: UserStorageRepository
+        userStorageRepository: UserStorageRepository,
+        favouritesRepository: FavouritesRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -98,7 +114,13 @@ object TestAppModule {
             loginUseCase = LoginUseCase(authRepository),
             signupUseCase = SignupUseCase(authRepository),
             logoutUseCase = LogoutUseCase(authRepository),
-            addUserUseCase = AddUserUseCase(userStorageRepository)
+            addUserUseCase = AddUserUseCase(userStorageRepository),
+            addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository),
+            getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository),
+            deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository),
+            setUserFavouritesUseCase = SetUserFavouritesUseCase(),
+            getFavouriteIdUseCase = GetFavouriteIdUseCase(),
+            filterProductsByUserFavouritesUseCase = FilterProductsByUserFavouritesUseCase()
         )
     }
 }

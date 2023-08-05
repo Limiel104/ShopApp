@@ -7,9 +7,9 @@ fun getLastDestination(navController: NavController): String {
     val destinationQueue = mutableListOf<String>()
 
     for(destination in navController.backQueue) {
-        val dest = destination.destination.route
-        if((dest != Screen.SignupScreen.route) && (dest != Screen.LoginScreen.route)) {
-            dest?.let { destinationQueue.add(it) }
+        val route = destination.destination.route
+        if((route != Screen.SignupScreen.route) && (route != Screen.LoginScreen.route)) {
+            route?.let { destinationQueue.add(it) }
         }
     }
 

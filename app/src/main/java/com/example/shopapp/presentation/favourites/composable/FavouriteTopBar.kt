@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.favourite.composable
+package com.example.shopapp.presentation.favourites.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,7 @@ import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.FAVOURITE_TOP_BAR
+import com.example.shopapp.util.Constants.FAVOURITES_TOP_BAR
 
 @Composable
 fun FavouriteTopBar() {
@@ -30,7 +30,7 @@ fun FavouriteTopBar() {
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
             .padding(vertical = 15.dp)
-            .testTag(FAVOURITE_TOP_BAR),
+            .testTag(FAVOURITES_TOP_BAR),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {

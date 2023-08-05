@@ -31,8 +31,12 @@ fun CategoryContent(
     productList: List<Product>,
     isSortSectionVisible: Boolean,
     isLoading: Boolean,
+    isButtonLocked: Boolean,
+    isDialogActivated: Boolean,
     onProductSelected: (Int) -> Unit,
-    onSortSelected: () -> Unit
+    onSortSelected: () -> Unit,
+    onFavourite: (Int) -> Unit,
+    onDismiss: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -68,11 +72,12 @@ fun CategoryContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                itemsIndexed(productList) { index, product ->
+                itemsIndexed(productList) { _, product ->
                     ProductItem(
                         product = product,
-                        isProductInFavourites = index%3 == 0,
-                        onClick = { onProductSelected(product.id) }
+                        isButtonLocked = isButtonLocked,
+                        onImageClick = { onProductSelected(product.id) },
+                        onFavourite = { onFavourite(product.id) }
                     )
                 }
             }
@@ -86,6 +91,18 @@ fun CategoryContent(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
+            }
+        }
+
+        if(isDialogActivated) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                NotLoggedInDialog(
+                    onDismiss = { onDismiss() }
+                )
             }
         }
     }
@@ -102,7 +119,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 2,
@@ -110,7 +128,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             ),
             Product(
                 id = 3,
@@ -118,7 +137,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 4,
@@ -126,7 +146,8 @@ fun CategoryContentPreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             )
         )
 
@@ -137,8 +158,12 @@ fun CategoryContentPreview() {
             productList = productList,
             isSortSectionVisible = false,
             isLoading = false,
+            isButtonLocked = false,
+            isDialogActivated = false,
             onProductSelected = {},
-            onSortSelected = {}
+            onSortSelected = {},
+            onFavourite = {},
+            onDismiss = {}
         )
     }
 }
@@ -154,7 +179,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             ),
             Product(
                 id = 2,
@@ -162,7 +188,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 3,
@@ -170,7 +197,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = false
             ),
             Product(
                 id = 4,
@@ -178,7 +206,8 @@ fun CategoryContentToggleTruePreview() {
                 price = "195,59 PLN",
                 description = productDescription,
                 category = "men's clothing",
-                imageUrl = "imageUrl"
+                imageUrl = "imageUrl",
+                isInFavourites = true
             )
         )
 
@@ -189,8 +218,12 @@ fun CategoryContentToggleTruePreview() {
             productList = productList,
             isSortSectionVisible = true,
             isLoading = false,
+            isButtonLocked = false,
+            isDialogActivated = false,
             onProductSelected = {},
-            onSortSelected = {}
+            onSortSelected = {},
+            onFavourite = {},
+            onDismiss = {}
         )
     }
 }
