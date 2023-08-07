@@ -64,7 +64,10 @@ fun CategoryContent(
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                SortSection()
+                Column() {
+                    SortSection()
+                    FilterSection()
+                }
             }
 
             LazyVerticalGrid(

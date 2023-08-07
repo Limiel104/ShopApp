@@ -59,7 +59,7 @@ fun SortSectionItem(
 fun SortSectionItemPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = stringResource(id = R.string.lowest_price),
+            text = stringResource(id = R.string.price_ascending),
             selected = true,
             onClick = {}
         )
@@ -71,7 +71,7 @@ fun SortSectionItemPreview() {
 fun SortSectionItemNotSelectedPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = stringResource(id = R.string.highest_price),
+            text = stringResource(id = R.string.price_descending),
             selected = false,
             onClick = {}
         )
