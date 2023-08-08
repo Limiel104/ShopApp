@@ -20,6 +20,9 @@ import com.example.shopapp.R
 
 @Composable
 fun FilterSection(
+    sliderPosition: ClosedFloatingPointRange<Float>,
+    sliderRange: ClosedFloatingPointRange<Float>,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -37,7 +40,11 @@ fun FilterSection(
             fontWeight = FontWeight.Light
         )
 
-        PriceSlider()
+        PriceSlider(
+            sliderPosition = sliderPosition,
+            sliderRange = sliderRange,
+            onValueChange = { onValueChange(it) }
+        )
 
         Divider()
     }
@@ -46,5 +53,9 @@ fun FilterSection(
 @Preview
 @Composable
 fun FilterSectionPreview() {
-    FilterSection()
+    FilterSection(
+        sliderPosition = 1f..4f,
+        sliderRange = 0f..5f,
+        onValueChange = {}
+    )
 }

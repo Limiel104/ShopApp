@@ -31,6 +31,8 @@ fun CategoryScreen(
     val isLoading = viewModel.categoryState.value.isLoading
     val isButtonLocked = viewModel.categoryState.value.isButtonLocked
     val isDialogActivated = viewModel.categoryState.value.isDialogActivated
+    val sliderPosition = viewModel.categoryState.value.priceSliderPosition
+    val sliderRange = viewModel.categoryState.value.priceSliderRange
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -56,9 +58,12 @@ fun CategoryScreen(
         isLoading = isLoading,
         isButtonLocked = isButtonLocked,
         isDialogActivated = isDialogActivated,
+        sliderPosition = sliderPosition,
+        sliderRange = sliderRange,
         onProductSelected = { viewModel.onEvent(CategoryEvent.OnProductSelected(it)) },
         onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) },
         onFavourite = { viewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(it)) },
-        onDismiss = { viewModel.onEvent(CategoryEvent.OnDialogDismissed) }
+        onDismiss = { viewModel.onEvent(CategoryEvent.OnDialogDismissed) },
+        onValueChange = { viewModel.onEvent(CategoryEvent.OnPriceSliderPositionChange(it)) }
     )
 }

@@ -56,8 +56,13 @@ class CategoryViewModel @Inject constructor(
             is CategoryEvent.OnFavouriteButtonSelected -> {
                 if(!_categoryState.value.isButtonLocked) {
                     changeButtonLockState(true)
-                    onFavouriteBattonClicked(event.value)
+                    onFavouriteButtonClicked(event.value)
                 }
+            }
+            is CategoryEvent.OnPriceSliderPositionChange -> {
+                _categoryState.value = categoryState.value.copy(
+                    priceSliderPosition = event.value
+                )
             }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
@@ -105,6 +110,7 @@ class CategoryViewModel @Inject constructor(
                             Log.i(TAG, "Products: $products")
                             if(products.isNotEmpty()) {
                                 setUserFavourites(products, userFavourites)
+                                setPriceSlider()
                             }
                         }
                     }
@@ -167,7 +173,7 @@ class CategoryViewModel @Inject constructor(
         )
     }
 
-    private fun onFavouriteBattonClicked(selectedProductId: Int) {
+    private fun onFavouriteButtonClicked(selectedProductId: Int) {
         val isProductInFavourites = isProductInFavourites(selectedProductId)
         val userUID = _categoryState.value.userUID
 
@@ -232,5 +238,23 @@ class CategoryViewModel @Inject constructor(
                 changeButtonLockState(false)
             }
         }
+    }
+
+    fun setPriceSlider() {
+        val prices: MutableList<Float> = mutableListOf()
+
+        _categoryState.value.productList.forEach { product ->
+            prices.add(product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat())
+        }
+
+        prices.sort()
+
+        val startValue = prices.first()
+        val endValue = prices.last()
+
+        _categoryState.value = categoryState.value.copy(
+            priceSliderPosition = startValue..endValue,
+            priceSliderRange = startValue..endValue
+        )
     }
 }

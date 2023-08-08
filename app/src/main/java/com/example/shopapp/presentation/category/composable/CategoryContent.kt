@@ -33,10 +33,13 @@ fun CategoryContent(
     isLoading: Boolean,
     isButtonLocked: Boolean,
     isDialogActivated: Boolean,
+    sliderPosition: ClosedFloatingPointRange<Float>,
+    sliderRange: ClosedFloatingPointRange<Float>,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
     onFavourite: (Int) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -66,7 +69,11 @@ fun CategoryContent(
             ) {
                 Column() {
                     SortSection()
-                    FilterSection()
+                    FilterSection(
+                        sliderPosition = sliderPosition,
+                        sliderRange = sliderRange,
+                        onValueChange = { onValueChange(it) }
+                    )
                 }
             }
 
@@ -163,10 +170,13 @@ fun CategoryContentPreview() {
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
-            onDismiss = {}
+            onDismiss = {},
+            onValueChange = {}
         )
     }
 }
@@ -223,10 +233,13 @@ fun CategoryContentToggleTruePreview() {
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
-            onDismiss = {}
+            onDismiss = {},
+            onValueChange = {}
         )
     }
 }
