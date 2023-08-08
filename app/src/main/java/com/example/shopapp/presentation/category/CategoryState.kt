@@ -14,5 +14,6 @@ data class CategoryState (
     val isButtonLocked: Boolean = false,
     val isDialogActivated: Boolean = false,
     val priceSliderRange: ClosedFloatingPointRange<Float> = 0f..0f,
-    val priceSliderPosition: ClosedFloatingPointRange<Float> = 0f..0f
+    val priceSliderPosition: ClosedFloatingPointRange<Float> = 0f..0f,
+    val isRangeSet: Boolean = false
 )

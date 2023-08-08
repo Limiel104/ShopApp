@@ -63,6 +63,7 @@ class CategoryViewModel @Inject constructor(
                 _categoryState.value = categoryState.value.copy(
                     priceSliderPosition = event.value
                 )
+                getProducts()
             }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
@@ -110,7 +111,10 @@ class CategoryViewModel @Inject constructor(
                             Log.i(TAG, "Products: $products")
                             if(products.isNotEmpty()) {
                                 setUserFavourites(products, userFavourites)
-                                setPriceSlider()
+                                if(!_categoryState.value.isRangeSet) {
+                                    setPriceSlider()
+                                }
+                                filterProducts()
                             }
                         }
                     }
@@ -254,7 +258,20 @@ class CategoryViewModel @Inject constructor(
 
         _categoryState.value = categoryState.value.copy(
             priceSliderPosition = startValue..endValue,
-            priceSliderRange = startValue..endValue
+            priceSliderRange = startValue..endValue,
+            isRangeSet = true
+        )
+    }
+
+    fun filterProducts() {
+        val products = shopUseCases.sortAndFilterProductsUseCase(
+            products = _categoryState.value.productList,
+            minPrice = _categoryState.value.priceSliderPosition.start,
+            maxPrice = _categoryState.value.priceSliderPosition.endInclusive
+        )
+
+        _categoryState.value = _categoryState.value.copy(
+            productList = products
         )
     }
 }
