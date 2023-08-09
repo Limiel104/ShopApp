@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CATEGORY_CPI
 import com.example.shopapp.util.Constants.productDescription
@@ -35,11 +36,13 @@ fun CategoryContent(
     isDialogActivated: Boolean,
     sliderPosition: ClosedFloatingPointRange<Float>,
     sliderRange: ClosedFloatingPointRange<Float>,
+    productOrder: ProductOrder,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
     onFavourite: (Int) -> Unit,
     onDismiss: () -> Unit,
-    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    onOrderChange: (ProductOrder) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -68,7 +71,10 @@ fun CategoryContent(
                 exit = fadeOut() + slideOutVertically()
             ) {
                 Column() {
-                    SortSection()
+                    SortSection(
+                        productOrder = productOrder,
+                        onOrderChange = { onOrderChange(it) }
+                    )
                     FilterSection(
                         sliderPosition = sliderPosition,
                         sliderRange = sliderRange,
@@ -172,11 +178,13 @@ fun CategoryContentPreview() {
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameAscending(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
             onDismiss = {},
-            onValueChange = {}
+            onValueChange = {},
+            onOrderChange = {}
         )
     }
 }
@@ -235,11 +243,13 @@ fun CategoryContentToggleTruePreview() {
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
             onDismiss = {},
-            onValueChange = {}
+            onValueChange = {},
+            onOrderChange = {}
         )
     }
 }

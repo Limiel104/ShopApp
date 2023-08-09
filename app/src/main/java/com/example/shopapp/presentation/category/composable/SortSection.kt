@@ -18,11 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CATEGORY_SORT_SECTION
 
 @Composable
-fun SortSection() {
+fun SortSection(
+    productOrder: ProductOrder,
+    onOrderChange: (ProductOrder) -> Unit
+) {
     Column {
         Divider()
 
@@ -38,32 +42,32 @@ fun SortSection() {
             Column() {
                 SortSectionItem(
                     text = stringResource(id = R.string.name_ascending),
-                    selected = true,
-                    onClick = {}
+                    selected = productOrder is ProductOrder.NameAscending,
+                    onClick = { onOrderChange(ProductOrder.NameAscending()) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 SortSectionItem(
                     text = stringResource(id = R.string.name_descending),
-                    selected = false,
-                    onClick = {}
+                    selected = productOrder is ProductOrder.NameDescending,
+                    onClick = { onOrderChange(ProductOrder.NameDescending()) }
                 )
             }
 
             Column() {
                 SortSectionItem(
                     text = stringResource(id = R.string.price_ascending),
-                    selected = true,
-                    onClick = {}
+                    selected = productOrder is ProductOrder.PriceAscending,
+                    onClick = { onOrderChange(ProductOrder.PriceAscending()) }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 SortSectionItem(
                     text = stringResource(id = R.string.price_descending),
-                    selected = false,
-                    onClick = {}
+                    selected = productOrder is ProductOrder.PriceDescending,
+                    onClick = { onOrderChange(ProductOrder.PriceDescending()) }
                 )
             }
         }
@@ -74,6 +78,9 @@ fun SortSection() {
 @Composable
 fun SortSectionPreview() {
     ShopAppTheme {
-        SortSection()
+        SortSection(
+            productOrder = ProductOrder.NameAscending(),
+            onOrderChange = {}
+        )
     }
 }

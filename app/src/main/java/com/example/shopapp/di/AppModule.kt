@@ -27,7 +27,8 @@ import com.example.shopapp.domain.use_case.LogoutUseCase
 import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
-import com.example.shopapp.domain.use_case.SortAndFilterProductsUseCase
+import com.example.shopapp.domain.use_case.FilterProductsUseCase
+import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
@@ -128,7 +129,8 @@ object AppModule {
             setUserFavouritesUseCase = SetUserFavouritesUseCase(),
             getFavouriteIdUseCase = GetFavouriteIdUseCase(),
             filterProductsByUserFavouritesUseCase = FilterProductsByUserFavouritesUseCase(),
-            sortAndFilterProductsUseCase = SortAndFilterProductsUseCase()
+            filterProductsUseCase = FilterProductsUseCase(),
+            sortProductsUseCase = SortProductsUseCase()
         )
     }
 }

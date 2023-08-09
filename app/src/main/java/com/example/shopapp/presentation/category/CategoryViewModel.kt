@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.categoryId
@@ -65,6 +66,9 @@ class CategoryViewModel @Inject constructor(
                 )
                 getProducts()
             }
+            is CategoryEvent.OnOrderChange -> {
+                sortProducts(event.value)
+            }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
@@ -115,6 +119,7 @@ class CategoryViewModel @Inject constructor(
                                     setPriceSlider()
                                 }
                                 filterProducts()
+                                sortProducts(_categoryState.value.productOrder)
                             }
                         }
                     }
@@ -264,7 +269,7 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun filterProducts() {
-        val products = shopUseCases.sortAndFilterProductsUseCase(
+        val products = shopUseCases.filterProductsUseCase(
             products = _categoryState.value.productList,
             minPrice = _categoryState.value.priceSliderPosition.start,
             maxPrice = _categoryState.value.priceSliderPosition.endInclusive
@@ -272,6 +277,19 @@ class CategoryViewModel @Inject constructor(
 
         _categoryState.value = _categoryState.value.copy(
             productList = products
+        )
+    }
+
+    fun sortProducts(productOrder: ProductOrder) {
+        _categoryState.value = categoryState.value.copy(
+            productOrder = productOrder
+        )
+
+        _categoryState.value = categoryState.value.copy(
+            productList = shopUseCases.sortProductsUseCase(
+                productOrder = productOrder,
+                products = _categoryState.value.productList
+            )
         )
     }
 }

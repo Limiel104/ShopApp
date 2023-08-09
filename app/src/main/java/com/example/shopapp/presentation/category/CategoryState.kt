@@ -2,6 +2,7 @@ package com.example.shopapp.presentation.category
 
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
+import com.example.shopapp.domain.util.ProductOrder
 
 data class CategoryState (
     val categoryId: String = "",
@@ -15,5 +16,6 @@ data class CategoryState (
     val isDialogActivated: Boolean = false,
     val priceSliderRange: ClosedFloatingPointRange<Float> = 0f..0f,
     val priceSliderPosition: ClosedFloatingPointRange<Float> = 0f..0f,
-    val isRangeSet: Boolean = false
+    val isRangeSet: Boolean = false,
+    val productOrder: ProductOrder = ProductOrder.NameAscending()
 )
