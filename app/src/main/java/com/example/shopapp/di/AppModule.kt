@@ -29,6 +29,7 @@ import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.FilterProductsUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
+import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
@@ -130,7 +131,8 @@ object AppModule {
             getFavouriteIdUseCase = GetFavouriteIdUseCase(),
             filterProductsByUserFavouritesUseCase = FilterProductsByUserFavouritesUseCase(),
             filterProductsUseCase = FilterProductsUseCase(),
-            sortProductsUseCase = SortProductsUseCase()
+            sortProductsUseCase = SortProductsUseCase(),
+            toggleCheckBoxUseCase = ToggleCheckBoxUseCase()
         )
     }
 }

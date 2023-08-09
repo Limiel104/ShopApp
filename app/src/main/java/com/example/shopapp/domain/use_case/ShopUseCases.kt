@@ -20,5 +20,6 @@ data class ShopUseCases(
     val getFavouriteIdUseCase: GetFavouriteIdUseCase,
     val filterProductsByUserFavouritesUseCase: FilterProductsByUserFavouritesUseCase,
     val filterProductsUseCase: FilterProductsUseCase,
-    val sortProductsUseCase: SortProductsUseCase
+    val sortProductsUseCase: SortProductsUseCase,
+    val toggleCheckBoxUseCase: ToggleCheckBoxUseCase
 )

@@ -22,7 +22,10 @@ import com.example.shopapp.R
 fun FilterSection(
     sliderPosition: ClosedFloatingPointRange<Float>,
     sliderRange: ClosedFloatingPointRange<Float>,
-    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit
+    isCategoryFilterVisible: Boolean,
+    categoryFilterMap: Map<String,Boolean>,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    onCheckedChange: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -47,15 +50,50 @@ fun FilterSection(
         )
 
         Divider()
+
+        if(isCategoryFilterVisible) {
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = stringResource(id = R.string.category),
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Light
+            )
+
+            CategoryFilterSection(
+                categoryFilterMap = categoryFilterMap,
+                onCheckedChange = { onCheckedChange(it) }
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Divider()
+        }
     }
 }
 
 @Preview
 @Composable
-fun FilterSectionPreview() {
+fun FilterSectionPreviewCategoryFilterVisible() {
     FilterSection(
         sliderPosition = 1f..4f,
         sliderRange = 0f..5f,
-        onValueChange = {}
+        isCategoryFilterVisible = true,
+        categoryFilterMap = mapOf(),
+        onValueChange = {},
+        onCheckedChange = {}
+    )
+}
+
+@Preview
+@Composable
+fun FilterSectionPreviewCategoryFilterNotVisible() {
+    FilterSection(
+        sliderPosition = 1f..4f,
+        sliderRange = 0f..5f,
+        isCategoryFilterVisible = false,
+        categoryFilterMap = mapOf(),
+        onValueChange = {},
+        onCheckedChange = {}
     )
 }

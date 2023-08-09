@@ -37,12 +37,14 @@ fun CategoryContent(
     sliderPosition: ClosedFloatingPointRange<Float>,
     sliderRange: ClosedFloatingPointRange<Float>,
     productOrder: ProductOrder,
+    categoryFilterMap: Map<String,Boolean>,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
     onFavourite: (Int) -> Unit,
     onDismiss: () -> Unit,
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
-    onOrderChange: (ProductOrder) -> Unit
+    onOrderChange: (ProductOrder) -> Unit,
+    onCheckedChange: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -78,7 +80,10 @@ fun CategoryContent(
                     FilterSection(
                         sliderPosition = sliderPosition,
                         sliderRange = sliderRange,
-                        onValueChange = { onValueChange(it) }
+                        isCategoryFilterVisible = categoryName == "all",
+                        categoryFilterMap = categoryFilterMap,
+                        onValueChange = { onValueChange(it) },
+                        onCheckedChange = { onCheckedChange(it) }
                     )
                 }
             }
@@ -179,12 +184,14 @@ fun CategoryContentPreview() {
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
             productOrder = ProductOrder.NameAscending(),
+            categoryFilterMap = mapOf(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
             onDismiss = {},
             onValueChange = {},
-            onOrderChange = {}
+            onOrderChange = {},
+            onCheckedChange = {}
         )
     }
 }
@@ -244,12 +251,14 @@ fun CategoryContentToggleTruePreview() {
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
             productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
             onDismiss = {},
             onValueChange = {},
-            onOrderChange = {}
+            onOrderChange = {},
+            onCheckedChange = {}
         )
     }
 }

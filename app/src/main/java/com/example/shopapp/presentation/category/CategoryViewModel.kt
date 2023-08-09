@@ -69,6 +69,10 @@ class CategoryViewModel @Inject constructor(
             is CategoryEvent.OnOrderChange -> {
                 sortProducts(event.value)
             }
+            is CategoryEvent.OnCheckBoxToggled -> {
+                toggleCheckBox(event.value)
+                getProducts()
+            }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
                     isSortSectionVisible = !_categoryState.value.isSortSectionVisible
@@ -272,7 +276,8 @@ class CategoryViewModel @Inject constructor(
         val products = shopUseCases.filterProductsUseCase(
             products = _categoryState.value.productList,
             minPrice = _categoryState.value.priceSliderPosition.start,
-            maxPrice = _categoryState.value.priceSliderPosition.endInclusive
+            maxPrice = _categoryState.value.priceSliderPosition.endInclusive,
+            categoryFilterMap = _categoryState.value.categoryFilterMap
         )
 
         _categoryState.value = _categoryState.value.copy(
@@ -290,6 +295,14 @@ class CategoryViewModel @Inject constructor(
                 productOrder = productOrder,
                 products = _categoryState.value.productList
             )
+        )
+    }
+
+    fun toggleCheckBox(selectedCheckBox: String) {
+        val map = _categoryState.value.categoryFilterMap
+
+        _categoryState.value = categoryState.value.copy(
+            categoryFilterMap = shopUseCases.toggleCheckBoxUseCase(map,selectedCheckBox)
         )
     }
 }

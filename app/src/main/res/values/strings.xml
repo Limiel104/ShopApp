@@ -37,4 +37,10 @@
     <string name="name_ascending">Name A-Z</string>
     <string name="name_descending">Name Z-A</string>
     <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="all">All</string>
+    <string name="men_clothing">Men\'s clothing</string>
+    <string name="women_clothing">Women\'s clothing</string>
+    <string name="jewelery">Jewelery</string>
+    <string name="electronics">Electronics</string>
 </resources>
