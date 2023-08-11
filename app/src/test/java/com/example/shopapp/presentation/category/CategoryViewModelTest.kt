@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.util.Category
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
@@ -38,6 +39,7 @@ class CategoryViewModelTest {
     private lateinit var user: FirebaseUser
     private lateinit var userFavourites: List<Favourite>
     private lateinit var products: List<Product>
+    private lateinit var categoryFilterMap: Map<String,Boolean>
 
     @Before
     fun setUp() {
@@ -133,6 +135,13 @@ class CategoryViewModelTest {
                 isInFavourites = true
             )
         )
+
+        categoryFilterMap = mapOf(
+            Pair(Category.Men.title,true),
+            Pair(Category.Women.title,false),
+            Pair(Category.Jewelery.title,false),
+            Pair(Category.Electronics.title,false)
+        )
     }
 
     @After
@@ -189,6 +198,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns productList
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns productList
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -200,6 +215,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
     }
 
@@ -270,6 +287,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.addProductToFavouritesUseCase(any(), any())
         } returns flowOf(
@@ -286,6 +309,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         }
         assertThat(loadingState).isFalse()
@@ -306,6 +331,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.addProductToFavouritesUseCase(any(), any())
         } returns flowOf(
@@ -322,6 +353,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         }
         assertThat(loadingState).isTrue()
@@ -342,6 +375,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         } returns flowOf(
@@ -358,6 +397,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         }
         assertThat(loadingState).isFalse()
@@ -378,6 +419,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         } returns flowOf(
@@ -394,6 +441,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         }
         assertThat(loadingState).isTrue()
@@ -414,6 +463,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -424,6 +479,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
         assertThat(result).isTrue()
     }
@@ -443,6 +500,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -453,6 +516,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
         assertThat(result).isFalse()
     }
@@ -472,6 +537,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -482,6 +553,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
         assertThat(result.productList).isNotEmpty()
         assertThat(result.productList).isEqualTo(products)
@@ -502,6 +575,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(), any())
         } returns productList
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns productList
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns productList
 
         categoryViewModel = setViewModel()
 
@@ -512,6 +591,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
         assertThat(result.productList).isNotEmpty()
         assertThat(result.productList).isEqualTo(productList)
@@ -560,6 +641,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -576,6 +663,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
     }
 
@@ -594,6 +683,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -610,6 +705,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
     }
 
@@ -628,6 +725,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -653,6 +756,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
     }
 
@@ -674,6 +779,12 @@ class CategoryViewModelTest {
         coEvery {
             shopUseCases.getFavouriteIdUseCase(userFavourites,1)
         } returns "favourite1"
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         } returns flowOf(
@@ -689,6 +800,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.getFavouriteIdUseCase(any(),any())
             shopUseCases.deleteProductFromFavouritesUseCase(any())
         }
@@ -709,6 +822,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         } returns flowOf(
@@ -724,6 +843,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         }
     }
@@ -743,6 +864,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
         coEvery {
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         } returns flowOf(
@@ -760,6 +887,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
             shopUseCases.addProductToFavouritesUseCase(any(),any())
         }
         assertThat(initialState).isFalse()
@@ -781,6 +910,12 @@ class CategoryViewModelTest {
         every {
             shopUseCases.setUserFavouritesUseCase(any(),any())
         } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
 
         categoryViewModel = setViewModel()
 
@@ -793,6 +928,8 @@ class CategoryViewModelTest {
             shopUseCases.getUserFavouritesUseCase(any())
             shopUseCases.getProductsUseCase(any())
             shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
         }
         assertThat(initialState).isFalse()
         assertThat(resultState).isFalse()
