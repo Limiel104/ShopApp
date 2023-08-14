@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
@@ -15,6 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.confirmVerified
 import io.mockk.every
+import io.mockk.excludeRecords
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -627,6 +629,189 @@ class CategoryViewModelTest {
     }
 
     @Test
+    fun `price slider is set correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == "men's clothing" }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title.lowercase() }
+
+        categoryViewModel = setViewModel()
+        val sliderPosition = getCurrentCategoryState().priceSliderPosition
+        val sliderRange = getCurrentCategoryState().priceSliderRange
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+        assertThat(sliderPosition).isEqualTo(34.99F..123.99F)
+        assertThat(sliderRange).isEqualTo(34.99F..123.99F)
+    }
+
+    @Test
+    fun `products are filtered correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == "men's clothing" }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title.lowercase() }
+
+        categoryViewModel = setViewModel()
+
+        categoryViewModel.filterProducts()
+        val filteredProducts = getCurrentCategoryState().productList
+
+        excludeRecords {
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        }
+        for(product in filteredProducts) {
+            assertThat(product.category).isEqualTo("men's clothing")
+        }
+    }
+
+    @Test
+    fun `products are sorted correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } answers { products.filter { it.category == "men's clothing" } }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title.lowercase() }
+
+        categoryViewModel = setViewModel()
+
+        val sortedProducts = getCurrentCategoryState().productList
+
+        excludeRecords {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        }
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+        for(i in 0..sortedProducts.size-2) {
+            assertThat(sortedProducts[i].title).isLessThan(sortedProducts[i+1].title)
+        }
+    }
+
+    @Test
+    fun `toggle checkbox works correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } answers { products.filter { it.category == "men's clothing" } }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title.lowercase() }
+        every {
+            shopUseCases.toggleCheckBoxUseCase(any(),any())
+        } returns mapOf(
+            Pair(Category.Men.title,false),
+            Pair(Category.Women.title,true),
+            Pair(Category.Jewelery.title,true),
+            Pair(Category.Electronics.title,true)
+        )
+
+        categoryViewModel = setViewModel()
+
+        val initialMapState = getCurrentCategoryState().categoryFilterMap
+        categoryViewModel.toggleCheckBox("men's clothing")
+        val resultMapState = getCurrentCategoryState().categoryFilterMap
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+            shopUseCases.toggleCheckBoxUseCase(any(),any())
+        }
+        for(category in initialMapState.values) {
+            assertThat(category).isTrue()
+        }
+
+        assertThat(resultMapState).isEqualTo(
+            mapOf(
+                Pair(Category.Men.title,false),
+                Pair(Category.Women.title,true),
+                Pair(Category.Jewelery.title,true),
+                Pair(Category.Electronics.title,true)
+            )
+        )
+    }
+
+    @Test
     fun `event onProductSelected sets state with selected product`() {
         coEvery {
             shopUseCases.getUserFavouritesUseCase(any())
@@ -933,5 +1118,153 @@ class CategoryViewModelTest {
         }
         assertThat(initialState).isFalse()
         assertThat(resultState).isFalse()
+    }
+
+    @Test
+    fun `event onPriceSliderPositionChange is setting new position of the slider correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
+
+        categoryViewModel = setViewModel()
+
+        val initialSliderPosition = getCurrentCategoryState().priceSliderPosition
+        categoryViewModel.onEvent(CategoryEvent.OnPriceSliderPositionChange(50.07F..100.45F))
+        val resultSliderPosition = getCurrentCategoryState().priceSliderPosition
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+        assertThat(initialSliderPosition).isEqualTo(34.99F..123.99F)
+        assertThat(resultSliderPosition).isEqualTo(50.07F..100.45F)
+    }
+
+    @Test
+    fun `event onOrderChange is setting new product order correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
+
+        categoryViewModel = setViewModel()
+
+        categoryViewModel.onEvent(CategoryEvent.OnOrderChange(ProductOrder.NameAscending()))
+        val sortedProducts = getCurrentCategoryState().productList
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+        for(i in 0..sortedProducts.size-2) {
+            assertThat(sortedProducts[i].title).isLessThan(sortedProducts[i+1].title)
+        }
+    }
+
+    @Test
+    fun `event onCheckBoxToggled is setting new state of categoryFilterMap correctly`() {
+        coEvery {
+            shopUseCases.getUserFavouritesUseCase(any())
+        } returns flowOf(
+            Resource.Success(userFavourites)
+        )
+        coEvery {
+            shopUseCases.getProductsUseCase(any())
+        } returns flowOf(
+            Resource.Success(productList)
+        )
+        every {
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+        } returns products
+        every {
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+        } returns products.filter { it.category == Category.Men.id }
+        every {
+            shopUseCases.sortProductsUseCase(any(),any())
+        } returns products.sortedBy { it.title }
+        every {
+            shopUseCases.toggleCheckBoxUseCase(any(),any())
+        } returns mapOf(
+            Pair(Category.Men.title,false),
+            Pair(Category.Women.title,true),
+            Pair(Category.Jewelery.title,true),
+            Pair(Category.Electronics.title,true)
+        )
+
+        categoryViewModel = setViewModel()
+
+        val initialMapState = getCurrentCategoryState().categoryFilterMap
+        categoryViewModel.onEvent(CategoryEvent.OnCheckBoxToggled("men's clothing"))
+        val resultMapState = getCurrentCategoryState().categoryFilterMap
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouritesUseCase(any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+            shopUseCases.toggleCheckBoxUseCase(any(),any())
+            shopUseCases.getProductsUseCase(any())
+            shopUseCases.setUserFavouritesUseCase(any(),any())
+            shopUseCases.filterProductsUseCase(any(),any(),any(),any())
+            shopUseCases.sortProductsUseCase(any(),any())
+        }
+        for(category in initialMapState.values) {
+            assertThat(category).isTrue()
+        }
+
+        assertThat(resultMapState).isEqualTo(
+            mapOf(
+                Pair(Category.Men.title,false),
+                Pair(Category.Women.title,true),
+                Pair(Category.Jewelery.title,true),
+                Pair(Category.Electronics.title,true)
+            )
+        )
     }
 }
