@@ -9,7 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
+import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -20,7 +23,8 @@ fun PriceSlider(
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .testTag(CATEGORY_PRICE_SLIDER),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -28,6 +32,8 @@ fun PriceSlider(
         )
 
         RangeSlider(
+            modifier = Modifier
+                .testTag(CATEGORY_PRICE_SLIDER_ITEM),
             value = sliderPosition,
             valueRange = sliderRange,
             onValueChange = { onValueChange(it) }

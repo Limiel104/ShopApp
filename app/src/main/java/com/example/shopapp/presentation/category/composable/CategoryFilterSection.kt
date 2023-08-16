@@ -9,10 +9,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
 import com.example.shopapp.util.Category
+import com.example.shopapp.util.Constants.CATEGORY_CHECKBOXES
 
 @Composable
 fun CategoryFilterSection(
@@ -22,7 +24,8 @@ fun CategoryFilterSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .testTag(CATEGORY_CHECKBOXES),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

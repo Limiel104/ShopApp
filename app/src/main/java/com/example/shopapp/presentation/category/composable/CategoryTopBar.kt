@@ -18,7 +18,7 @@ import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
-import com.example.shopapp.util.Constants.SORT_BTN
+import com.example.shopapp.util.Constants.SORT_AND_FILTER_BTN
 
 @Composable
 fun CategoryTopBar(
@@ -45,7 +45,7 @@ fun CategoryTopBar(
         ) {
             IconButtonCard(
                 icon = Icons.Outlined.Sort,
-                description = SORT_BTN,
+                description = SORT_AND_FILTER_BTN,
                 outsidePaddingValue = 0,
                 onClick = { onSortSelected() }
             )

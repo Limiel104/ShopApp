@@ -24,6 +24,10 @@ object Constants {
     const val ACCOUNT_POINTS_CARD: String = "Account points card"
     const val CATEGORY_TOP_BAR: String = "Category top bar"
     const val CATEGORY_SORT_SECTION: String = "Category sort section"
+    const val CATEGORY_FILTER_SECTION: String = "Category filter section"
+    const val CATEGORY_CHECKBOXES: String = "Category checkboxes"
+    const val CATEGORY_PRICE_SLIDER: String = "Category price slider"
+    const val CATEGORY_PRICE_SLIDER_ITEM: String = "Category price slider item"
     const val CATEGORY_LIST_TOP_BAR: String = "Category list top bar"
     const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list lazy column"
     const val CATEGORY_NAME_1: String = "All"
@@ -48,7 +52,7 @@ object Constants {
 
     //Content Description
     const val CART_BTN: String = "Cart button"
-    const val SORT_BTN: String = "Sort button"
+    const val SORT_AND_FILTER_BTN: String = "Sort button"
     const val FAVOURITES_BTN: String = "Favourite button"
     const val IMAGE: String = "Image"
     const val GO_BACK_BTN: String = "Go back button"

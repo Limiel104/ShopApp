@@ -11,12 +11,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
+import com.example.shopapp.util.Constants.CATEGORY_FILTER_SECTION
 
 @Composable
 fun FilterSection(
@@ -31,7 +33,8 @@ fun FilterSection(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp)
+            .testTag(CATEGORY_FILTER_SECTION),
     ) {
         Divider()
 
