@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CATEGORY_CPI
 import com.example.shopapp.util.Constants.productDescription
@@ -33,10 +34,17 @@ fun CategoryContent(
     isLoading: Boolean,
     isButtonLocked: Boolean,
     isDialogActivated: Boolean,
+    sliderPosition: ClosedFloatingPointRange<Float>,
+    sliderRange: ClosedFloatingPointRange<Float>,
+    productOrder: ProductOrder,
+    categoryFilterMap: Map<String,Boolean>,
     onProductSelected: (Int) -> Unit,
     onSortSelected: () -> Unit,
     onFavourite: (Int) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    onOrderChange: (ProductOrder) -> Unit,
+    onCheckedChange: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -64,7 +72,20 @@ fun CategoryContent(
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
-                SortSection()
+                Column() {
+                    SortSection(
+                        productOrder = productOrder,
+                        onOrderChange = { onOrderChange(it) }
+                    )
+                    FilterSection(
+                        sliderPosition = sliderPosition,
+                        sliderRange = sliderRange,
+                        isCategoryFilterVisible = categoryName == "all",
+                        categoryFilterMap = categoryFilterMap,
+                        onValueChange = { onValueChange(it) },
+                        onCheckedChange = { onCheckedChange(it) }
+                    )
+                }
             }
 
             LazyVerticalGrid(
@@ -160,10 +181,17 @@ fun CategoryContentPreview() {
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameAscending(),
+            categoryFilterMap = mapOf(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
-            onDismiss = {}
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
         )
     }
 }
@@ -220,10 +248,17 @@ fun CategoryContentToggleTruePreview() {
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
             onProductSelected = {},
             onSortSelected = {},
             onFavourite = {},
-            onDismiss = {}
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
         )
     }
 }

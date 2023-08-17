@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
@@ -29,7 +30,11 @@ fun SortSectionItem(
 ) {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .toggleable(
+                value = selected,
+                onValueChange = { onClick() }
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -59,7 +64,7 @@ fun SortSectionItem(
 fun SortSectionItemPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = stringResource(id = R.string.lowest_price),
+            text = stringResource(id = R.string.price_ascending),
             selected = true,
             onClick = {}
         )
@@ -71,7 +76,7 @@ fun SortSectionItemPreview() {
 fun SortSectionItemNotSelectedPreview() {
     ShopAppTheme() {
         SortSectionItem(
-            text = stringResource(id = R.string.highest_price),
+            text = stringResource(id = R.string.price_descending),
             selected = false,
             onClick = {}
         )

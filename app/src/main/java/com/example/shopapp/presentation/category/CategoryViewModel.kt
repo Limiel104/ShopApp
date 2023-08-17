@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Constants.categoryId
@@ -56,8 +57,21 @@ class CategoryViewModel @Inject constructor(
             is CategoryEvent.OnFavouriteButtonSelected -> {
                 if(!_categoryState.value.isButtonLocked) {
                     changeButtonLockState(true)
-                    onFavouriteBattonClicked(event.value)
+                    onFavouriteButtonClicked(event.value)
                 }
+            }
+            is CategoryEvent.OnPriceSliderPositionChange -> {
+                _categoryState.value = categoryState.value.copy(
+                    priceSliderPosition = event.value
+                )
+                getProducts()
+            }
+            is CategoryEvent.OnOrderChange -> {
+                sortProducts(event.value)
+            }
+            is CategoryEvent.OnCheckBoxToggled -> {
+                toggleCheckBox(event.value)
+                getProducts()
             }
             is CategoryEvent.ToggleSortSection -> {
                 _categoryState.value = categoryState.value.copy(
@@ -105,6 +119,11 @@ class CategoryViewModel @Inject constructor(
                             Log.i(TAG, "Products: $products")
                             if(products.isNotEmpty()) {
                                 setUserFavourites(products, userFavourites)
+                                if(!_categoryState.value.isRangeSet) {
+                                    setPriceSlider()
+                                }
+                                filterProducts()
+                                sortProducts(_categoryState.value.productOrder)
                             }
                         }
                     }
@@ -167,7 +186,7 @@ class CategoryViewModel @Inject constructor(
         )
     }
 
-    private fun onFavouriteBattonClicked(selectedProductId: Int) {
+    private fun onFavouriteButtonClicked(selectedProductId: Int) {
         val isProductInFavourites = isProductInFavourites(selectedProductId)
         val userUID = _categoryState.value.userUID
 
@@ -232,5 +251,58 @@ class CategoryViewModel @Inject constructor(
                 changeButtonLockState(false)
             }
         }
+    }
+
+    fun setPriceSlider() {
+        val prices: MutableList<Float> = mutableListOf()
+
+        _categoryState.value.productList.forEach { product ->
+            prices.add(product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat())
+        }
+
+        prices.sort()
+
+        val startValue = prices.first()
+        val endValue = prices.last()
+
+        _categoryState.value = categoryState.value.copy(
+            priceSliderPosition = startValue..endValue,
+            priceSliderRange = startValue..endValue,
+            isRangeSet = true
+        )
+    }
+
+    fun filterProducts() {
+        val products = shopUseCases.filterProductsUseCase(
+            products = _categoryState.value.productList,
+            minPrice = _categoryState.value.priceSliderPosition.start,
+            maxPrice = _categoryState.value.priceSliderPosition.endInclusive,
+            categoryFilterMap = _categoryState.value.categoryFilterMap
+        )
+
+        _categoryState.value = _categoryState.value.copy(
+            productList = products
+        )
+    }
+
+    fun sortProducts(productOrder: ProductOrder) {
+        _categoryState.value = categoryState.value.copy(
+            productOrder = productOrder
+        )
+
+        _categoryState.value = categoryState.value.copy(
+            productList = shopUseCases.sortProductsUseCase(
+                productOrder = productOrder,
+                products = _categoryState.value.productList
+            )
+        )
+    }
+
+    fun toggleCheckBox(selectedCheckBox: String) {
+        val map = _categoryState.value.categoryFilterMap
+
+        _categoryState.value = categoryState.value.copy(
+            categoryFilterMap = shopUseCases.toggleCheckBoxUseCase(map,selectedCheckBox)
+        )
     }
 }
