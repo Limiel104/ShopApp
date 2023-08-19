@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Category
+import com.example.shopapp.util.Constants.CATEGORY_LIST_CONTENT
 import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
 import com.example.shopapp.util.getCategory
 
@@ -37,7 +38,8 @@ fun CategoryListContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(bottom = bottomBarHeight)
-    ) { _ ->
+            .testTag(CATEGORY_LIST_CONTENT)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
