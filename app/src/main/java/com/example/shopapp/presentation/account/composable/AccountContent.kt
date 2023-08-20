@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.R
+import com.example.shopapp.util.Constants.ACCOUNT_CONTENT
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
@@ -43,6 +44,7 @@ fun AccountContent(
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
+            .testTag(ACCOUNT_CONTENT)
     ) { innerPadding ->
         Column(
             modifier = Modifier

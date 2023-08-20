@@ -4,7 +4,7 @@
     <string name="points"> points</string>
     <string name="pln_discount">PLN Discount</string>
     <string name="coupon_validation_message">The coupon is valid for 14 days after activation.\n</string>
-    <string name="purchase_minimal_amount_message">"Minimum purchase amount is"</string>
+    <string name="purchase_minimal_amount_message">Minimum purchase amount is</string>
     <string name="activation_points_amount">Activate for</string>
     <string name="hi">Hi</string>
     <string name="my_profile">My profile</string>

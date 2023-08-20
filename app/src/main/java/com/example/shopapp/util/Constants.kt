@@ -17,6 +17,7 @@ object Constants {
     const val HOME_CONTENT: String = "Home content"
     const val HOME_TOP_BAR: String = "Home top bar"
     const val HOME_LAZY_COLUMN: String = "Home lazy column"
+    const val ACCOUNT_CONTENT: String = "Account content"
     const val ACCOUNT_TOP_BAR: String = "Account top bar"
     const val COUPON_ITEM_: String = "Coupon item for "
     const val COUPON_ITEM_10: String = "Coupon item for 10"
