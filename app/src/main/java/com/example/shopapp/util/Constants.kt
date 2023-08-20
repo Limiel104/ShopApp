@@ -53,6 +53,7 @@ object Constants {
     const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
     const val SIGNUP_BTN: String = "Signup button"
     const val SIGNUP_CPI: String = "Signup circular progress indicator"
+    const val USER_NOT_LOGGED_IN_CONTENT: String = "User not logged in content"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
