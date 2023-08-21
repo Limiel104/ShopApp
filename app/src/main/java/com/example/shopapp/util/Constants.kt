@@ -13,6 +13,7 @@ object Constants {
     const val LOGIN_BTN: String = "Login button"
     const val LOGIN_SIGNUP_BTN: String = "Go to sign up screen button"
     const val LOGIN_CPI: String = "Login circular progress indicator"
+    const val PRODUCT_DETAILS_CONTENT: String = "Product details content"
     const val PRODUCT_DETAILS_ADD_TO_CART_BTN: String = "Add to cart"
     const val HOME_CONTENT: String = "Home content"
     const val HOME_TOP_BAR: String = "Home top bar"
@@ -73,6 +74,9 @@ object Constants {
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
     const val productItemImageHeight: Int = 200
+
+    //VALUES
+    const val bottomSheetPeekHeight: Int = 100
 
     //VALUE NAMES
     const val productId: String = "productId"

@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,12 +30,15 @@ fun ProductDetailsContent(
                 isProductInFavourites = true
             ) },
         sheetBackgroundColor = MaterialTheme.colors.background,
-        sheetPeekHeight = 100.dp
+        sheetPeekHeight = bottomSheetPeekHeight.dp,
+        modifier = Modifier.testTag(PRODUCT_DETAILS_CONTENT)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(15.dp)
+                .padding(horizontal = 15.dp)
+                .padding(top = 15.dp)
+                .padding(bottom = bottomSheetPeekHeight.dp)
         ) {
             ProductDetailsImageItem(
                 imageUrl = product.imageUrl,
