@@ -6,6 +6,7 @@ object Constants {
     const val MY_PROFILE_BTN: String = "My profile button"
     const val ORDERS_AND_RETURNS_BTN: String = "Orders and returns button"
     const val LOGOUT_BTN: String = "Sign out button"
+    const val LOGIN_CONTENT: String = "Login content"
     const val LOGIN_EMAIL_TF: String = "Login email"
     const val LOGIN_EMAIL_ERROR: String = "Login email error"
     const val LOGIN_PASSWORD_TF: String = "Login password"

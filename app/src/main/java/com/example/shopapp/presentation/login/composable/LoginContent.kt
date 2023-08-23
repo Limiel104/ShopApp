@@ -25,6 +25,7 @@ import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.common.composable.ShopTextFieldItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.LOGIN_BTN
+import com.example.shopapp.util.Constants.LOGIN_CONTENT
 import com.example.shopapp.util.Constants.LOGIN_CPI
 import com.example.shopapp.util.Constants.LOGIN_EMAIL_ERROR
 import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
@@ -41,9 +42,9 @@ fun LoginContent(
     emailError: String?,
     password: String,
     passwordError: String?,
+    isLoading: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    isLoading: Boolean,
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
@@ -52,7 +53,8 @@ fun LoginContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 20.dp)
-            .padding(bottom = bottomBarHeight),
+            .padding(bottom = bottomBarHeight)
+            .testTag(LOGIN_CONTENT),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -197,6 +199,25 @@ fun LoginContentErrorPreview() {
             onEmailChange = {},
             onPasswordChange = {},
             isLoading = false,
+            onLogin = {},
+            onSignup = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoginContentCPIPreview() {
+    ShopAppTheme() {
+        LoginContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = null,
+            password = "abcdef2+A",
+            passwordError = null,
+            onEmailChange = {},
+            onPasswordChange = {},
+            isLoading = true,
             onLogin = {},
             onSignup = {}
         )
