@@ -25,6 +25,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.SIGNUP_BTN
 import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_TF
+import com.example.shopapp.util.Constants.SIGNUP_CONTENT
 import com.example.shopapp.util.Constants.SIGNUP_CPI
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
@@ -54,7 +55,8 @@ fun SignupContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 20.dp)
-            .padding(bottom = bottomBarHeight),
+            .padding(bottom = bottomBarHeight)
+            .testTag(SIGNUP_CONTENT),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -190,6 +192,27 @@ fun SignupContentErrorPreview() {
             confirmPassword = "abcdeff2+A",
             confirmPasswordError = confirmPasswordError,
             isLoading = false,
+            onEmailChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
+            onSignup = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SignupContentCPIPreview() {
+    ShopAppTheme() {
+        SignupContent(
+            bottomBarHeight = 56.dp,
+            email = "email@wp.com",
+            emailError = null,
+            password = "abcdef2+A",
+            passwordError = null,
+            confirmPassword = "abcdeff2+A",
+            confirmPasswordError = null,
+            isLoading = true,
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
