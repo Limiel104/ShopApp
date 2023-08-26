@@ -8,7 +8,7 @@ import com.example.shopapp.util.Category
 data class CategoryState (
     val categoryId: String = "",
     val productList: List<Product> = emptyList(),
-    val isSortSectionVisible: Boolean = false,
+    val isSortAndFilterSectionVisible: Boolean = false,
     val productId: Int = -1,
     val isLoading: Boolean = false,
     val userFavourites: List<Favourite> = emptyList(),

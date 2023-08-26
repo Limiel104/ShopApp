@@ -23,7 +23,7 @@ import com.example.shopapp.util.Constants.SORT_AND_FILTER_BTN
 @Composable
 fun CategoryTopBar(
     categoryName: String,
-    onSortSelected: () -> Unit,
+    onSortAndFilterSelected: () -> Unit,
     onCartSelected: () -> Unit
 ) {
     Row(
@@ -47,7 +47,7 @@ fun CategoryTopBar(
                 icon = Icons.Outlined.Sort,
                 description = SORT_AND_FILTER_BTN,
                 outsidePaddingValue = 0,
-                onClick = { onSortSelected() }
+                onClick = { onSortAndFilterSelected() }
             )
 
             IconButtonCard(
@@ -66,7 +66,7 @@ fun CategoryTopBarPreview() {
     ShopAppTheme {
         CategoryTopBar(
             categoryName = "men's clothing",
-            onSortSelected = {},
+            onSortAndFilterSelected = {},
             onCartSelected = {}
         )
     }

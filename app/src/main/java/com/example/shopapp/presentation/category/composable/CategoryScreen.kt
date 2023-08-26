@@ -27,7 +27,7 @@ fun CategoryScreen(
     val scaffoldState = rememberScaffoldState()
     val categoryId = viewModel.categoryState.value.categoryId
     val productList = viewModel.categoryState.value.productList
-    val isSortSectionVisible = viewModel.categoryState.value.isSortSectionVisible
+    val isSortSectionVisible = viewModel.categoryState.value.isSortAndFilterSectionVisible
     val isLoading = viewModel.categoryState.value.isLoading
     val isButtonLocked = viewModel.categoryState.value.isButtonLocked
     val isDialogActivated = viewModel.categoryState.value.isDialogActivated
@@ -56,7 +56,7 @@ fun CategoryScreen(
         bottomBarHeight = bottomBarHeight,
         categoryName = categoryId,
         productList = productList,
-        isSortSectionVisible = isSortSectionVisible,
+        isSortAndFilterSectionVisible = isSortSectionVisible,
         isLoading = isLoading,
         isButtonLocked = isButtonLocked,
         isDialogActivated = isDialogActivated,
@@ -65,7 +65,7 @@ fun CategoryScreen(
         productOrder = productOrder,
         categoryFilterMap = categoryFilterMap,
         onProductSelected = { viewModel.onEvent(CategoryEvent.OnProductSelected(it)) },
-        onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) },
+        onSortAndFilterSelected = { viewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection) },
         onFavourite = { viewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(it)) },
         onDismiss = { viewModel.onEvent(CategoryEvent.OnDialogDismissed) },
         onValueChange = { viewModel.onEvent(CategoryEvent.OnPriceSliderPositionChange(it)) },

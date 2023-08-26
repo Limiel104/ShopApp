@@ -27,12 +27,14 @@ object Constants {
     const val COUPON_ITEM_50: String = "Coupon item for 50"
     const val ACCOUNT_LAZY_ROW: String = "Account lazy row"
     const val ACCOUNT_POINTS_CARD: String = "Account points card"
+    const val CATEGORY_CONTENT: String = "Category content"
     const val CATEGORY_TOP_BAR: String = "Category top bar"
     const val CATEGORY_SORT_SECTION: String = "Category sort section"
     const val CATEGORY_FILTER_SECTION: String = "Category filter section"
     const val CATEGORY_CHECKBOXES: String = "Category checkboxes"
     const val CATEGORY_PRICE_SLIDER: String = "Category price slider"
     const val CATEGORY_PRICE_SLIDER_ITEM: String = "Category price slider item"
+    const val CATEGORY_LAZY_VERTICAL_GRID: String = "Category lazy vertical grid"
     const val CATEGORY_LIST_CONTENT: String = "Category list content"
     const val CATEGORY_LIST_TOP_BAR: String = "Category list top bar"
     const val CATEGORY_LIST_LAZY_COLUMN: String = "Category list lazy column"
@@ -60,7 +62,7 @@ object Constants {
 
     //Content Description
     const val CART_BTN: String = "Cart button"
-    const val SORT_AND_FILTER_BTN: String = "Sort button"
+    const val SORT_AND_FILTER_BTN: String = "Sort and filter button"
     const val FAVOURITES_BTN: String = "Favourite button"
     const val IMAGE: String = "Image"
     const val GO_BACK_BTN: String = "Go back button"
@@ -82,7 +84,6 @@ object Constants {
 
     //VALUE NAMES
     const val productId: String = "productId"
-    const val categoryId: String = "categoryId"
 
     //LOGS
     const val TAG: String = "TAG"

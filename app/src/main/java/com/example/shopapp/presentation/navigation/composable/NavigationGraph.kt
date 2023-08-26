@@ -15,7 +15,6 @@ import com.example.shopapp.presentation.home.composable.HomeScreen
 import com.example.shopapp.presentation.login.composable.LoginScreen
 import com.example.shopapp.presentation.product_details.composable.ProductDetailsScreen
 import com.example.shopapp.presentation.signup.composable.SignupScreen
-import com.example.shopapp.util.Constants.categoryId
 import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 
@@ -53,10 +52,10 @@ fun NavigationGraph(
             )
         }
         composable(
-            route = Screen.CategoryScreen.route + categoryId + "={$categoryId}",
+            route = Screen.CategoryScreen.route + "categoryId={categoryId}",
             arguments = listOf(
                 navArgument(
-                    name = categoryId
+                    name = "categoryId"
                 ) {
                     type = NavType.StringType
                 }
