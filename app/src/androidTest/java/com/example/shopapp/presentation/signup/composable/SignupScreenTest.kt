@@ -495,7 +495,7 @@ class SignupScreenTest {
     }
 
     @Test
-    fun isLoading_circularProgressIndicatorIsDisplayedCorrectly() {
+    fun signupScreenCircularProgressIndicator_isShowingUpWhenAllIsCorrect() {
         val email = "email@email.com"
         val password = "Qwerty1+"
         val confirmPassword = "Qwerty1+"

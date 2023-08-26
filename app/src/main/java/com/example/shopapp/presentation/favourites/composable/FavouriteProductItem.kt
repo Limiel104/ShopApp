@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,8 @@ fun FavouriteProductItem(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
             .padding(bottom = 5.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .testTag(product.title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -51,7 +53,7 @@ fun FavouriteProductItem(
 
             IconButtonCard(
                 icon = Icons.Outlined.Delete,
-                description = DELETE_BTN,
+                description = DELETE_BTN + " ${product.title}",
                 onClick = { onDelete() }
             )
         }
@@ -64,7 +66,7 @@ fun FavouriteProductItem(
         ShopButtonItem(
             text = stringResource(id = R.string.add),
             size = 180,
-            testTag = ADD_TO_CART_BTN,
+            testTag = ADD_TO_CART_BTN + " ${product.title}",
             onClick = {}
         )
     }

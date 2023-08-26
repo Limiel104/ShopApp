@@ -16,6 +16,7 @@ import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -36,6 +37,7 @@ import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.CATEGORY_CHECKBOXES
 import com.example.shopapp.util.Constants.CATEGORY_CONTENT
+import com.example.shopapp.util.Constants.CATEGORY_CPI
 import com.example.shopapp.util.Constants.CATEGORY_FILTER_SECTION
 import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
 import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
@@ -545,6 +547,19 @@ class CategoryScreenTest {
     }
 
     @Test
+    fun categoryScreenLazyVerticalGrid_hasCorrectNumberOfVisibleItems() {
+        setScreenState(
+            productList = productList,
+            categoryFilterMap = categoryFilterMap
+        )
+
+        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertExists()
+        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertIsDisplayed()
+        val numberOfChildrenVisible = composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).fetchSemanticsNode().children.size
+        assertThat(numberOfChildrenVisible).isEqualTo(4)
+    }
+
+    @Test
     fun categoryScreenLazyGrid_isDisplayedCorrectly() {
         setScreenState(
             productList = productList,
@@ -568,5 +583,27 @@ class CategoryScreenTest {
         composeRule.onNodeWithTag(productList[0].title).onChildAt(1).assertTextEquals(productList[0].title)
         composeRule.onNodeWithTag(productList[0].title).onChildAt(3).assertTextEquals(productList[0].price)
         composeRule.onNodeWithTag(productList[0].title).assertPositionInRootIsEqualTo(20.dp,66.dp)
+    }
+
+    @Test
+    fun categoryScreenCircularProgressIndicator_IsDisplayedCorrectly() {
+        setScreenState(
+            productList = productList,
+            categoryFilterMap = categoryFilterMap,
+            isLoading = true
+        )
+        val deviceWidth = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().right
+        val deviceHeight = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().bottom
+        val leftPosition = deviceWidth.value/2
+        val topPosition = deviceHeight.value/2
+
+        composeRule.onNodeWithTag(CATEGORY_CPI).assertExists()
+        composeRule.onNodeWithTag(CATEGORY_CPI).assertIsDisplayed()
+        composeRule.onNodeWithTag(CATEGORY_CPI).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(CATEGORY_CPI).assertHeightIsEqualTo(deviceHeight)
+        composeRule.onNodeWithTag(CATEGORY_CPI).assertWidthIsEqualTo(deviceWidth)
+
+        composeRule.onNodeWithTag(CATEGORY_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
+        composeRule.onNodeWithTag(CATEGORY_CPI).onChild().assertWidthIsEqualTo(40.dp)
     }
 }

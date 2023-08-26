@@ -26,8 +26,9 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.FAVOURITES_CONTENT
 import com.example.shopapp.util.Constants.FAVOURITES_CPI
-import com.example.shopapp.util.Constants.FAVOURITE_LAZY_VERTICAL_GRID
+import com.example.shopapp.util.Constants.FAVOURITES_LAZY_VERTICAL_GRID
 import com.example.shopapp.util.Constants.productDescription
 
 @Composable
@@ -47,6 +48,7 @@ fun FavouriteContent(
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
+            .testTag(FAVOURITES_CONTENT)
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -59,7 +61,7 @@ fun FavouriteContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp),
                 modifier = Modifier
-                    .testTag(FAVOURITE_LAZY_VERTICAL_GRID)
+                    .testTag(FAVOURITES_LAZY_VERTICAL_GRID)
             ) {
                 itemsIndexed(productList) { _, product ->
                     FavouriteProductItem(
@@ -68,17 +70,6 @@ fun FavouriteContent(
                         onClick = { onProductSelected(product.id) }
                     )
                 }
-            }
-        }
-
-        if(isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .testTag(FAVOURITES_CPI),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
             }
         }
 
@@ -93,6 +84,17 @@ fun FavouriteContent(
                     text = stringResource(id = R.string.no_favourites)
                 )
             }
+        }
+    }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(FAVOURITES_CPI),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }

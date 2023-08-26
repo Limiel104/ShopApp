@@ -111,17 +111,6 @@ fun CategoryContent(
             }
         }
 
-        if(isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .testTag(CATEGORY_CPI),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
         if(isDialogActivated) {
             Box(
                 modifier = Modifier
@@ -132,6 +121,17 @@ fun CategoryContent(
                     onDismiss = { onDismiss() }
                 )
             }
+        }
+    }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(CATEGORY_CPI),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
