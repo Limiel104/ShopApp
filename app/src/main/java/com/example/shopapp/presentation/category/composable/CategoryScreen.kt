@@ -14,7 +14,6 @@ import com.example.shopapp.presentation.category.CategoryUiEvent
 import com.example.shopapp.presentation.category.CategoryViewModel
 import com.example.shopapp.util.Constants.CATEGORY_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -42,7 +41,7 @@ fun CategoryScreen(
             when(event) {
                 is CategoryUiEvent.NavigateToProductDetails -> {
                     Log.i(TAG, CATEGORY_SCREEN_LE)
-                    navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
+                    navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
                 }
                 is CategoryUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()

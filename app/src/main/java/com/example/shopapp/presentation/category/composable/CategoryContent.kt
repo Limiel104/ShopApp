@@ -110,17 +110,17 @@ fun CategoryContent(
                 }
             }
         }
+    }
 
-        if(isDialogActivated) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                NotLoggedInDialog(
-                    onDismiss = { onDismiss() }
-                )
-            }
+    if(isDialogActivated) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            NotLoggedInDialog(
+                onDismiss = { onDismiss() }
+            )
         }
     }
 
@@ -136,54 +136,56 @@ fun CategoryContent(
     }
 }
 
+private fun getProductList(): List<Product> {
+    return listOf(
+        Product(
+            id = 1,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = false
+        ),
+        Product(
+            id = 2,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = true
+        ),
+        Product(
+            id = 3,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = false
+        ),
+        Product(
+            id = 4,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = true
+        )
+    )
+}
+
 @Preview
 @Composable
 fun CategoryContentPreview() {
     ShopAppTheme {
-        val productList = listOf(
-            Product(
-                id = 1,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 2,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            ),
-            Product(
-                id = 3,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 4,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            )
-        )
-
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
-            productList = productList,
+            productList = getProductList(),
             isSortAndFilterSectionVisible = false,
             isLoading = false,
             isButtonLocked = false,
@@ -207,50 +209,11 @@ fun CategoryContentPreview() {
 @Composable
 fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
     ShopAppTheme {
-        val productList = listOf(
-            Product(
-                id = 1,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            ),
-            Product(
-                id = 2,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 3,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 4,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            )
-        )
-
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
-            productList = productList,
+            productList = getProductList(),
             isSortAndFilterSectionVisible = true,
             isLoading = false,
             isButtonLocked = false,
@@ -274,50 +237,11 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
 @Composable
 fun CategoryContentToggleTruePreviewCategoryIsAll() {
     ShopAppTheme {
-        val productList = listOf(
-            Product(
-                id = 1,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            ),
-            Product(
-                id = 2,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 3,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 4,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            )
-        )
-
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryName = "all",
-            productList = productList,
+            productList = getProductList(),
             isSortAndFilterSectionVisible = true,
             isLoading = false,
             isButtonLocked = false,
@@ -331,6 +255,62 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
                 Pair(Category.Jewelery.title,true),
                 Pair(Category.Electronics.title,true)
             ),
+            onProductSelected = {},
+            onSortAndFilterSelected = {},
+            onFavourite = {},
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentDialogPreview() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            categoryName = "all",
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = false,
+            isLoading = false,
+            isButtonLocked = false,
+            isDialogActivated = true,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
+            onProductSelected = {},
+            onSortAndFilterSelected = {},
+            onFavourite = {},
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentCPIPreview() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            categoryName = "all",
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = false,
+            isLoading = true,
+            isButtonLocked = false,
+            isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
             onProductSelected = {},
             onSortAndFilterSelected = {},
             onFavourite = {},

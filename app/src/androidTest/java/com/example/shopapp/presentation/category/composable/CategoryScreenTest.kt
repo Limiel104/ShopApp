@@ -44,6 +44,8 @@ import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
 import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
 import com.example.shopapp.util.Constants.CATEGORY_SORT_SECTION
 import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
+import com.example.shopapp.util.Constants.DISMISS_BTN
+import com.example.shopapp.util.Constants.NOT_LOGGED_IN_DIALOG
 import com.example.shopapp.util.Constants.SORT_AND_FILTER_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.productDescription
@@ -589,8 +591,9 @@ class CategoryScreenTest {
     fun categoryScreenCircularProgressIndicator_IsDisplayedCorrectly() {
         setScreenState(
             productList = productList,
-            categoryFilterMap = categoryFilterMap,
-            isLoading = true
+            isLoading = true,
+            categoryFilterMap = categoryFilterMap
+
         )
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().right
         val deviceHeight = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().bottom
@@ -605,5 +608,24 @@ class CategoryScreenTest {
 
         composeRule.onNodeWithTag(CATEGORY_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
         composeRule.onNodeWithTag(CATEGORY_CPI).onChild().assertWidthIsEqualTo(40.dp)
+    }
+
+    @Test
+    fun categoryScreenDialog_isDisplayedCorrectly() {
+        setScreenState(
+            productList = productList,
+            isDialogActivated = true,
+            categoryFilterMap = categoryFilterMap,
+        )
+
+        val numberOfChildren = composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(3)
+
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChildAt(0).assertTextEquals("Not logged in")
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChildAt(1).assertTextEquals("You need to be logged in to add product to favourites")
+        composeRule.onNodeWithTag(DISMISS_BTN).assertExists()
+        composeRule.onNodeWithTag(DISMISS_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(DISMISS_BTN).assertTextEquals("Dismiss")
+        composeRule.onNodeWithTag(DISMISS_BTN).assertHasClickAction()
     }
 }

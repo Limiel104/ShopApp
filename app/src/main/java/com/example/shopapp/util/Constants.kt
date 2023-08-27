@@ -44,6 +44,8 @@ object Constants {
     const val CATEGORY_NAME_4: String = "Jewelery"
     const val CATEGORY_NAME_5: String = "Electronics"
     const val CATEGORY_CPI: String = "Category circular progress indicator"
+    const val NOT_LOGGED_IN_DIALOG: String = "Not logged in dialog"
+    const val DISMISS_BTN: String = "Dismiss button"
     const val FAVOURITES_CONTENT: String = "Favourites content"
     const val FAVOURITES_TOP_BAR: String = "Favourites top bar"
     const val FAVOURITES_LAZY_VERTICAL_GRID: String = "Favourite lazy vertical grid"
@@ -83,9 +85,6 @@ object Constants {
 
     //VALUES
     const val bottomSheetPeekHeight: Int = 100
-
-    //VALUE NAMES
-    const val productId: String = "productId"
 
     //LOGS
     const val TAG: String = "TAG"

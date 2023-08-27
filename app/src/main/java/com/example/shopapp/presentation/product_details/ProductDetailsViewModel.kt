@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +31,7 @@ class ProductDetailsViewModel @Inject constructor(
     init {
         Log.i(TAG, PRODUCT_DETAILS_VM)
 
-        savedStateHandle.get<Int>(productId)?.let { productId ->
+        savedStateHandle.get<Int>("productId")?.let { productId ->
             _productDetailsState.value = productDetailsState.value.copy(
                 productId = productId
             )

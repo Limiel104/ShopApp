@@ -15,7 +15,6 @@ import com.example.shopapp.presentation.favourites.FavouritesUiEvent
 import com.example.shopapp.presentation.favourites.FavouritesViewModel
 import com.example.shopapp.util.Constants.FAVOURITES_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -36,7 +35,7 @@ fun FavouriteScreen(
             Log.i(TAG, FAVOURITES_SCREEN_LE)
             when(event) {
                 is FavouritesUiEvent.NavigateToProductDetails -> {
-                    navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
+                    navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
                 }
                 is FavouritesUiEvent.NavigateToLogin -> {
                     navController.navigate(Screen.LoginScreen.route)

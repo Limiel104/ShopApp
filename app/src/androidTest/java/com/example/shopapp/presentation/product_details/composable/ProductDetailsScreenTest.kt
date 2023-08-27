@@ -43,7 +43,6 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
 import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -72,13 +71,13 @@ class ProductDetailsScreenTest {
             ShopAppTheme() {
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.ProductDetailsScreen.route + productId + "={${productId}}"
+                    startDestination = Screen.ProductDetailsScreen.route + "productId={productId}"
                 ) {
                     composable(
-                        route = Screen.ProductDetailsScreen.route + productId + "={${productId}}",
+                        route = Screen.ProductDetailsScreen.route + "productId={productId}",
                         arguments = listOf(
                             navArgument(
-                                name = productId
+                                name = "productId"
                             ) {
                                 type = NavType.IntType
                                 defaultValue = -1
