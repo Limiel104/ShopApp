@@ -4,13 +4,21 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
+import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onParent
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,9 +27,15 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants
+import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.DELETE_BTN
+import com.example.shopapp.util.Constants.FAVOURITES_CONTENT
+import com.example.shopapp.util.Constants.FAVOURITES_CPI
 import com.example.shopapp.util.Constants.FAVOURITES_TOP_BAR
-import com.example.shopapp.util.Constants.FAVOURITE_LAZY_VERTICAL_GRID
+import com.example.shopapp.util.Constants.FAVOURITES_LAZY_VERTICAL_GRID
+import com.example.shopapp.util.Constants.PRODUCT_ITEM_TITLE
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -36,6 +50,8 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 class FavouriteScreenTest {
 
+    private lateinit var productList: List<Product>
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -45,6 +61,60 @@ class FavouriteScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+
+        productList = listOf(
+            Product(
+                id = 1,
+                title = "Shirt",
+                price = "195,59 PLN",
+                description = Constants.productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 2,
+                title = "Trousers",
+                price = "195,59 PLN",
+                description = Constants.productDescription,
+                category = "women's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 3,
+                title = "Hoodie",
+                price = "195,59 PLN",
+                description = Constants.productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 4,
+                title = "Blouse",
+                price = "195,59 PLN",
+                description = Constants.productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 4,
+                title = "Earrings",
+                price = "400,59 PLN",
+                description = Constants.productDescription,
+                category = "jewelery",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            )
+        )
+    }
+
+    private fun setScreenState(
+        productList: List<Product>,
+        isLoading: Boolean = false,
+    ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
             ShopAppTheme() {
@@ -58,36 +128,8 @@ class FavouriteScreenTest {
                         FavouriteContent(
                             scaffoldState = rememberScaffoldState(),
                             bottomBarHeight = bottomBarHeight.dp,
-                            productList = listOf(
-                                Product(
-                                    id = 1,
-                                    title = "title 1",
-                                    price = "123,99 PLN",
-                                    description = "description of a product 1",
-                                    category = "men's clothing",
-                                    imageUrl = "url",
-                                    isInFavourites = true
-                                ),
-                                Product(
-                                    id = 3,
-                                    title = "title 3",
-                                    price = "34,99 PLN",
-                                    description = "description of a product 3",
-                                    category = "men's clothing",
-                                    imageUrl = "url",
-                                    isInFavourites = true
-                                ),
-                                Product(
-                                    id = 7,
-                                    title = "title 7",
-                                    price = "41,99 PLN",
-                                    description = "description of a product 7",
-                                    category = "women's clothing",
-                                    imageUrl = "url",
-                                    isInFavourites = false
-                                ),
-                            ),
-                            isLoading = false,
+                            productList = productList,
+                            isLoading = isLoading,
                             onProductSelected = {},
                             onDelete = {}
                         )
@@ -99,6 +141,10 @@ class FavouriteScreenTest {
 
     @Test
     fun favouriteScreenTopBar_hasCorrectNumberOfItems() {
+        setScreenState(
+            productList = productList
+        )
+
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).fetchSemanticsNode().children.size
@@ -106,42 +152,106 @@ class FavouriteScreenTest {
     }
 
     @Test
+    fun categoryScreenTopBar_topBarIsDisplayedCorrectly() {
+        setScreenState(
+            productList = productList
+        )
+
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        val deviceWidth = composeRule.onNodeWithTag(FAVOURITES_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+    }
+
+    @Test
     fun favouriteScreenTopBar_titleIsDisplayedCorrectly() {
+        setScreenState(
+            productList = productList
+        )
+
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(0).assertTextContains("Favourite")
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(0).assertTextContains("Favourites")
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 
     @Test
-    fun categoryScreenTopBar_cartButtonIsDisplayedCorrectly() {
+    fun favouritesScreenTopBar_cartButtonIsDisplayedCorrectly() {
+        setScreenState(
+            productList = productList
+        )
+
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertHasClickAction()
-        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertTopPositionInRootIsEqualTo(15.dp)
+
+        val deviceWidth = composeRule.onNodeWithTag(FAVOURITES_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp)
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(FAVOURITES_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(36.dp)
     }
 
     @Test
-    fun categoryScreenLazyVerticalGrid_hasCorrectNumberOfItems() {
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).assertExists()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).assertIsDisplayed()
-        val numberOfChildren = composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(3)
+    fun favouritesScreenLazyVerticalGrid_hasCorrectNumberOfVisibleItems() {
+        setScreenState(
+            productList = productList
+        )
+
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertExists()
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertIsDisplayed()
+        val numberOfChildrenVisible = composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).fetchSemanticsNode().children.size
+        assertThat(numberOfChildrenVisible).isEqualTo(4)
     }
 
     @Test
-    fun categoryListScreenLazyColumn_isDisplayingCategoriesCorrectly() {
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(0).assertExists()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(0).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(0).assertHasClickAction()
+    fun favouritesScreenLazyGrid_isDisplayedCorrectly() {
+        setScreenState(
+            productList = productList
+        )
+        val deviceWidth = composeRule.onNodeWithTag(FAVOURITES_CONTENT).onParent().getBoundsInRoot().right
 
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(1).assertExists()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(1).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(1).assertHasClickAction()
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertExists()
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertIsDisplayed()
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertPositionInRootIsEqualTo(20.dp,66.dp)
+        composeRule.onNodeWithTag(FAVOURITES_LAZY_VERTICAL_GRID).assertWidthIsEqualTo(deviceWidth-40.dp)
+    }
 
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(2).assertExists()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(2).assertIsDisplayed()
-        composeRule.onNodeWithTag(FAVOURITE_LAZY_VERTICAL_GRID).onChildAt(2).assertHasClickAction()
+    @Test
+    fun favouritesScreenProduct_isDisplayedCorrectly() {
+        setScreenState(
+            productList = productList
+        )
+
+        composeRule.onNodeWithTag(PRODUCT_ITEM_TITLE + " ${productList[0].title}", useUnmergedTree = true).onChildAt(0).assertTextEquals(productList[0].title)
+        composeRule.onNodeWithTag(PRODUCT_ITEM_TITLE + " ${productList[0].title}", useUnmergedTree = true).onChildAt(1).assertTextEquals(productList[0].price)
+        composeRule.onNodeWithContentDescription(DELETE_BTN+ " ${productList[0].title}").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription(DELETE_BTN+ " ${productList[0].title}").assertHasClickAction()
+        composeRule.onNodeWithTag(ADD_TO_CART_BTN+ " ${productList[0].title}").assertIsDisplayed()
+        composeRule.onNodeWithTag(ADD_TO_CART_BTN+ " ${productList[0].title}").assertHasClickAction()
+        composeRule.onNodeWithTag(ADD_TO_CART_BTN+ " ${productList[0].title}").assertTextEquals("Add")
+        composeRule.onNodeWithTag(productList[0].title).assertPositionInRootIsEqualTo(20.dp,66.dp)
+    }
+
+    @Test
+    fun favouritesScreen() {
+        setScreenState(
+            productList = productList,
+            isLoading = true
+        )
+
+        val deviceWidth = composeRule.onNodeWithTag(FAVOURITES_CONTENT).onParent().getBoundsInRoot().right
+        val deviceHeight = composeRule.onNodeWithTag(FAVOURITES_CONTENT).onParent().getBoundsInRoot().bottom
+        val leftPosition = deviceWidth.value/2
+        val topPosition = deviceHeight.value/2
+
+        composeRule.onNodeWithTag(FAVOURITES_CPI).assertExists()
+        composeRule.onNodeWithTag(FAVOURITES_CPI).assertIsDisplayed()
+        composeRule.onNodeWithTag(FAVOURITES_CPI).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(FAVOURITES_CPI).assertHeightIsEqualTo(deviceHeight)
+        composeRule.onNodeWithTag(FAVOURITES_CPI).assertWidthIsEqualTo(deviceWidth)
+
+        composeRule.onNodeWithTag(FAVOURITES_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
+        composeRule.onNodeWithTag(FAVOURITES_CPI).onChild().assertWidthIsEqualTo(40.dp)
     }
 }

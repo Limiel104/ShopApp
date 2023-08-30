@@ -12,7 +12,6 @@ import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.categoryId
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,7 +34,7 @@ class CategoryViewModel @Inject constructor(
     init {
         Log.i(TAG, CATEGORY_VM)
 
-        savedStateHandle.get<String>(categoryId)?.let { categoryId ->
+        savedStateHandle.get<String>("categoryId")?.let { categoryId ->
             _categoryState.value = categoryState.value.copy(
                 categoryId = categoryId
             )
@@ -73,9 +72,9 @@ class CategoryViewModel @Inject constructor(
                 toggleCheckBox(event.value)
                 getProducts()
             }
-            is CategoryEvent.ToggleSortSection -> {
+            is CategoryEvent.ToggleSortAndFilterSection -> {
                 _categoryState.value = categoryState.value.copy(
-                    isSortSectionVisible = !_categoryState.value.isSortSectionVisible
+                    isSortAndFilterSectionVisible = !_categoryState.value.isSortAndFilterSectionVisible
                 )
             }
             is CategoryEvent.OnDialogDismissed -> {

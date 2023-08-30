@@ -8,6 +8,6 @@ sealed class CategoryEvent {
     data class OnPriceSliderPositionChange(val value: ClosedFloatingPointRange<Float>): CategoryEvent()
     data class OnOrderChange(val value: ProductOrder): CategoryEvent()
     data class OnCheckBoxToggled(val value: String): CategoryEvent()
-    object ToggleSortSection: CategoryEvent()
+    object ToggleSortAndFilterSection: CategoryEvent()
     object OnDialogDismissed: CategoryEvent()
 }

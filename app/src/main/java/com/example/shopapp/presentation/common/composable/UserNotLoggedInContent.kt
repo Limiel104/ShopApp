@@ -14,6 +14,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,7 @@ import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.LOGIN_BTN
 import com.example.shopapp.util.Constants.SIGNUP_BTN
+import com.example.shopapp.util.Constants.USER_NOT_LOGGED_IN_CONTENT
 
 @Composable
 fun UserNotLoggedInContent(
@@ -40,6 +42,7 @@ fun UserNotLoggedInContent(
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
+            .testTag(USER_NOT_LOGGED_IN_CONTENT)
     ) { innerPadding ->
         Column(
             modifier = Modifier

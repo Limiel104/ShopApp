@@ -14,7 +14,6 @@ import com.example.shopapp.presentation.category.CategoryUiEvent
 import com.example.shopapp.presentation.category.CategoryViewModel
 import com.example.shopapp.util.Constants.CATEGORY_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.productId
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -27,7 +26,7 @@ fun CategoryScreen(
     val scaffoldState = rememberScaffoldState()
     val categoryId = viewModel.categoryState.value.categoryId
     val productList = viewModel.categoryState.value.productList
-    val isSortSectionVisible = viewModel.categoryState.value.isSortSectionVisible
+    val isSortSectionVisible = viewModel.categoryState.value.isSortAndFilterSectionVisible
     val isLoading = viewModel.categoryState.value.isLoading
     val isButtonLocked = viewModel.categoryState.value.isButtonLocked
     val isDialogActivated = viewModel.categoryState.value.isDialogActivated
@@ -42,7 +41,7 @@ fun CategoryScreen(
             when(event) {
                 is CategoryUiEvent.NavigateToProductDetails -> {
                     Log.i(TAG, CATEGORY_SCREEN_LE)
-                    navController.navigate(Screen.ProductDetailsScreen.route + "$productId="+ event.productId)
+                    navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
                 }
                 is CategoryUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
@@ -56,7 +55,7 @@ fun CategoryScreen(
         bottomBarHeight = bottomBarHeight,
         categoryName = categoryId,
         productList = productList,
-        isSortSectionVisible = isSortSectionVisible,
+        isSortAndFilterSectionVisible = isSortSectionVisible,
         isLoading = isLoading,
         isButtonLocked = isButtonLocked,
         isDialogActivated = isDialogActivated,
@@ -65,7 +64,7 @@ fun CategoryScreen(
         productOrder = productOrder,
         categoryFilterMap = categoryFilterMap,
         onProductSelected = { viewModel.onEvent(CategoryEvent.OnProductSelected(it)) },
-        onSortSelected = { viewModel.onEvent(CategoryEvent.ToggleSortSection) },
+        onSortAndFilterSelected = { viewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection) },
         onFavourite = { viewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(it)) },
         onDismiss = { viewModel.onEvent(CategoryEvent.OnDialogDismissed) },
         onValueChange = { viewModel.onEvent(CategoryEvent.OnPriceSliderPositionChange(it)) },

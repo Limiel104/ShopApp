@@ -877,12 +877,12 @@ class CategoryViewModelTest {
 
         categoryViewModel = setViewModel()
 
-        val initialToggleState = getCurrentCategoryState().isSortSectionVisible
+        val initialToggleState = getCurrentCategoryState().isSortAndFilterSectionVisible
         assertThat(initialToggleState).isEqualTo(false)
 
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
 
-        val resultToggleState = getCurrentCategoryState().isSortSectionVisible
+        val resultToggleState = getCurrentCategoryState().isSortAndFilterSectionVisible
         assertThat(resultToggleState).isEqualTo(true)
 
         coVerifySequence {
@@ -919,21 +919,21 @@ class CategoryViewModelTest {
 
         categoryViewModel = setViewModel()
 
-        val initialToggleState = getCurrentCategoryState().isSortSectionVisible
+        val initialToggleState = getCurrentCategoryState().isSortAndFilterSectionVisible
         assertThat(initialToggleState).isEqualTo(false)
 
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
 
-        val firstCheckOfToggleState = getCurrentCategoryState().isSortSectionVisible
+        val firstCheckOfToggleState = getCurrentCategoryState().isSortAndFilterSectionVisible
         assertThat(firstCheckOfToggleState).isEqualTo(true)
 
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
-        categoryViewModel.onEvent(CategoryEvent.ToggleSortSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
+        categoryViewModel.onEvent(CategoryEvent.ToggleSortAndFilterSection)
 
-        val secondCheckOfToggleState = getCurrentCategoryState().isSortSectionVisible
+        val secondCheckOfToggleState = getCurrentCategoryState().isSortAndFilterSectionVisible
         assertThat(secondCheckOfToggleState).isEqualTo(false)
 
         coVerifySequence {

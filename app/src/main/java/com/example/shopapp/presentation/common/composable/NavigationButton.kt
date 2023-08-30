@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -23,7 +24,8 @@ fun NavigationButton(
         colors = ButtonDefaults.buttonColors(Color.White),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(25.dp,9.dp),
+            .padding(25.dp,9.dp)
+            .testTag("$text button"),
         border = BorderStroke(1.dp, MaterialTheme.colors.onSecondary),
         shape = RoundedCornerShape(35.dp),
         onClick = { onClick() }

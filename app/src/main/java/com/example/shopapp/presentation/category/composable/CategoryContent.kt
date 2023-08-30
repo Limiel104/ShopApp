@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.category.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,16 +22,20 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Category
+import com.example.shopapp.util.Constants.CATEGORY_CONTENT
 import com.example.shopapp.util.Constants.CATEGORY_CPI
+import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
 import com.example.shopapp.util.Constants.productDescription
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
     categoryName: String,
     productList: List<Product>,
-    isSortSectionVisible: Boolean,
+    isSortAndFilterSectionVisible: Boolean,
     isLoading: Boolean,
     isButtonLocked: Boolean,
     isDialogActivated: Boolean,
@@ -39,7 +44,7 @@ fun CategoryContent(
     productOrder: ProductOrder,
     categoryFilterMap: Map<String,Boolean>,
     onProductSelected: (Int) -> Unit,
-    onSortSelected: () -> Unit,
+    onSortAndFilterSelected: () -> Unit,
     onFavourite: (Int) -> Unit,
     onDismiss: () -> Unit,
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
@@ -50,7 +55,7 @@ fun CategoryContent(
         topBar = {
             CategoryTopBar(
                 categoryName = categoryName,
-                onSortSelected = { onSortSelected() },
+                onSortAndFilterSelected = { onSortAndFilterSelected() },
                 onCartSelected = {}
             ) },
         scaffoldState = scaffoldState,
@@ -59,16 +64,16 @@ fun CategoryContent(
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
-    ) { innerPadding ->
+            .testTag(CATEGORY_CONTENT)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(horizontal = 10.dp)
         ) {
 
             AnimatedVisibility(
-                visible = isSortSectionVisible,
+                visible = isSortAndFilterSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
@@ -91,7 +96,9 @@ fun CategoryContent(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
-                verticalArrangement = Arrangement.spacedBy(25.dp)
+                verticalArrangement = Arrangement.spacedBy(25.dp),
+                modifier = Modifier
+                    .testTag(CATEGORY_LAZY_VERTICAL_GRID)
             ) {
                 itemsIndexed(productList) { _, product ->
                     ProductItem(
@@ -103,81 +110,83 @@ fun CategoryContent(
                 }
             }
         }
+    }
 
-        if(isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .testTag(CATEGORY_CPI),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        if(isDialogActivated) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                NotLoggedInDialog(
-                    onDismiss = { onDismiss() }
-                )
-            }
+    if(isDialogActivated) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            NotLoggedInDialog(
+                onDismiss = { onDismiss() }
+            )
         }
     }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(CATEGORY_CPI),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+}
+
+private fun getProductList(): List<Product> {
+    return listOf(
+        Product(
+            id = 1,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = false
+        ),
+        Product(
+            id = 2,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = true
+        ),
+        Product(
+            id = 3,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = false
+        ),
+        Product(
+            id = 4,
+            title = "Shirt",
+            price = "195,59 PLN",
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "imageUrl",
+            isInFavourites = true
+        )
+    )
 }
 
 @Preview
 @Composable
 fun CategoryContentPreview() {
     ShopAppTheme {
-        val productList = listOf(
-            Product(
-                id = 1,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 2,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            ),
-            Product(
-                id = 3,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 4,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            )
-        )
-
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
-            productList = productList,
-            isSortSectionVisible = false,
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = false,
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
@@ -186,7 +195,7 @@ fun CategoryContentPreview() {
             productOrder = ProductOrder.NameAscending(),
             categoryFilterMap = mapOf(),
             onProductSelected = {},
-            onSortSelected = {},
+            onSortAndFilterSelected = {},
             onFavourite = {},
             onDismiss = {},
             onValueChange = {},
@@ -198,53 +207,14 @@ fun CategoryContentPreview() {
 
 @Preview
 @Composable
-fun CategoryContentToggleTruePreview() {
+fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
     ShopAppTheme {
-        val productList = listOf(
-            Product(
-                id = 1,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            ),
-            Product(
-                id = 2,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 3,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = false
-            ),
-            Product(
-                id = 4,
-                title = "Shirt",
-                price = "195,59 PLN",
-                description = productDescription,
-                category = "men's clothing",
-                imageUrl = "imageUrl",
-                isInFavourites = true
-            )
-        )
-
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
-            productList = productList,
-            isSortSectionVisible = true,
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = true,
             isLoading = false,
             isButtonLocked = false,
             isDialogActivated = false,
@@ -253,7 +223,96 @@ fun CategoryContentToggleTruePreview() {
             productOrder = ProductOrder.NameDescending(),
             categoryFilterMap = mapOf(),
             onProductSelected = {},
-            onSortSelected = {},
+            onSortAndFilterSelected = {},
+            onFavourite = {},
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentToggleTruePreviewCategoryIsAll() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            categoryName = "all",
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = true,
+            isLoading = false,
+            isButtonLocked = false,
+            isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(
+                Pair(Category.Men.title,true),
+                Pair(Category.Women.title,true),
+                Pair(Category.Jewelery.title,true),
+                Pair(Category.Electronics.title,true)
+            ),
+            onProductSelected = {},
+            onSortAndFilterSelected = {},
+            onFavourite = {},
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentDialogPreview() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            categoryName = "all",
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = false,
+            isLoading = false,
+            isButtonLocked = false,
+            isDialogActivated = true,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
+            onProductSelected = {},
+            onSortAndFilterSelected = {},
+            onFavourite = {},
+            onDismiss = {},
+            onValueChange = {},
+            onOrderChange = {},
+            onCheckedChange = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CategoryContentCPIPreview() {
+    ShopAppTheme {
+        CategoryContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            categoryName = "all",
+            productList = getProductList(),
+            isSortAndFilterSectionVisible = false,
+            isLoading = true,
+            isButtonLocked = false,
+            isDialogActivated = false,
+            sliderPosition = 1f..4f,
+            sliderRange = 0f..5f,
+            productOrder = ProductOrder.NameDescending(),
+            categoryFilterMap = mapOf(),
+            onProductSelected = {},
+            onSortAndFilterSelected = {},
             onFavourite = {},
             onDismiss = {},
             onValueChange = {},

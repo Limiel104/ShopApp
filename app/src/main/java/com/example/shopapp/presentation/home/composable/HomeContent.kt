@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.home.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +13,16 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Offer
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.HOME_CONTENT
+import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
@@ -33,14 +38,16 @@ fun HomeContent(
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
-    ) { innerPadding ->
+            .testTag(HOME_CONTENT)
+    ) {
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .fillMaxSize()
         ) {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .testTag(HOME_LAZY_COLUMN),
             ) {
                 itemsIndexed(offerList) { _, offer ->
                     OfferItem(
