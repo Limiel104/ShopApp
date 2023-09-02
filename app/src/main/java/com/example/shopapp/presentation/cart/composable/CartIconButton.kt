@@ -15,11 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.util.Constants
 
 @Composable
 fun CartIconButton(
     icon: ImageVector,
+    description: String,
     onClick: () -> Unit
 ) {
     Box(
@@ -31,7 +31,7 @@ fun CartIconButton(
         Icon(
             imageVector = icon,
             tint = Color.Gray,
-            contentDescription = Constants.PLUS_BTN,
+            contentDescription = description,
             modifier = Modifier
                 .clickable { onClick() }
         )
@@ -43,6 +43,7 @@ fun CartIconButton(
 fun CartIconButtonPreview() {
     CartIconButton(
         icon = Icons.Sharp.Add,
+        description = "Button",
         onClick = {}
     )
 }

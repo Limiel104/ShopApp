@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.cart.composable.CartIconButton
 import com.example.shopapp.presentation.common.composable.ImageItem
+import com.example.shopapp.util.Constants.MINUS_BTN
+import com.example.shopapp.util.Constants.PLUS_BTN
 import com.example.shopapp.util.Constants.cartProductItemImageHeight
 import com.example.shopapp.util.Constants.cartProductItemImageWidth
 
@@ -78,6 +80,7 @@ fun CartItem(
         ) {
             CartIconButton(
                 icon = Icons.Sharp.Add,
+                description = PLUS_BTN,
                 onClick = { onPlus() }
             )
 
@@ -88,6 +91,7 @@ fun CartItem(
 
             CartIconButton(
                 icon = Icons.Filled.HorizontalRule,
+                description = MINUS_BTN,
                 onClick = { onMinus() }
             )
         }

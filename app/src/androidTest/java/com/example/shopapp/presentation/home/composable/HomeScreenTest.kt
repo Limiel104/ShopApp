@@ -88,7 +88,8 @@ class HomeScreenTest {
                             scaffoldState = rememberScaffoldState(),
                             bottomBarHeight = bottomBarHeight.dp,
                             offerList = offerList,
-                            onOfferSelected = {}
+                            onOfferSelected = {},
+                            onGoToCart = {}
                         )
                     }
                 }

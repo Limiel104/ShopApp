@@ -67,6 +67,7 @@ object Constants {
     const val CART_TOP_BAR: String = "Cart top bar"
     const val CART_LAZY_COLUMN: String = "Cart lazy column"
     const val PLUS_BTN: String = "Plus button"
+    const val MINUS_BTN: String = "Minus button"
     const val ORDER_BTN: String = "Order button"
     const val ORDER_PLACED_DIALOG: String = "Order placed dialog"
 
