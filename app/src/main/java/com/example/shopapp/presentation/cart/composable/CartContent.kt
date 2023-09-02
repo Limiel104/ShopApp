@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -33,8 +34,10 @@ import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.home.composable.CartItem
 import com.example.shopapp.util.Constants.CART_CONTENT
+import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDER_BTN
+import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_ROW
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -43,6 +46,7 @@ fun CartContent(
     bottomBarHeight: Dp,
     cartProducts: List<CartProduct>,
     totalAmount: Double,
+    isLoading: Boolean,
     isDialogActivated: Boolean,
     onGoBack: () -> Unit,
     onGoHome: () -> Unit
@@ -87,7 +91,8 @@ fun CartContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp),
+                        .padding(bottom = 10.dp)
+                        .testTag(CART_TOTAL_AMOUNT_ROW),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -98,7 +103,7 @@ fun CartContent(
                     )
 
                     Text(
-                        text = totalAmount.toString(),
+                        text = String.format("%.2f PLN", totalAmount),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 20.sp
                     )
@@ -135,6 +140,17 @@ fun CartContent(
             OrderPlacedDialog(
                 onGoHome = { onGoHome() }
             )
+        }
+    }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(CART_CPI),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
@@ -201,6 +217,7 @@ fun CartContentPreview() {
         bottomBarHeight = 56.dp,
         totalAmount = 155.45,
         cartProducts = returnCartProducts(),
+        isLoading = false,
         isDialogActivated = false,
         onGoBack = {},
         onGoHome = {}
@@ -215,6 +232,7 @@ fun CartContentPreviewListIsEmpty() {
         bottomBarHeight = 56.dp,
         cartProducts = emptyList(),
         totalAmount = 155.45,
+        isLoading = false,
         isDialogActivated = false,
         onGoBack = {},
         onGoHome = {}
@@ -229,7 +247,23 @@ fun CartContentPreviewDialogActivated() {
         bottomBarHeight = 56.dp,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
+        isLoading = false,
         isDialogActivated = true,
+        onGoBack = {},
+        onGoHome = {}
+    )
+}
+
+@Preview
+@Composable
+fun CartContentPreviewLoading() {
+    CartContent(
+        scaffoldState = rememberScaffoldState(),
+        bottomBarHeight = 56.dp,
+        cartProducts = returnCartProducts(),
+        totalAmount = 155.45,
+        isLoading = true,
+        isDialogActivated = false,
         onGoBack = {},
         onGoHome = {}
     )

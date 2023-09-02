@@ -69,6 +69,7 @@ fun CartScreen(
         bottomBarHeight = bottomBarHeight,
         totalAmount = 155.45,
         cartProducts = cartItems,
+        isLoading = false,
         isDialogActivated = false,
         onGoBack = {},
         onGoHome = {}

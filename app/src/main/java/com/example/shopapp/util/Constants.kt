@@ -70,6 +70,9 @@ object Constants {
     const val MINUS_BTN: String = "Minus button"
     const val ORDER_BTN: String = "Order button"
     const val ORDER_PLACED_DIALOG: String = "Order placed dialog"
+    const val CART_CPI: String = "Cart circular progress indicator"
+    const val HOME_BTN: String = "Home button"
+    const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
