@@ -63,6 +63,12 @@ object Constants {
     const val SIGNUP_BTN: String = "Signup button"
     const val SIGNUP_CPI: String = "Signup circular progress indicator"
     const val USER_NOT_LOGGED_IN_CONTENT: String = "User not logged in content"
+    const val CART_CONTENT: String = "Cart content"
+    const val CART_TOP_BAR: String = "Cart top bar"
+    const val CART_LAZY_COLUMN: String = "Cart lazy column"
+    const val PLUS_BTN: String = "Plus button"
+    const val ORDER_BTN: String = "Order button"
+    const val ORDER_PLACED_DIALOG: String = "Order placed dialog"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -82,6 +88,8 @@ object Constants {
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
     const val productItemImageHeight: Int = 200
+    const val cartProductItemImageWidth: Int = 60
+    const val cartProductItemImageHeight: Int = 80
 
     //VALUES
     const val bottomSheetPeekHeight: Int = 100
