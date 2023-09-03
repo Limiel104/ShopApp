@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
-import com.example.shopapp.presentation.home.composable.CartItem
 import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
@@ -79,7 +78,7 @@ fun CartContent(
                         .testTag(CART_LAZY_COLUMN)
                 ) {
                     itemsIndexed(cartProducts) { _, item ->
-                        CartItem(
+                        CartProductItem(
                             cartProduct = item,
                             onImageClick = {},
                             onPlus = {},

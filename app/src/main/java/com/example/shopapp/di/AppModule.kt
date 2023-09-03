@@ -14,8 +14,10 @@ import com.example.shopapp.domain.repository.CartRepository
 import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddProductToCartUseCase
 import com.example.shopapp.domain.use_case.AddProductToFavouritesUseCase
 import com.example.shopapp.domain.use_case.AddUserUseCase
+import com.example.shopapp.domain.use_case.DeleteProductFromCartUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.FilterProductsByUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetCategoriesUseCase
@@ -30,8 +32,10 @@ import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.FilterProductsUseCase
+import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
+import com.example.shopapp.domain.use_case.UpdateProductInCartUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
@@ -119,7 +123,8 @@ object AppModule {
         productRepository: ProductRepository,
         authRepository: AuthRepository,
         userStorageRepository: UserStorageRepository,
-        favouritesRepository: FavouritesRepository
+        favouritesRepository: FavouritesRepository,
+        cartRepository: CartRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -142,7 +147,11 @@ object AppModule {
             filterProductsByUserFavouritesUseCase = FilterProductsByUserFavouritesUseCase(),
             filterProductsUseCase = FilterProductsUseCase(),
             sortProductsUseCase = SortProductsUseCase(),
-            toggleCheckBoxUseCase = ToggleCheckBoxUseCase()
+            toggleCheckBoxUseCase = ToggleCheckBoxUseCase(),
+            addProductToCartUseCase = AddProductToCartUseCase(cartRepository),
+            getUserCartItemsUseCase = GetUserCartItemsUseCase(cartRepository),
+            deleteProductFromCartUseCase = DeleteProductFromCartUseCase(cartRepository),
+            updateProductInCartUseCase = UpdateProductInCartUseCase(cartRepository)
         )
     }
 }

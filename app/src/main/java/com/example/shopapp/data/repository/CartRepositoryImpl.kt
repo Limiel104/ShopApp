@@ -1,6 +1,6 @@
 package com.example.shopapp.data.repository
 
-import com.example.shopapp.domain.model.CartElement
+import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.repository.CartRepository
 import com.example.shopapp.util.Resource
 import com.google.firebase.firestore.CollectionReference
@@ -28,7 +28,7 @@ class CartRepositoryImpl @Inject constructor(
                 val documentId = cartsRef.document().id
                 cartsRef.document(documentId).set(
                     mapOf(
-                        "cartElementId" to documentId,
+                        "cartItemId" to documentId,
                         "userUID" to userUID,
                         "productId" to productId,
                         "amount" to amount
@@ -49,8 +49,8 @@ class CartRepositoryImpl @Inject constructor(
             .whereEqualTo("userUID", userUID)
             .addSnapshotListener { snapshot, e ->
                 val response = if(snapshot != null) {
-                    val userCartElements = snapshot.toObjects(CartElement::class.java)
-                    Resource.Success(userCartElements)
+                    val userCartItems = snapshot.toObjects(CartItem::class.java)
+                    Resource.Success(userCartItems)
                 }
                 else {
                     Resource.Error(e!!.localizedMessage as String)
@@ -83,17 +83,17 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateProductInCart(cartElement: CartElement): Flow<Resource<Boolean>> {
+    override suspend fun updateProductInCart(cartItem: CartItem): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
 
             try {
-                cartsRef.document(cartElement.cartElementId).update(
+                cartsRef.document(cartItem.cartItemId).update(
                     mapOf(
-                        "cartElementId" to cartElement.cartElementId,
-                        "userUID" to cartElement.userUID,
-                        "productId" to cartElement.productId,
-                        "amount" to cartElement.amount
+                        "cartItemId" to cartItem.cartItemId,
+                        "userUID" to cartItem.userUID,
+                        "productId" to cartItem.productId,
+                        "amount" to cartItem.amount
                     )
                 ).await()
                 emit(Resource.Success(true))
