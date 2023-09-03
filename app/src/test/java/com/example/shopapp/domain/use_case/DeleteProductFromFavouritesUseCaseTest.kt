@@ -2,7 +2,7 @@ package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.util.Resource
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -25,7 +25,7 @@ class DeleteProductFromFavouritesUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository)
+        deleteProductFromFavouritesUseCase = DeleteProductFromFavouritesUseCase(favouritesRepository)
     }
 
     @After
@@ -44,9 +44,9 @@ class DeleteProductFromFavouritesUseCaseTest {
             val response = deleteProductFromFavouritesUseCase(favouriteId).first()
 
             coVerify(exactly = 1) { deleteProductFromFavouritesUseCase(favouriteId) }
-            Truth.assertThat(response).isEqualTo(result)
-            Truth.assertThat(response.data).isTrue()
-            Truth.assertThat(response.message).isNull()
+            assertThat(response).isEqualTo(result)
+            assertThat(response.data).isTrue()
+            assertThat(response.message).isNull()
         }
     }
 
@@ -64,8 +64,8 @@ class DeleteProductFromFavouritesUseCaseTest {
             val response = deleteProductFromFavouritesUseCase(favouriteId).first()
 
             coVerify(exactly = 1) { deleteProductFromFavouritesUseCase(favouriteId) }
-            Truth.assertThat(response.message).isEqualTo("Error")
-            Truth.assertThat(response.data).isNull()
+            assertThat(response.data).isNull()
+            assertThat(response.message).isEqualTo("Error")
         }
     }
 }

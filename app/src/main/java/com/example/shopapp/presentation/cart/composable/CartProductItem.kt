@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.home.composable
+package com.example.shopapp.presentation.cart.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
-import com.example.shopapp.presentation.cart.composable.CartIconButton
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.util.Constants.MINUS_BTN
 import com.example.shopapp.util.Constants.PLUS_BTN
@@ -31,7 +30,7 @@ import com.example.shopapp.util.Constants.cartProductItemImageHeight
 import com.example.shopapp.util.Constants.cartProductItemImageWidth
 
 @Composable
-fun CartItem(
+fun CartProductItem(
     cartProduct: CartProduct,
     onImageClick: () -> Unit,
     onPlus: () -> Unit,
@@ -100,8 +99,8 @@ fun CartItem(
 
 @Preview
 @Composable
-fun CartItemPreview() {
-    CartItem(
+fun CartProductItemPreview() {
+    CartProductItem(
         cartProduct = CartProduct(
             id = 2,
             title = "title 2",

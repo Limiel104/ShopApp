@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.domain.model.Favourite
-import com.example.shopapp.domain.repository.FavouritesRepository
+import com.example.shopapp.domain.model.CartItem
+import com.example.shopapp.domain.repository.CartRepository
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
@@ -16,16 +16,16 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetUserFavouritesUseCaseTest {
+class GetUserCartItemsUseCaseTest {
 
     @MockK
-    private lateinit var favouritesRepository: FavouritesRepository
-    private lateinit var getUserFavouritesUseCase: GetUserFavouritesUseCase
+    private lateinit var cartRepository: CartRepository
+    private lateinit var getUserCartItemsUseCase: GetUserCartItemsUseCase
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository)
+        getUserCartItemsUseCase = GetUserCartItemsUseCase(cartRepository)
     }
 
     @After
@@ -34,36 +34,44 @@ class GetUserFavouritesUseCaseTest {
     }
 
     @Test
-    fun `getting user favourites was successfully`() {
+    fun `getting user cart items was successfully`() {
         runBlocking {
-            val favourites = listOf(
-                Favourite(
+            val cartItems = listOf(
+                CartItem(
+                    cartItemId = "cartItemId1",
                     userUID = "userUID",
-                    productId = 1
+                    productId = 1,
+                    amount = 1
                 ),
-                Favourite(
+                CartItem(
+                    cartItemId = "cartItemId2",
                     userUID = "userUID",
-                    productId = 3
+                    productId = 3,
+                    amount = 4
                 ),
-                Favourite(
+                CartItem(
+                    cartItemId = "cartItemId3",
                     userUID = "userUID",
-                    productId = 4
+                    productId = 4,
+                    amount = 1
                 ),
-                Favourite(
+                CartItem(
+                    cartItemId = "cartItemId4",
                     userUID = "userUID",
-                    productId = 9
+                    productId = 6,
+                    amount = 2
                 )
             )
             val userUID = "userUID"
-            val result = Resource.Success(favourites)
+            val result = Resource.Success(cartItems)
 
-            coEvery { favouritesRepository.getUserFavourites(userUID) } returns flowOf(result)
+            coEvery { cartRepository.getUserCartItems(userUID) } returns flowOf(result)
 
-            val response = getUserFavouritesUseCase(userUID).first()
+            val response = getUserCartItemsUseCase(userUID).first()
 
-            coVerify(exactly = 1) { getUserFavouritesUseCase(userUID) }
+            coVerify(exactly = 1) { getUserCartItemsUseCase(userUID) }
             assertThat(response).isEqualTo(result)
-            assertThat(response.data).containsExactlyElementsIn(favourites)
+            assertThat(response.data).containsExactlyElementsIn(cartItems)
             assertThat(response.message).isNull()
             for (favourite in response.data!!) {
                 assertThat(favourite.userUID).isEqualTo(userUID)
@@ -78,14 +86,14 @@ class GetUserFavouritesUseCaseTest {
             val userUID = "userUID"
 
             coEvery {
-                favouritesRepository.getUserFavourites(userUID)
+                cartRepository.getUserCartItems(userUID)
             } returns flowOf(
                 Resource.Error("Error")
             )
 
-            val response = getUserFavouritesUseCase(userUID).first()
+            val response = getUserCartItemsUseCase(userUID).first()
 
-            coVerify(exactly = 1) { getUserFavouritesUseCase(userUID) }
+            coVerify(exactly = 1) { getUserCartItemsUseCase(userUID) }
             assertThat(response.data).isNull()
             assertThat(response.message).isEqualTo("Error")
         }

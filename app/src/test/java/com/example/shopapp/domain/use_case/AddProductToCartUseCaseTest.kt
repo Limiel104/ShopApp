@@ -1,6 +1,6 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.domain.repository.FavouritesRepository
+import com.example.shopapp.domain.repository.CartRepository
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
@@ -15,16 +15,16 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class AddProductToFavouritesUseCaseTest {
+class AddProductToCartUseCaseTest {
 
     @MockK
-    private lateinit var favouritesRepository: FavouritesRepository
-    private lateinit var addProductToFavouritesUseCase: AddProductToFavouritesUseCase
+    private lateinit var cartRepository: CartRepository
+    private lateinit var addProductToCartUseCase: AddProductToCartUseCase
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository)
+        addProductToCartUseCase = AddProductToCartUseCase(cartRepository)
     }
 
     @After
@@ -33,17 +33,18 @@ class AddProductToFavouritesUseCaseTest {
     }
 
     @Test
-    fun `product was added to favourites successfully`() {
+    fun `product was added to cart successfully`() {
         runBlocking {
-            val productId = 1
             val userUID = "userUID"
+            val productId = 1
+            val amount = 1
             val result = Resource.Success(true)
 
-            coEvery { favouritesRepository.addProductToFavourites(productId,userUID) } returns flowOf(result)
+            coEvery { cartRepository.addProductToCart(userUID,productId,amount) } returns flowOf(result)
 
-            val response = addProductToFavouritesUseCase(productId,userUID).first()
+            val response = addProductToCartUseCase(userUID,productId,amount).first()
 
-            coVerify(exactly = 1) { addProductToFavouritesUseCase(productId,userUID) }
+            coVerify(exactly = 1) { addProductToCartUseCase(userUID,productId,amount) }
             assertThat(response).isEqualTo(result)
             assertThat(response.data).isTrue()
             assertThat(response.message).isNull()
@@ -51,20 +52,21 @@ class AddProductToFavouritesUseCaseTest {
     }
 
     @Test
-    fun `product was not added to favourites and error message was returned`() {
+    fun `product was not added to cart and error message was returned`() {
         runBlocking {
-            val productId = 1
             val userUID = "userUID"
+            val productId = 1
+            val amount = 1
 
             coEvery {
-                favouritesRepository.addProductToFavourites(productId,userUID)
+                cartRepository.addProductToCart(userUID,productId,amount)
             } returns flowOf(
                 Resource.Error("Error")
             )
 
-            val response = addProductToFavouritesUseCase(productId,userUID).first()
+            val response = addProductToCartUseCase(userUID,productId,amount).first()
 
-            coVerify(exactly = 1) { addProductToFavouritesUseCase(productId,userUID) }
+            coVerify(exactly = 1) { addProductToCartUseCase(userUID,productId,amount) }
             assertThat(response.data).isNull()
             assertThat(response.message).isEqualTo("Error")
         }

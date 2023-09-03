@@ -8,7 +8,7 @@ interface CartRepository {
 
     suspend fun addProductToCart(userUID: String, productId: Int, amount: Int): Flow<Resource<Boolean>>
 
-    suspend fun getCartItems(userUID: String): Flow<Resource<List<CartItem>>>
+    suspend fun getUserCartItems(userUID: String): Flow<Resource<List<CartItem>>>
 
     suspend fun deleteProductFromCart(cartItemId: String): Flow<Resource<Boolean>>
 

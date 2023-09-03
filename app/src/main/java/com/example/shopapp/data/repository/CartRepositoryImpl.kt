@@ -44,7 +44,7 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCartItems(userUID: String) = callbackFlow {
+    override suspend fun getUserCartItems(userUID: String) = callbackFlow {
         val snapshotListener = cartsRef
             .whereEqualTo("userUID", userUID)
             .addSnapshotListener { snapshot, e ->

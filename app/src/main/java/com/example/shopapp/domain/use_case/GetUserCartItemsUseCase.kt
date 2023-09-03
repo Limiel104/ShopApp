@@ -9,6 +9,6 @@ class GetUserCartItemsUseCase(
     private val cartRepository: CartRepository
 ) {
     suspend operator fun invoke(userUID: String): Flow<Resource<List<CartItem>>> {
-        return cartRepository.getCartItems(userUID)
+        return cartRepository.getUserCartItems(userUID)
     }
 }
