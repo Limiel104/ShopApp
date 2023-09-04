@@ -1,12 +1,14 @@
 package com.example.shopapp.presentation.product_details.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.domain.model.Product
@@ -38,13 +40,22 @@ fun ProductDetailsScreen(
         imageUrl = viewModel.productDetailsState.value.imageUrl,
         isInFavourites = viewModel.productDetailsState.value.isInFavourites
     )
+    val isLoading = viewModel.productDetailsState.value.isLoading
+    val context = LocalContext.current
+
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG, PRODUCT_DETAILS_SCREEN_LE)
             when(event) {
                 is ProductDetailsUiEvent.NavigateBack -> {
-                    Log.i(TAG, PRODUCT_DETAILS_SCREEN_LE)
                     navController.popBackStack()
+                }
+                is ProductDetailsUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+                ProductDetailsUiEvent.ShowProductAddedToCartMessage -> {
+                    Toast.makeText(context, "Added to the cart", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -53,6 +64,8 @@ fun ProductDetailsScreen(
     ProductDetailsContent(
         scaffoldState = scaffoldState,
         product = product,
-        onNavigateBack = { viewModel.onEvent(ProductDetailsEvent.GoBack) }
+        isLoading = isLoading,
+        onNavigateBack = { viewModel.onEvent(ProductDetailsEvent.GoBack) },
+        onAddToCart = { viewModel.onEvent(ProductDetailsEvent.OnAddToCart) }
     )
 }

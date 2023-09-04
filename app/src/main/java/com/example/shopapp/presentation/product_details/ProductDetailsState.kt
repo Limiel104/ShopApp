@@ -7,5 +7,7 @@ data class ProductDetailsState(
     val description: String = "",
     val category: String = "",
     val imageUrl: String = "",
-    val isInFavourites: Boolean = false
+    val isInFavourites: Boolean = false,
+    val userUID: String = "",
+    val isLoading: Boolean = false
 )

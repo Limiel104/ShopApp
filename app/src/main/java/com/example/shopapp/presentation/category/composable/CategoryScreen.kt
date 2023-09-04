@@ -38,9 +38,9 @@ fun CategoryScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG, CATEGORY_SCREEN_LE)
             when(event) {
                 is CategoryUiEvent.NavigateToProductDetails -> {
-                    Log.i(TAG, CATEGORY_SCREEN_LE)
                     navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
                 }
                 is CategoryUiEvent.ShowErrorMessage -> {

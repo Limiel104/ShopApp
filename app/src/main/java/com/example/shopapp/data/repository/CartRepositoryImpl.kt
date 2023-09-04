@@ -105,4 +105,33 @@ class CartRepositoryImpl @Inject constructor(
             emit(Resource.Loading(false))
         }
     }
+
+    override suspend fun getUserCartItem(userUID: String, productId: Int): Flow<Resource<List<CartItem>>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                val cartItems = cartsRef
+                    .whereEqualTo("userUID", userUID)
+                    .whereEqualTo("productId", productId)
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { snapshot ->
+                        snapshot.toObject(CartItem::class.java)
+                    }
+                if(cartItems.isEmpty()) {
+                    emit(Resource.Success(emptyList()))
+                }
+                else {
+                    emit(Resource.Success(cartItems))
+                }
+            }
+            catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage as String))
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
 }
