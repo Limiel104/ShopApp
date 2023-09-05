@@ -1,18 +1,52 @@
 package com.example.shopapp.presentation.cart.composable
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.domain.model.CartProduct
+import com.example.shopapp.presentation.cart.CartEvent
+import com.example.shopapp.presentation.cart.CartUiEvent
+import com.example.shopapp.presentation.cart.CartViewModel
+import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
+import com.example.shopapp.util.Constants.CART_SCREEN_LE
+import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Screen
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CartScreen(
     navController: NavController,
-    bottomBarHeight: Dp
+    bottomBarHeight: Dp,
+    viewModel: CartViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
-    val cartItems = listOf(
+    val isUserLoggedIn = viewModel.cartState.value.isUserLoggedIn
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG, CART_SCREEN_LE)
+            when(event) {
+                is CartUiEvent.NavigateToLogin -> {
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+                is CartUiEvent.NavigateToSignup -> {
+                    navController.navigate(Screen.SignupScreen.route)
+                }
+                is CartUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    val cartProducts = listOf(
         CartProduct(
             id = 1,
             title = "title 1",
@@ -64,14 +98,24 @@ fun CartScreen(
         )
     )
 
-    CartContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
-        totalAmount = 155.45,
-        cartProducts = cartItems,
-        isLoading = false,
-        isDialogActivated = false,
-        onGoBack = {},
-        onGoHome = {}
-    )
+    if(isUserLoggedIn) {
+        CartContent(
+            scaffoldState = scaffoldState,
+            bottomBarHeight = bottomBarHeight,
+            totalAmount = 155.45,
+            cartProducts = cartProducts,
+            isLoading = false,
+            isDialogActivated = false,
+            onGoBack = {},
+            onGoHome = {}
+        )
+    }
+    else {
+        UserNotLoggedInContent(
+            scaffoldState = scaffoldState,
+            bottomBarHeight = bottomBarHeight,
+            onLogin = { viewModel.onEvent(CartEvent.OnLogin) },
+            onSignup = { viewModel.onEvent(CartEvent.OnSignup) }
+        )
+    }
 }

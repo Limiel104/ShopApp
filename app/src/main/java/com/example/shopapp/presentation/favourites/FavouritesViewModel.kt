@@ -52,7 +52,6 @@ class FavouritesViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(FavouritesUiEvent.NavigateToLogin)
                 }
-
             }
             is FavouritesEvent.OnSignup -> {
                 viewModelScope.launch {
