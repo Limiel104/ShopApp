@@ -5,9 +5,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CART_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,6 +32,10 @@ class CartViewModel @Inject constructor(
         Log.i(TAG, CART_VM)
 
         checkIfUserIsLoggedIn()
+
+        if(_cartState.value.isUserLoggedIn) {
+            getUserCartItems(_cartState.value.userUID)
+        }
     }
 
     fun onEvent(event: CartEvent) {
@@ -60,5 +67,69 @@ class CartViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun getUserCartItems(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserCartItemsUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { cartItems ->
+                            Log.i(TAG, "Cart: $cartItems")
+                            _cartState.value = cartState.value.copy(
+                                cartItems = cartItems
+                            )
+                            if(cartItems.isNotEmpty()) {
+                                getProducts()
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getProducts() {
+        viewModelScope.launch {
+            shopUseCases.getProductsUseCase(Category.All.id).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { products ->
+                            if(products.isNotEmpty()) {
+                                getCartProducts(products)
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getCartProducts(products: List<Product>) {
+        val cartItems = _cartState.value.cartItems
+
+        _cartState.value = cartState.value.copy(
+            cartProducts = shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        )
     }
 }
