@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
 import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
 
@@ -57,7 +57,7 @@ fun ProductDetailsContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .testTag(Constants.FAVOURITES_CPI),
+                .testTag(PRODUCT_DETAILS_CPI),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()

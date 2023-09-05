@@ -98,11 +98,16 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun addOrUpdateProductInCart(userUID: String, productId: Int) {
+    fun addOrUpdateProductInCart(userUID: String, productId: Int) {
         viewModelScope.launch {
             shopUseCases.getUserCartItemUseCase(userUID,productId).collect { response ->
                 when(response) {
-                    is Resource.Loading -> {}
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading get user cart item: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
                     is Resource.Success -> {
                         if (!response.data.isNullOrEmpty()) {
                             val cartItem = CartItem(
@@ -126,7 +131,7 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun addProductToCart(userUID: String, productId: Int) {
+    fun addProductToCart(userUID: String, productId: Int) {
         viewModelScope.launch {
             shopUseCases.addProductToCartUseCase(userUID,productId,1).collect { response ->
                 when(response) {
@@ -149,7 +154,7 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun updateProductInCart(cartItem: CartItem) {
+    fun updateProductInCart(cartItem: CartItem) {
         viewModelScope.launch {
             shopUseCases.updateProductInCartUseCase(cartItem).collect { response ->
                 when(response) {
