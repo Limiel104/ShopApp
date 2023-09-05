@@ -234,7 +234,7 @@ class FavouriteScreenTest {
     }
 
     @Test
-    fun favouritesScreen() {
+    fun favouritesScreenCircularProgressIndicator_IsDisplayedCorrectly() {
         setScreenState(
             productList = productList,
             isLoading = true

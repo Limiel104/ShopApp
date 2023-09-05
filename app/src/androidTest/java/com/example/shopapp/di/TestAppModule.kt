@@ -26,6 +26,7 @@ import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
 import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
 import com.example.shopapp.domain.use_case.GetProductsUseCase
+import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
@@ -144,7 +145,8 @@ object TestAppModule {
             addProductToCartUseCase = AddProductToCartUseCase(cartRepository),
             getUserCartItemsUseCase = GetUserCartItemsUseCase(cartRepository),
             deleteProductFromCartUseCase = DeleteProductFromCartUseCase(cartRepository),
-            updateProductInCartUseCase = UpdateProductInCartUseCase(cartRepository)
+            updateProductInCartUseCase = UpdateProductInCartUseCase(cartRepository),
+            getUserCartItemUseCase = GetUserCartItemUseCase(cartRepository)
         )
     }
 }
