@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -50,6 +51,19 @@ class CartViewModel @Inject constructor(
                     _eventFlow.emit(CartUiEvent.NavigateToSignup)
                 }
             }
+            is CartEvent.OnPlus -> {
+                val cartItemToUpdate = getCartItemFromCartProductId(event.value)
+                updateCartItem(cartItemToUpdate,cartItemToUpdate.amount+1)
+            }
+            is CartEvent.OnMinus -> {
+                val cartItemToUpdate = getCartItemFromCartProductId(event.value)
+                if(cartItemToUpdate.amount == 1) {
+                    deleteCartItem(cartItemToUpdate.cartItemId)
+                }
+                else {
+                    updateCartItem(cartItemToUpdate,cartItemToUpdate.amount-1)
+                }
+            }
         }
     }
 
@@ -87,6 +101,9 @@ class CartViewModel @Inject constructor(
                             )
                             if(cartItems.isNotEmpty()) {
                                 getProducts()
+                            }
+                            else {
+                                getCartProducts(emptyList())
                             }
                         }
                     }
@@ -131,5 +148,62 @@ class CartViewModel @Inject constructor(
         _cartState.value = cartState.value.copy(
             cartProducts = shopUseCases.setUserCartProductsUseCase(cartItems,products)
         )
+    }
+
+    fun getCartItemFromCartProductId(cartProductId: Int): CartItem {
+        val cartItems = _cartState.value.cartItems
+        return cartItems.first { it.productId == cartProductId }
+    }
+
+    fun updateCartItem(cartItem: CartItem, newAmount: Int) {
+        val cartItemToUpdate = CartItem(
+            cartItemId = cartItem.cartItemId,
+            userUID = cartItem.userUID,
+            productId = cartItem.productId,
+            amount = newAmount
+        )
+
+        viewModelScope.launch {
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product amount updated")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteCartItem(cartItemId: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteProductFromCartUseCase(cartItemId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading products: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+
+                        Log.i(TAG,"Product was deleted from cart")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
     }
 }

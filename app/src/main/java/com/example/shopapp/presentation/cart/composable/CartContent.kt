@@ -47,6 +47,8 @@ fun CartContent(
     totalAmount: Double,
     isLoading: Boolean,
     isDialogActivated: Boolean,
+    onPlus: (Int) -> Unit,
+    onMinus: (Int) -> Unit,
     onGoBack: () -> Unit,
     onGoHome: () -> Unit
 ) {
@@ -81,8 +83,8 @@ fun CartContent(
                         CartProductItem(
                             cartProduct = item,
                             onImageClick = {},
-                            onPlus = {},
-                            onMinus = {}
+                            onPlus = { onPlus(it) },
+                            onMinus = { onMinus(it) }
                         )
                     }
                 }
@@ -218,6 +220,8 @@ fun CartContentPreview() {
         cartProducts = returnCartProducts(),
         isLoading = false,
         isDialogActivated = false,
+        onPlus = {},
+        onMinus = {},
         onGoBack = {},
         onGoHome = {}
     )
@@ -233,6 +237,8 @@ fun CartContentPreviewListIsEmpty() {
         totalAmount = 155.45,
         isLoading = false,
         isDialogActivated = false,
+        onPlus = {},
+        onMinus = {},
         onGoBack = {},
         onGoHome = {}
     )
@@ -248,6 +254,8 @@ fun CartContentPreviewDialogActivated() {
         totalAmount = 155.45,
         isLoading = false,
         isDialogActivated = true,
+        onPlus = {},
+        onMinus = {},
         onGoBack = {},
         onGoHome = {}
     )
@@ -263,6 +271,8 @@ fun CartContentPreviewLoading() {
         totalAmount = 155.45,
         isLoading = true,
         isDialogActivated = false,
+        onPlus = {},
+        onMinus = {},
         onGoBack = {},
         onGoHome = {}
     )

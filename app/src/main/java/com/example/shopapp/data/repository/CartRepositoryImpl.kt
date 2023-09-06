@@ -70,7 +70,7 @@ class CartRepositoryImpl @Inject constructor(
             emit(Resource.Loading(true))
 
             try {
-                cartsRef.document()
+                cartsRef.document(cartItemId)
                     .delete()
                     .await()
                 emit(Resource.Success(true))

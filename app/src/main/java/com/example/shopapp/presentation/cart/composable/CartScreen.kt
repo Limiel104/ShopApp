@@ -54,6 +54,8 @@ fun CartScreen(
             cartProducts = cartProducts,
             isLoading = false,
             isDialogActivated = false,
+            onPlus = { viewModel.onEvent(CartEvent.OnPlus(it)) },
+            onMinus = { viewModel.onEvent(CartEvent.OnMinus(it)) },
             onGoBack = {},
             onGoHome = {}
         )

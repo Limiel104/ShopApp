@@ -33,8 +33,8 @@ import com.example.shopapp.util.Constants.cartProductItemImageWidth
 fun CartProductItem(
     cartProduct: CartProduct,
     onImageClick: () -> Unit,
-    onPlus: () -> Unit,
-    onMinus: () -> Unit
+    onPlus: (Int) -> Unit,
+    onMinus: (Int) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun CartProductItem(
             CartIconButton(
                 icon = Icons.Sharp.Add,
                 description = PLUS_BTN,
-                onClick = { onPlus() }
+                onClick = { onPlus(cartProduct.id) }
             )
 
             Text(
@@ -91,7 +91,7 @@ fun CartProductItem(
             CartIconButton(
                 icon = Icons.Filled.HorizontalRule,
                 description = MINUS_BTN,
-                onClick = { onMinus() }
+                onClick = { onMinus(cartProduct.id) }
             )
         }
     }
