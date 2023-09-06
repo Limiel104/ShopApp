@@ -33,6 +33,9 @@ class CartViewModelTest {
     private lateinit var shopUseCases: ShopUseCases
     private lateinit var cartViewModel: CartViewModel
     private lateinit var cartItems: List<CartItem>
+    private lateinit var cartItem: CartItem
+    private lateinit var cartItemToUpdate: CartItem
+    private lateinit var cartItemToUpdate2: CartItem
     private lateinit var products: List<Product>
     private lateinit var cartProducts: List<CartProduct>
     @MockK
@@ -70,6 +73,27 @@ class CartViewModelTest {
                 amount = 7
             )
         ).shuffled()
+
+        cartItem = CartItem(
+            cartItemId = "cartItemId2",
+            userUID = "userUID",
+            productId = 3,
+            amount = 1
+        )
+
+        cartItemToUpdate = CartItem(
+            cartItemId = "cartItemId2",
+            userUID = "userUID",
+            productId = 3,
+            amount = 2
+        )
+
+        cartItemToUpdate2 = CartItem(
+            cartItemId = "cartItemId1",
+            userUID = "userUID",
+            productId = 1,
+            amount = 1
+        )
 
         products = listOf(
             Product(
@@ -177,7 +201,7 @@ class CartViewModelTest {
     fun `checkIfUserIsLoggedIn is successful`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
-        } returns flowOf(Resource.Success(emptyList()))
+        } returns flowOf(Resource.Error("Error"))
 
         cartViewModel = setViewModel()
 
@@ -347,5 +371,274 @@ class CartViewModelTest {
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `fun getCartItemFromCartProduct returns correct result`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+
+        cartViewModel = setViewModel()
+
+        val resultCartItem = cartViewModel.getCartItemFromCartProductId(3)
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        }
+        assertThat(resultCartItem).isEqualTo(cartItem)
+    }
+
+    @Test
+    fun `update product amount in cart result is successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.updateCartItem(cartItem,2)
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `update product amount in cart result is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.updateCartItem(cartItem,2)
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `delete product from cart result is successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.deleteCartItem("cartItemId2")
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `delete products from cart result is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.deleteCartItem("cartItemId2")
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `event onPlus`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.onEvent(CartEvent.OnPlus(3))
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `event onMinus - product amount is more than 1`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate2)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.onEvent(CartEvent.OnMinus(1))
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.updateProductInCartUseCase(cartItemToUpdate2)
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `event onMinus - product amount is equal 1`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.onEvent(CartEvent.OnMinus(3))
+
+        val cartItemsState = getCurrentCartState().cartItems
+        val cartProductsState = getCurrentCartState().cartProducts
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.deleteProductFromCartUseCase("cartItemId2")
+        }
+        assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
+        assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
+        assertThat(isLoading).isFalse()
     }
 }
