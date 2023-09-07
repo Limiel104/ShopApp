@@ -99,7 +99,7 @@ class CartViewModelTest {
             Product(
                 id = 1,
                 title = "Polo Shirt",
-                price = "55,99 PLN",
+                price = 55.99,
                 description = productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
@@ -108,7 +108,7 @@ class CartViewModelTest {
             Product(
                 id = 2,
                 title = "Cargo Pants",
-                price = "90,00 PLN",
+                price = 90.00,
                 description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -117,7 +117,7 @@ class CartViewModelTest {
             Product(
                 id = 3,
                 title = "Skirt",
-                price = "78,78 PLN",
+                price = 78.78,
                 description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -126,7 +126,7 @@ class CartViewModelTest {
             Product(
                 id = 4,
                 title = "Jeans",
-                price = "235,99 PLN",
+                price = 235.99,
                 description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -135,7 +135,7 @@ class CartViewModelTest {
             Product(
                 id = 5,
                 title = "Shirt",
-                price = "85,99 PLN",
+                price = 85.99,
                 description = productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
@@ -144,7 +144,7 @@ class CartViewModelTest {
             Product(
                 id = 6,
                 title = "Blouse",
-                price = "99,99 PLN",
+                price = 99.99,
                 description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -156,28 +156,28 @@ class CartViewModelTest {
             CartProduct(
                 id = 1,
                 title = "Polo Shirt",
-                price = "55,99 PLN",
+                price = 55.99,
                 imageUrl = "imageUrl",
                 amount = 2
             ),
             CartProduct(
                 id = 3,
                 title = "Skirt",
-                price = "78,78 PLN",
+                price = 78.78,
                 imageUrl = "imageUrl",
                 amount = 1
             ),
             CartProduct(
                 id = 4,
                 title = "Jeans",
-                price = "235,99 PLN",
+                price = 235.99,
                 imageUrl = "imageUrl",
                 amount = 3
             ),
             CartProduct(
                 id = 6,
                 title = "Blouse",
-                price = "99,99 PLN",
+                price = 99.99,
                 imageUrl = "imageUrl",
                 amount = 7
             )

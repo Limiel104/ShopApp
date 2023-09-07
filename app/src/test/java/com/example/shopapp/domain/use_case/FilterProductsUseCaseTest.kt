@@ -19,7 +19,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "70,99 PLN",
+                price = 70.99,
                 description = "description of a product 1",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -28,7 +28,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 2,
                 title = "Pants",
-                price = "120,99 PLN",
+                price = 120.99,
                 description = "description of a product 2",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -37,7 +37,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 3,
                 title = "Socks",
-                price = "5,99 PLN",
+                price = 5.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -46,7 +46,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 4,
                 title = "Jacket",
-                price = "178,99 PLN",
+                price = 178.99,
                 description = "description of a product 3",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -56,7 +56,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 5,
                 title = "TV",
-                price = "2230,99 PLN",
+                price = 2230.99,
                 description = "description of a product 3",
                 category = "electronics",
                 imageUrl = "url",
@@ -65,7 +65,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 6,
                 title = "Hat",
-                price = "13,99 PLN",
+                price = 13.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -75,7 +75,7 @@ class FilterProductsUseCaseTest {
             Product(
                 id = 7,
                 title = "Necklace",
-                price = "1000,00 PLN",
+                price = 1000.00,
                 description = "description of a product 3",
                 category = "jewelery",
                 imageUrl = "url",
@@ -163,8 +163,7 @@ class FilterProductsUseCaseTest {
 
         assertThat(products.size).isEqualTo(7)
         for(product in products){
-            val price = product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            assert(price in minPrice..maxPrice)
+            assert(product.price.toFloat() in minPrice..maxPrice)
         }
     }
 
@@ -183,8 +182,7 @@ class FilterProductsUseCaseTest {
 
         assertThat(products.size).isEqualTo(4)
         for(product in products){
-            val price = product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            assert(price in minPrice..maxPrice)
+            assert(product.price.toFloat() in minPrice..maxPrice)
         }
     }
 
@@ -219,8 +217,7 @@ class FilterProductsUseCaseTest {
 
         assertThat(products.size).isEqualTo(1)
         for(product in products){
-            val price = product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            assert(price in minPrice..maxPrice)
+            assert(product.price.toFloat() in minPrice..maxPrice)
         }
     }
 }

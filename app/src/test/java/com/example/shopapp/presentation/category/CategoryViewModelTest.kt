@@ -54,7 +54,7 @@ class CategoryViewModelTest {
             Product(
                 id = 1,
                 title = "title 1",
-                price = "123,99 PLN",
+                price = 123.99,
                 description = "description of a product 1",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -63,7 +63,7 @@ class CategoryViewModelTest {
             Product(
                 id = 2,
                 title = "title 2",
-                price = "41,99 PLN",
+                price = 41.99,
                 description = "description of a product 2",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -72,7 +72,7 @@ class CategoryViewModelTest {
             Product(
                 id = 3,
                 title = "title 3",
-                price = "34,99 PLN",
+                price = 34.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -112,7 +112,7 @@ class CategoryViewModelTest {
             Product(
                 id = 1,
                 title = "title 1",
-                price = "123,99 PLN",
+                price = 123.99,
                 description = "description of a product 1",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -121,7 +121,7 @@ class CategoryViewModelTest {
             Product(
                 id = 2,
                 title = "title 2",
-                price = "41,99 PLN",
+                price = 41.99,
                 description = "description of a product 2",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -130,7 +130,7 @@ class CategoryViewModelTest {
             Product(
                 id = 3,
                 title = "title 3",
-                price = "34,99 PLN",
+                price = 34.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",

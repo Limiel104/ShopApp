@@ -32,6 +32,7 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.presentation.MainActivity
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CART_BTN
@@ -79,7 +80,7 @@ class CategoryScreenTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -88,7 +89,7 @@ class CategoryScreenTest {
             Product(
                 id = 2,
                 title = "Trousers",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "women's clothing",
                 imageUrl = "imageUrl",
@@ -97,7 +98,7 @@ class CategoryScreenTest {
             Product(
                 id = 3,
                 title = "Hoodie",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -106,7 +107,7 @@ class CategoryScreenTest {
             Product(
                 id = 4,
                 title = "Blouse",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -115,7 +116,7 @@ class CategoryScreenTest {
             Product(
                 id = 4,
                 title = "Earrings",
-                price = "400,59 PLN",
+                price = 400.59,
                 description = productDescription,
                 category = "jewelery",
                 imageUrl = "imageUrl",
@@ -583,7 +584,7 @@ class CategoryScreenTest {
         )
 
         composeRule.onNodeWithTag(productList[0].title).onChildAt(1).assertTextEquals(productList[0].title)
-        composeRule.onNodeWithTag(productList[0].title).onChildAt(3).assertTextEquals(productList[0].price)
+        composeRule.onNodeWithTag(productList[0].title).onChildAt(3).assertTextEquals(productList[0].priceToString())
         composeRule.onNodeWithTag(productList[0].title).assertPositionInRootIsEqualTo(20.dp,66.dp)
     }
 

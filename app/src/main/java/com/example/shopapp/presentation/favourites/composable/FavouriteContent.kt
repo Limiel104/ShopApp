@@ -107,7 +107,7 @@ fun FavouriteContentPreview() {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -116,7 +116,7 @@ fun FavouriteContentPreview() {
             Product(
                 id = 2,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -125,7 +125,7 @@ fun FavouriteContentPreview() {
             Product(
                 id = 3,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",

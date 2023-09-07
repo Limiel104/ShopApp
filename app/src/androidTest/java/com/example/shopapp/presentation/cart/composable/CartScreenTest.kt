@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.MainActivity
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
@@ -66,49 +67,49 @@ class CartScreenTest {
             CartProduct(
                 id = 1,
                 title = "title 1",
-                price = "123,45 PLN",
+                price = 123.45,
                 imageUrl = "",
                 amount = 1
             ),
             CartProduct(
                 id = 2,
                 title = "title 2",
-                price = "53,34 PLN",
+                price = 53.34,
                 imageUrl = "",
                 amount = 2
             ),
             CartProduct(
                 id = 3,
                 title = "title 3",
-                price = "56,00 PLN",
+                price = 56.00,
                 imageUrl = "",
                 amount = 1
             ),
             CartProduct(
                 id = 4,
                 title = "title 4",
-                price = "23,00 PLN",
+                price = 23.00,
                 imageUrl = "",
                 amount = 1
             ),
             CartProduct(
                 id = 5,
                 title = "title 5",
-                price = "6,86 PLN",
+                price = 6.86,
                 imageUrl = "",
                 amount = 2
             ),
             CartProduct(
                 id = 6,
                 title = "title 6",
-                price = "44,99 PLN",
+                price = 44.99,
                 imageUrl = "",
                 amount = 3
             ),
             CartProduct(
                 id = 7,
                 title = "title 7",
-                price = "203,99 PLN",
+                price = 203.99,
                 imageUrl = "",
                 amount = 3
             )
@@ -138,6 +139,8 @@ class CartScreenTest {
                             totalAmount = totalAmount,
                             isLoading = isLoading,
                             isDialogActivated = isDialogActivated,
+                            onPlus = {},
+                            onMinus = {},
                             onGoBack = {},
                             onGoHome = {}
                         )
@@ -231,7 +234,7 @@ class CartScreenTest {
         )
 
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(1).assertTextEquals(cartProductList[0].title)
-        composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(2).assertTextEquals(cartProductList[0].price)
+        composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(2).assertTextEquals(cartProductList[0].priceToString())
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(3).assertContentDescriptionContains(PLUS_BTN)
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(4).assertTextEquals(cartProductList[0].amount.toString())
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(5).assertContentDescriptionContains(MINUS_BTN)

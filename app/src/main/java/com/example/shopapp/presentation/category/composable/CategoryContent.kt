@@ -141,7 +141,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -150,7 +150,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 2,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -159,7 +159,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 3,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -168,7 +168,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 4,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",

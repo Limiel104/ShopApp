@@ -161,49 +161,49 @@ private fun returnCartProducts(): List<CartProduct> {
         CartProduct(
             id = 1,
             title = "title 1",
-            price = "123,45 PLN",
+            price = 123.45,
             imageUrl = "",
             amount = 1
         ),
         CartProduct(
             id = 2,
             title = "title 2",
-            price = "53,34 PLN",
+            price = 53.34,
             imageUrl = "",
             amount = 2
         ),
         CartProduct(
             id = 3,
             title = "title 3",
-            price = "56,00 PLN",
+            price = 56.00,
             imageUrl = "",
             amount = 1
         ),
         CartProduct(
             id = 4,
             title = "title 4",
-            price = "23,00 PLN",
+            price = 23.00,
             imageUrl = "",
             amount = 1
         ),
         CartProduct(
             id = 5,
             title = "title 5",
-            price = "6,86 PLN",
+            price = 6.86,
             imageUrl = "",
             amount = 2
         ),
         CartProduct(
             id = 6,
             title = "title 6 dsfhdkjhgdfjkg hdfjkghdfkghfjdh fdhkghdkfjghdfkjghdfjghdfkjghdfkjghdfk",
-            price = "44,99 PLN",
+            price = 44.99,
             imageUrl = "",
             amount = 3
         ),
         CartProduct(
             id = 7,
             title = "title 7",
-            price = "203,99 PLN",
+            price = 203.99,
             imageUrl = "",
             amount = 3
         )

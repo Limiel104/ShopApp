@@ -253,16 +253,9 @@ class CategoryViewModel @Inject constructor(
     }
 
     fun setPriceSlider() {
-        val prices: MutableList<Float> = mutableListOf()
-
-        _categoryState.value.productList.forEach { product ->
-            prices.add(product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat())
-        }
-
-        prices.sort()
-
-        val startValue = prices.first()
-        val endValue = prices.last()
+        val prices = _categoryState.value.productList.sortedBy { it.price }
+        val startValue = prices.first().price.toFloat()
+        val endValue = prices.last().price.toFloat()
 
         _categoryState.value = categoryState.value.copy(
             priceSliderPosition = startValue..endValue,

@@ -20,7 +20,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "70,99 PLN",
+                price = 70.99,
                 description = "description of a product 1",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -29,7 +29,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 2,
                 title = "Pants",
-                price = "120,99 PLN",
+                price = 120.99,
                 description = "description of a product 2",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -38,7 +38,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 3,
                 title = "Socks",
-                price = "5,99 PLN",
+                price = 5.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -47,7 +47,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 4,
                 title = "Jacket",
-                price = "178,99 PLN",
+                price = 178.99,
                 description = "description of a product 3",
                 category = "women's clothing",
                 imageUrl = "url",
@@ -57,7 +57,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 5,
                 title = "TV",
-                price = "2230,99 PLN",
+                price = 2230.99,
                 description = "description of a product 3",
                 category = "electronics",
                 imageUrl = "url",
@@ -66,7 +66,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 6,
                 title = "Hat",
-                price = "13,99 PLN",
+                price = 13.99,
                 description = "description of a product 3",
                 category = "men's clothing",
                 imageUrl = "url",
@@ -76,7 +76,7 @@ class SortProductsUseCaseTest {
             Product(
                 id = 7,
                 title = "Necklace",
-                price = "1000,00 PLN",
+                price = 1000.00,
                 description = "description of a product 3",
                 category = "jewelery",
                 imageUrl = "url",
@@ -108,8 +108,8 @@ class SortProductsUseCaseTest {
         val products = sortProductsUseCase(ProductOrder.PriceAscending(),productList)
 
         for(i in 0..products.size-2) {
-            val currentProductPrice =  products[i].price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            val nextProductPrice = products[i+1].price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
+            val currentProductPrice =  products[i].price
+            val nextProductPrice = products[i+1].price
             assertThat(currentProductPrice).isLessThan(nextProductPrice)
         }
     }
@@ -119,8 +119,8 @@ class SortProductsUseCaseTest {
         val products = sortProductsUseCase(ProductOrder.PriceDescending(),productList)
 
         for(i in 0..products.size-2) {
-            val currentProductPrice =  products[i].price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            val nextProductPrice = products[i+1].price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
+            val currentProductPrice =  products[i].price
+            val nextProductPrice = products[i+1].price
             assertThat(currentProductPrice).isGreaterThan(nextProductPrice)
         }
     }

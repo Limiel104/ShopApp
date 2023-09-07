@@ -22,6 +22,7 @@ import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Constants.productItemImageHeight
 import com.example.shopapp.util.Constants.productItemImageWidth
 import com.example.shopapp.R
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.DELETE_BTN
 
@@ -60,7 +61,7 @@ fun FavouriteProductItem(
 
         ProductItemTitle(
             name = product.title,
-            price = product.price
+            price = product.priceToString()
         )
 
         ShopButtonItem(
@@ -78,7 +79,7 @@ fun FavouriteProductItemPreview() {
     val product = Product(
         id = 1,
         title = "Shirt",
-        price = "195,59 PLN",
+        price = 195.59,
         description = productDescription,
         category = "men's clothing",
         imageUrl = "imageUrl",

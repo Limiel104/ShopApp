@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.util.Constants.MINUS_BTN
@@ -66,7 +67,7 @@ fun CartProductItem(
             )
 
             Text(
-                text = cartProduct.price
+                text = cartProduct.priceToString()
             )
         }
 
@@ -104,7 +105,7 @@ fun CartProductItemPreview() {
         cartProduct = CartProduct(
             id = 2,
             title = "title 2",
-            price = "53,34 PLN",
+            price = 53.34,
             imageUrl = "",
             amount = 2
         ),

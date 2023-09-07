@@ -31,7 +31,7 @@ class GetProductUseCaseTest {
         product = Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = Category.Women.id,
             imageUrl = "imageUrl",

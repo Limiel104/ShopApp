@@ -50,7 +50,7 @@ class ProductDetailsViewModelTest {
         product = Product(
             id = 1,
             title = "title 1",
-            price = "123,99 PLN",
+            price = 123.99,
             description = "description of a product 1",
             category = "men's clothing",
             imageUrl = "url",
@@ -145,7 +145,7 @@ class ProductDetailsViewModelTest {
         }
         assertThat(productId).isEqualTo(product.id)
         assertThat(title).isEqualTo("")
-        assertThat(price).isEqualTo("")
+        assertThat(price).isEqualTo(-1)
         assertThat(description).isEqualTo("")
         assertThat(category).isEqualTo("")
         assertThat(imageUrl).isEqualTo("")
@@ -172,7 +172,7 @@ class ProductDetailsViewModelTest {
         }
         assertThat(productId).isEqualTo(product.id)
         assertThat(title).isEqualTo("")
-        assertThat(price).isEqualTo("")
+        assertThat(price).isEqualTo(-1)
         assertThat(description).isEqualTo("")
         assertThat(category).isEqualTo("")
         assertThat(imageUrl).isEqualTo("")
