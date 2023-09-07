@@ -2,10 +2,8 @@ package com.example.shopapp.presentation.cart.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,11 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
@@ -36,7 +32,6 @@ import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDER_BTN
-import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_ROW
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -89,26 +84,9 @@ fun CartContent(
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .testTag(CART_TOTAL_AMOUNT_ROW),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.total_amount),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp
-                    )
-
-                    Text(
-                        text = String.format("%.2f PLN", totalAmount),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp
-                    )
-                }
+                TotalAmountItem(
+                    totalAmount = totalAmount
+                )
 
                 ShopButtonItem(
                     text = stringResource(id = R.string.order),

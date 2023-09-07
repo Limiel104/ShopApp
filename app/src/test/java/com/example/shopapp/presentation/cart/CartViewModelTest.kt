@@ -398,6 +398,32 @@ class CartViewModelTest {
     }
 
     @Test
+    fun `total amount of products in the cart is correctly calculated`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.calculateTotalAmount()
+        val totalAmount = String.format("%.2f",getCurrentCartState().totalAmount)
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        }
+        assertThat(totalAmount).isEqualTo("1598,66")
+    }
+
+    @Test
     fun `update product amount in cart result is successful`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")

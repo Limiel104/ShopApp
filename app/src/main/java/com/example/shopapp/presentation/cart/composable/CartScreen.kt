@@ -27,6 +27,7 @@ fun CartScreen(
     val scaffoldState = rememberScaffoldState()
     val isUserLoggedIn = viewModel.cartState.value.isUserLoggedIn
     val cartProducts = viewModel.cartState.value.cartProducts
+    val totalAmount = viewModel.cartState.value.totalAmount
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -50,7 +51,7 @@ fun CartScreen(
         CartContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            totalAmount = 155.45,
+            totalAmount = totalAmount,
             cartProducts = cartProducts,
             isLoading = false,
             isDialogActivated = false,

@@ -130,6 +130,7 @@ class CartViewModel @Inject constructor(
                         response.data?.let { products ->
                             if(products.isNotEmpty()) {
                                 getCartProducts(products)
+                                calculateTotalAmount()
                             }
                         }
                     }
@@ -147,6 +148,19 @@ class CartViewModel @Inject constructor(
 
         _cartState.value = cartState.value.copy(
             cartProducts = shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        )
+    }
+
+    fun calculateTotalAmount() {
+        var totalAmount = 0.0
+        val cartProducts = _cartState.value.cartProducts
+
+        for(cartProduct in cartProducts) {
+            totalAmount += cartProduct.amount * cartProduct.price
+        }
+
+        _cartState.value = cartState.value.copy(
+            totalAmount = totalAmount
         )
     }
 

@@ -299,7 +299,7 @@ class CartScreenTest {
 
         composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(0).assertTextEquals("Total amount")
         composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(1).assertTextEquals("150.00 PLN")
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(1).assertTextEquals("150,00 PLN")
     }
 
     @Test

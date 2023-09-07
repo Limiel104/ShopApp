@@ -9,5 +9,6 @@ data class CartState(
     val cartProducts: List<CartProduct> = emptyList(),
     val isUserLoggedIn: Boolean = false,
     val userUID: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val totalAmount: Double = -1.0
 )
