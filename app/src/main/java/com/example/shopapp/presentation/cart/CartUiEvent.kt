@@ -4,4 +4,5 @@ sealed class CartUiEvent {
     data class ShowErrorMessage(val message: String): CartUiEvent()
     object NavigateToLogin: CartUiEvent()
     object NavigateToSignup: CartUiEvent()
+    object NavigateBack: CartUiEvent()
 }

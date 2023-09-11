@@ -84,6 +84,11 @@ class CategoryViewModel @Inject constructor(
                     )
                 }
             }
+            is CategoryEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(CategoryUiEvent.NavigateToCart)
+                }
+            }
         }
     }
 

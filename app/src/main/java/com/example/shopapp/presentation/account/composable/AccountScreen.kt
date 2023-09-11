@@ -36,6 +36,9 @@ fun AccountScreen(
                 is AccountUiEvent.NavigateToSignup -> {
                     navController.navigate(Screen.SignupScreen.route)
                 }
+                is AccountUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
+                }
             }
         }
     }
@@ -46,7 +49,8 @@ fun AccountScreen(
             bottomBarHeight = bottomBarHeight,
             userName = name,
             userClubPoints = 234,
-            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) }
+            onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
+            onGoToCart = { viewModel.onEvent(AccountEvent.GoToCart) }
         )
     }
     else {

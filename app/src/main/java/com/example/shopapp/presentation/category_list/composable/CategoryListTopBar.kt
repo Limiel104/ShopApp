@@ -20,7 +20,9 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.CATEGORY_LIST_TOP_BAR
 
 @Composable
-fun CategoryListTopBar() {
+fun CategoryListTopBar(
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +36,7 @@ fun CategoryListTopBar() {
             icon = Icons.Outlined.ShoppingCart,
             description = CART_BTN,
             outsidePaddingValue = 0,
-            onClick = {}
+            onClick = { onClick() }
         )
     }
 }
@@ -43,6 +45,8 @@ fun CategoryListTopBar() {
 @Composable
 fun CategoryListTopBarPreview() {
     ShopAppTheme {
-        CategoryListTopBar()
+        CategoryListTopBar(
+            onClick = {}
+        )
     }
 }

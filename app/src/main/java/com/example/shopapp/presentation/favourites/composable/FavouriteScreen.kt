@@ -46,6 +46,9 @@ fun FavouriteScreen(
                 is FavouritesUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
+                is FavouritesUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
+                }
             }
         }
     }
@@ -57,7 +60,8 @@ fun FavouriteScreen(
             productList = productList,
             isLoading = isLoading,
             onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) },
-            onDelete = { viewModel.onEvent(FavouritesEvent.OnDelete(it)) }
+            onDelete = { viewModel.onEvent(FavouritesEvent.OnDelete(it)) },
+            onGoToCart = { viewModel.onEvent(FavouritesEvent.GoToCart) }
         )
     }
     else {

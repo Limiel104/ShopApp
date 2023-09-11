@@ -40,6 +40,11 @@ class CategoryListViewModel @Inject constructor(
                     _eventFlow.emit(CategoryListUiEvent.NavigateToCategory(event.value))
                 }
             }
+            is CategoryListEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(CategoryListUiEvent.NavigateToCart)
+                }
+            }
         }
     }
 

@@ -30,14 +30,17 @@ fun AccountContent(
     bottomBarHeight: Dp,
     userName: String,
     userClubPoints: Int,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onGoToCart: () -> Unit
 ) {
     val coupons = listOf(10,20,50)
 
     Scaffold(
-        topBar = { AccountTopBar(
-            userName = userName
-        ) },
+        topBar = {
+            AccountTopBar(
+                userName = userName,
+                onClick = { onGoToCart() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -106,7 +109,8 @@ fun AccountContentPreview() {
             bottomBarHeight = 56.dp,
             userName = "John",
             userClubPoints = 234,
-            onLogout = {}
+            onLogout = {},
+            onGoToCart = {}
         )
     }
 }

@@ -64,6 +64,11 @@ class CartViewModel @Inject constructor(
                     updateCartItem(cartItemToUpdate,cartItemToUpdate.amount-1)
                 }
             }
+            is CartEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(CartUiEvent.NavigateBack)
+                }
+            }
         }
     }
 

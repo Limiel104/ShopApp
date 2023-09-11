@@ -49,14 +49,15 @@ fun CategoryContent(
     onDismiss: () -> Unit,
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
     onOrderChange: (ProductOrder) -> Unit,
-    onCheckedChange: (String) -> Unit
+    onCheckedChange: (String) -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CategoryTopBar(
                 categoryName = categoryName,
                 onSortAndFilterSelected = { onSortAndFilterSelected() },
-                onCartSelected = {}
+                onCartSelected = { onGoToCart() }
             ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
@@ -200,7 +201,8 @@ fun CategoryContentPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -228,7 +230,8 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -261,7 +264,8 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -289,7 +293,8 @@ fun CategoryContentDialogPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -317,7 +322,8 @@ fun CategoryContentCPIPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }

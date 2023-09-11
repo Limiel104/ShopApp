@@ -5,4 +5,5 @@ sealed class FavouritesUiEvent {
     object NavigateToLogin: FavouritesUiEvent()
     object NavigateToSignup: FavouritesUiEvent()
     data class ShowErrorMessage(val message: String): FavouritesUiEvent()
+    object NavigateToCart: FavouritesUiEvent()
 }

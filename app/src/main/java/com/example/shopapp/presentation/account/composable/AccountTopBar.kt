@@ -25,7 +25,8 @@ import com.example.shopapp.util.Constants.CART_BTN
 
 @Composable
 fun AccountTopBar(
-    userName: String
+    userName: String,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -45,7 +46,7 @@ fun AccountTopBar(
             icon = Icons.Outlined.ShoppingCart,
             description = CART_BTN ,
             outsidePaddingValue = 0,
-            onClick = {}
+            onClick = { onClick() }
         )
     }
 }
@@ -55,7 +56,8 @@ fun AccountTopBar(
 fun AccountTopBarPreview() {
     ShopAppTheme {
         AccountTopBar(
-            userName = "John"
+            userName = "John",
+            onClick = {}
         )
     }
 }

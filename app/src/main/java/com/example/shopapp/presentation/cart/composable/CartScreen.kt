@@ -43,6 +43,9 @@ fun CartScreen(
                 is CartUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
+                is CartUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -57,7 +60,7 @@ fun CartScreen(
             isDialogActivated = false,
             onPlus = { viewModel.onEvent(CartEvent.OnPlus(it)) },
             onMinus = { viewModel.onEvent(CartEvent.OnMinus(it)) },
-            onGoBack = {},
+            onGoBack = { viewModel.onEvent(CartEvent.OnGoBack) },
             onGoHome = {}
         )
     }

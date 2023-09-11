@@ -29,10 +29,14 @@ fun CategoryListContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
     categoryList: List<Category>,
-    onCategorySelected: (String) -> Unit
+    onCategorySelected: (String) -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Scaffold(
-        topBar = { CategoryListTopBar() },
+        topBar = {
+            CategoryListTopBar(
+                onClick = { onGoToCart() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +73,8 @@ fun CategoryListContentPreview() {
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             categoryList = getCategory(),
-            onCategorySelected = {}
+            onCategorySelected = {},
+            onGoToCart = {}
         )
     }
 }

@@ -63,6 +63,11 @@ class FavouritesViewModel @Inject constructor(
                 val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites, event.value)
                 deleteProductFromFavourites(favouriteId)
             }
+            is FavouritesEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(FavouritesUiEvent.NavigateToCart)
+                }
+            }
         }
     }
 

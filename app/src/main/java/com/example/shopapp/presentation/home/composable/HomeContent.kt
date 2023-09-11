@@ -35,8 +35,7 @@ fun HomeContent(
         topBar = {
             HomeTopBar(
                 onClick = { onGoToCart() }
-            )
-        },
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()

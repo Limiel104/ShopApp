@@ -51,8 +51,7 @@ fun CartContent(
         topBar = {
             CartTopBar(
                 onClick = { onGoBack() }
-            )
-        },
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()

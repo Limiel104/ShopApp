@@ -38,10 +38,14 @@ fun FavouriteContent(
     productList: List<Product>,
     isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
-    onDelete: (Int) -> Unit
+    onDelete: (Int) -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Scaffold(
-        topBar = { FavouriteTopBar() },
+        topBar = {
+            FavouriteTopBar(
+                onClick = { onGoToCart() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -139,7 +143,8 @@ fun FavouriteContentPreview() {
             productList = productList,
             isLoading = false,
             onProductSelected = {},
-            onDelete = {}
+            onDelete = {},
+            onGoToCart = {}
         )
     }
 }
@@ -153,6 +158,7 @@ fun FavouriteContentEmptyListPreview() {
         productList = emptyList(),
         isLoading = false,
         onProductSelected = {},
-        onDelete = {}
+        onDelete = {},
+        onGoToCart = {}
     )
 }
