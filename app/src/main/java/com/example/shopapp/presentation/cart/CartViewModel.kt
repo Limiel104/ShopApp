@@ -69,6 +69,10 @@ class CartViewModel @Inject constructor(
                     _eventFlow.emit(CartUiEvent.NavigateBack)
                 }
             }
+            is CartEvent.OnDelete -> {
+                val cartItemToDelete = getCartItemFromCartProductId(event.value)
+                deleteCartItem(cartItemToDelete.cartItemId)
+            }
         }
     }
 

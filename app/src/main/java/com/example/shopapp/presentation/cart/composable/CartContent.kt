@@ -12,14 +12,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +42,7 @@ import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDER_BTN
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CartContent(
@@ -45,7 +55,9 @@ fun CartContent(
     onPlus: (Int) -> Unit,
     onMinus: (Int) -> Unit,
     onGoBack: () -> Unit,
-    onGoHome: () -> Unit
+    onGoHome: () -> Unit,
+    onDelete: (Int) -> Unit,
+    onRestore: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -73,12 +85,57 @@ fun CartContent(
                         .padding(bottom = 10.dp)
                         .testTag(CART_LAZY_COLUMN)
                 ) {
-                    itemsIndexed(cartProducts) { _, item ->
-                        CartProductItem(
-                            cartProduct = item,
-                            onImageClick = {},
-                            onPlus = { onPlus(it) },
-                            onMinus = { onMinus(it) }
+                    itemsIndexed(
+                        items = cartProducts,
+                        key = { _, item -> item.hashCode() }
+                    ) { _, cartProduct ->
+                        val dismissState = rememberDismissState(
+                            confirmStateChange = {
+                                if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
+                                    onDelete(cartProduct.id)
+                                    true
+                                } else false
+                            }
+                        )
+
+                        SwipeToDismiss(
+                            state = dismissState,
+                            directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
+                            background = {
+                                val color = when(dismissState.dismissDirection) {
+                                    DismissDirection.StartToEnd -> MaterialTheme.colors.onSecondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colors.onSecondary
+                                    null -> Color.Transparent
+                                }
+
+                                val alignment = when(dismissState.dismissDirection) {
+                                    DismissDirection.StartToEnd -> Alignment.CenterStart
+                                    DismissDirection.EndToStart -> Alignment.CenterEnd
+                                    null -> Alignment.Center
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(color)
+                                        .padding(8.dp),
+                                    contentAlignment = alignment
+                                ){
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = stringResource(id = R.string.delete_cart_product),
+                                        tint = MaterialTheme.colors.onPrimary
+                                    )
+                                }
+                            },
+                            dismissContent = {
+                                CartProductItem(
+                                    cartProduct = cartProduct,
+                                    onImageClick = {},
+                                    onPlus = { onPlus(it) },
+                                    onMinus = { onMinus(it) }
+                                )
+                            }
                         )
                     }
                 }
@@ -187,6 +244,7 @@ private fun returnCartProducts(): List<CartProduct> {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreview() {
@@ -200,10 +258,13 @@ fun CartContentPreview() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {}
+        onGoHome = {},
+        onDelete = {},
+        onRestore = {}
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewListIsEmpty() {
@@ -217,10 +278,13 @@ fun CartContentPreviewListIsEmpty() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {}
+        onGoHome = {},
+        onDelete = {},
+        onRestore = {}
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewDialogActivated() {
@@ -234,10 +298,13 @@ fun CartContentPreviewDialogActivated() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {}
+        onGoHome = {},
+        onDelete = {},
+        onRestore = {}
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewLoading() {
@@ -251,6 +318,8 @@ fun CartContentPreviewLoading() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {}
+        onGoHome = {},
+        onDelete = {},
+        onRestore = {}
     )
 }

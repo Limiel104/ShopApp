@@ -61,7 +61,9 @@ fun CartScreen(
             onPlus = { viewModel.onEvent(CartEvent.OnPlus(it)) },
             onMinus = { viewModel.onEvent(CartEvent.OnMinus(it)) },
             onGoBack = { viewModel.onEvent(CartEvent.OnGoBack) },
-            onGoHome = {}
+            onGoHome = {},
+            onDelete = { viewModel.onEvent(CartEvent.OnDelete(it)) },
+            onRestore = {}
         )
     }
     else {
