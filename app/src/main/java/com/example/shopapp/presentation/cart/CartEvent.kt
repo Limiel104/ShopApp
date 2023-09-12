@@ -7,4 +7,5 @@ sealed class CartEvent {
     data class OnMinus(val value: Int): CartEvent()
     object OnGoBack: CartEvent()
     data class OnDelete(val value: Int): CartEvent()
+    object OnCartItemRestore: CartEvent()
 }

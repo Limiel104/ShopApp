@@ -56,8 +56,7 @@ fun CartContent(
     onMinus: (Int) -> Unit,
     onGoBack: () -> Unit,
     onGoHome: () -> Unit,
-    onDelete: (Int) -> Unit,
-    onRestore: () -> Unit
+    onDelete: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -259,8 +258,7 @@ fun CartContentPreview() {
         onMinus = {},
         onGoBack = {},
         onGoHome = {},
-        onDelete = {},
-        onRestore = {}
+        onDelete = {}
     )
 }
 
@@ -279,8 +277,7 @@ fun CartContentPreviewListIsEmpty() {
         onMinus = {},
         onGoBack = {},
         onGoHome = {},
-        onDelete = {},
-        onRestore = {}
+        onDelete = {}
     )
 }
 
@@ -299,8 +296,7 @@ fun CartContentPreviewDialogActivated() {
         onMinus = {},
         onGoBack = {},
         onGoHome = {},
-        onDelete = {},
-        onRestore = {}
+        onDelete = {}
     )
 }
 
@@ -319,7 +315,6 @@ fun CartContentPreviewLoading() {
         onMinus = {},
         onGoBack = {},
         onGoHome = {},
-        onDelete = {},
-        onRestore = {}
+        onDelete = {}
     )
 }

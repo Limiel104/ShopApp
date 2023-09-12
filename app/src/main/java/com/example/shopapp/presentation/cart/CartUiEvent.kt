@@ -5,4 +5,5 @@ sealed class CartUiEvent {
     object NavigateToLogin: CartUiEvent()
     object NavigateToSignup: CartUiEvent()
     object NavigateBack: CartUiEvent()
+    object ShowSnackbar: CartUiEvent()
 }

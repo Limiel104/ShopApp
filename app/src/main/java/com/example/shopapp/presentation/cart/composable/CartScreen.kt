@@ -2,6 +2,7 @@ package com.example.shopapp.presentation.cart.composable
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,6 +16,8 @@ import com.example.shopapp.presentation.cart.CartViewModel
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
 import com.example.shopapp.util.Constants.CART_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Constants.snackbarActionLabel
+import com.example.shopapp.util.Constants.snackbarMessage
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -46,6 +49,15 @@ fun CartScreen(
                 is CartUiEvent.NavigateBack -> {
                     navController.popBackStack()
                 }
+                is CartUiEvent.ShowSnackbar -> {
+                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                        message = snackbarMessage,
+                        actionLabel = snackbarActionLabel
+                    )
+                    if(result == SnackbarResult.ActionPerformed) {
+                        viewModel.onEvent(CartEvent.OnCartItemRestore)
+                    }
+                }
             }
         }
     }
@@ -62,8 +74,7 @@ fun CartScreen(
             onMinus = { viewModel.onEvent(CartEvent.OnMinus(it)) },
             onGoBack = { viewModel.onEvent(CartEvent.OnGoBack) },
             onGoHome = {},
-            onDelete = { viewModel.onEvent(CartEvent.OnDelete(it)) },
-            onRestore = {}
+            onDelete = { viewModel.onEvent(CartEvent.OnDelete(it)) }
         )
     }
     else {

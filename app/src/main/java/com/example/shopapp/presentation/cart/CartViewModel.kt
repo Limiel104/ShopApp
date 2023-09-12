@@ -29,6 +29,8 @@ class CartViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<CartUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    private var deletedCartItem: CartItem? = null
+
     init {
         Log.i(TAG, CART_VM)
 
@@ -71,7 +73,15 @@ class CartViewModel @Inject constructor(
             }
             is CartEvent.OnDelete -> {
                 val cartItemToDelete = getCartItemFromCartProductId(event.value)
+                deletedCartItem = cartItemToDelete
                 deleteCartItem(cartItemToDelete.cartItemId)
+                viewModelScope.launch {
+                    _eventFlow.emit(CartUiEvent.ShowSnackbar)
+                }
+            }
+            is CartEvent.OnCartItemRestore -> {
+                Log.i(TAG,deletedCartItem.toString())
+                deletedCartItem?.let { restoreProductToCart(it) }
             }
         }
     }
@@ -220,6 +230,32 @@ class CartViewModel @Inject constructor(
                     is Resource.Success -> {
 
                         Log.i(TAG,"Product was deleted from cart")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun restoreProductToCart(cartItem: CartItem) {
+        viewModelScope.launch {
+            shopUseCases.addProductToCartUseCase(
+                cartItem.userUID,
+                cartItem.productId,
+                cartItem.amount
+            ).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product restore to cart: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product restored to the cart")
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

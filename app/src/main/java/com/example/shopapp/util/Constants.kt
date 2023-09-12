@@ -84,6 +84,10 @@ object Constants {
     const val ADD_TO_CART_BTN: String = "Add to cart button"
     const val DELETE_BTN: String = "Delete button"
 
+    //Snackbar
+    const val snackbarMessage: String = "Cart item deleted"
+    const val snackbarActionLabel: String = "Undo"
+
     //TEST VALUES
     const val badgeCount: Int = 10
     const val badgeCountZero: Int = 0
