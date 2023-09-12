@@ -8,4 +8,6 @@ sealed class CartEvent {
     object OnGoBack: CartEvent()
     data class OnDelete(val value: Int): CartEvent()
     object OnCartItemRestore: CartEvent()
+    object OnOrderPlaced: CartEvent()
+    object OnGoHome: CartEvent()
 }

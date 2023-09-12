@@ -83,6 +83,24 @@ class CartViewModel @Inject constructor(
                 Log.i(TAG,deletedCartItem.toString())
                 deletedCartItem?.let { restoreProductToCart(it) }
             }
+            is CartEvent.OnOrderPlaced -> {
+                _cartState.value = cartState.value.copy(
+                    isDialogActivated = true
+                )
+            }
+            is CartEvent.OnGoHome -> {
+                viewModelScope.launch {
+                    _cartState.value = cartState.value.copy(
+                        isDialogActivated = false
+                    )
+
+                    for(cartItem in _cartState.value.cartItems) {
+                        deleteCartItem(cartItem.cartItemId)
+                    }
+
+                    _eventFlow.emit(CartUiEvent.NavigateToHome)
+                }
+            }
         }
     }
 

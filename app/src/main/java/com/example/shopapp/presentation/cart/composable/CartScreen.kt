@@ -31,6 +31,8 @@ fun CartScreen(
     val isUserLoggedIn = viewModel.cartState.value.isUserLoggedIn
     val cartProducts = viewModel.cartState.value.cartProducts
     val totalAmount = viewModel.cartState.value.totalAmount
+    val isLoading = viewModel.cartState.value.isLoading
+    val isDialogActivated = viewModel.cartState.value.isDialogActivated
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -58,6 +60,11 @@ fun CartScreen(
                         viewModel.onEvent(CartEvent.OnCartItemRestore)
                     }
                 }
+                is CartUiEvent.NavigateToHome -> {
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    }
+                }
             }
         }
     }
@@ -68,13 +75,14 @@ fun CartScreen(
             bottomBarHeight = bottomBarHeight,
             totalAmount = totalAmount,
             cartProducts = cartProducts,
-            isLoading = false,
-            isDialogActivated = false,
+            isLoading = isLoading,
+            isDialogActivated = isDialogActivated,
             onPlus = { viewModel.onEvent(CartEvent.OnPlus(it)) },
             onMinus = { viewModel.onEvent(CartEvent.OnMinus(it)) },
             onGoBack = { viewModel.onEvent(CartEvent.OnGoBack) },
-            onGoHome = {},
-            onDelete = { viewModel.onEvent(CartEvent.OnDelete(it)) }
+            onDelete = { viewModel.onEvent(CartEvent.OnDelete(it)) },
+            onOrderPlaced = { viewModel.onEvent(CartEvent.OnOrderPlaced) },
+            onGoHome = { viewModel.onEvent(CartEvent.OnGoHome) }
         )
     }
     else {

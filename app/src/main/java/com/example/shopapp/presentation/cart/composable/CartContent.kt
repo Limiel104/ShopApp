@@ -55,8 +55,9 @@ fun CartContent(
     onPlus: (Int) -> Unit,
     onMinus: (Int) -> Unit,
     onGoBack: () -> Unit,
+    onDelete: (Int) -> Unit,
+    onOrderPlaced: () -> Unit,
     onGoHome: () -> Unit,
-    onDelete: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -146,7 +147,7 @@ fun CartContent(
                 ShopButtonItem(
                     text = stringResource(id = R.string.order),
                     testTag = ORDER_BTN,
-                    onClick = { }
+                    onClick = { onOrderPlaced() }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -257,8 +258,9 @@ fun CartContentPreview() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {},
-        onDelete = {}
+        onDelete = {},
+        onOrderPlaced = {},
+        onGoHome = {}
     )
 }
 
@@ -276,8 +278,9 @@ fun CartContentPreviewListIsEmpty() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {},
-        onDelete = {}
+        onDelete = {},
+        onOrderPlaced = {},
+        onGoHome = {}
     )
 }
 
@@ -295,8 +298,9 @@ fun CartContentPreviewDialogActivated() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {},
-        onDelete = {}
+        onDelete = {},
+        onOrderPlaced = {},
+        onGoHome = {}
     )
 }
 
@@ -314,7 +318,8 @@ fun CartContentPreviewLoading() {
         onPlus = {},
         onMinus = {},
         onGoBack = {},
-        onGoHome = {},
-        onDelete = {}
+        onDelete = {},
+        onOrderPlaced = {},
+        onGoHome = {}
     )
 }

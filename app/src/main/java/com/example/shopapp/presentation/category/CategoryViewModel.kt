@@ -78,11 +78,9 @@ class CategoryViewModel @Inject constructor(
                 )
             }
             is CategoryEvent.OnDialogDismissed -> {
-                viewModelScope.launch {
-                    _categoryState.value = categoryState.value.copy(
-                        isDialogActivated = false
-                    )
-                }
+                _categoryState.value = categoryState.value.copy(
+                    isDialogActivated = false
+                )
             }
             is CategoryEvent.GoToCart -> {
                 viewModelScope.launch {
