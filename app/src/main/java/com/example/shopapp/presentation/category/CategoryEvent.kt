@@ -10,4 +10,5 @@ sealed class CategoryEvent {
     data class OnCheckBoxToggled(val value: String): CategoryEvent()
     object ToggleSortAndFilterSection: CategoryEvent()
     object OnDialogDismissed: CategoryEvent()
+    object GoToCart: CategoryEvent()
 }

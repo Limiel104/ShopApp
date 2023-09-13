@@ -8,8 +8,8 @@ class SortProductsUseCase {
         return when(productOrder) {
             is ProductOrder.NameAscending -> products.sortedBy { it.title.lowercase() }
             is ProductOrder.NameDescending -> products.sortedByDescending { it.title.lowercase() }
-            is ProductOrder.PriceAscending -> products.sortedBy { it.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat() }
-            is ProductOrder.PriceDescending -> products.sortedByDescending { it.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat() }
+            is ProductOrder.PriceAscending -> products.sortedBy { it.price }
+            is ProductOrder.PriceDescending -> products.sortedByDescending { it.price }
         }
     }
 }

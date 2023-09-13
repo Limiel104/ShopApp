@@ -33,6 +33,9 @@ fun CategoryListScreen(
                     Log.i(TAG, CATEGORY_LIST_SCREEN_LE)
                     navController.navigate(Screen.CategoryScreen.route + "categoryId="+ event.categoryId)
                 }
+                is CategoryListUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
+                }
             }
         }
     }
@@ -41,8 +44,7 @@ fun CategoryListScreen(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
         categoryList = categoryList,
-        onCategorySelected = { categoryId: String ->
-            viewModel.onEvent(CategoryListEvent.OnCategorySelected(categoryId))
-        }
+        onCategorySelected = { viewModel.onEvent(CategoryListEvent.OnCategorySelected(it)) },
+        onGoToCart = { viewModel.onEvent(CategoryListEvent.GoToCart) }
     )
 }

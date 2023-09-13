@@ -52,7 +52,6 @@ class FavouritesViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(FavouritesUiEvent.NavigateToLogin)
                 }
-
             }
             is FavouritesEvent.OnSignup -> {
                 viewModelScope.launch {
@@ -63,6 +62,11 @@ class FavouritesViewModel @Inject constructor(
                 val favourites = _favouritesState.value.favouriteList
                 val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites, event.value)
                 deleteProductFromFavourites(favouriteId)
+            }
+            is FavouritesEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(FavouritesUiEvent.NavigateToCart)
+                }
             }
         }
     }

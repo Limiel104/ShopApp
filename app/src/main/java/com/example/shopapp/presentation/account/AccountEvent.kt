@@ -4,4 +4,5 @@ sealed class AccountEvent {
     object OnLogin: AccountEvent()
     object OnSignup: AccountEvent()
     object OnLogout: AccountEvent()
+    object GoToCart: AccountEvent()
 }

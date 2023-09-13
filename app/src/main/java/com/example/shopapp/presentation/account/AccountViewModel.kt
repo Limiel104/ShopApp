@@ -52,6 +52,11 @@ class AccountViewModel @Inject constructor(
                     logout()
                 }
             }
+            is AccountEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(AccountUiEvent.NavigateToCart)
+                }
+            }
         }
     }
 

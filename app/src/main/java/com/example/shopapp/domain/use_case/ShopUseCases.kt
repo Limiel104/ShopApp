@@ -21,5 +21,11 @@ data class ShopUseCases(
     val filterProductsByUserFavouritesUseCase: FilterProductsByUserFavouritesUseCase,
     val filterProductsUseCase: FilterProductsUseCase,
     val sortProductsUseCase: SortProductsUseCase,
-    val toggleCheckBoxUseCase: ToggleCheckBoxUseCase
+    val toggleCheckBoxUseCase: ToggleCheckBoxUseCase,
+    val addProductToCartUseCase: AddProductToCartUseCase,
+    val getUserCartItemsUseCase: GetUserCartItemsUseCase,
+    val deleteProductFromCartUseCase: DeleteProductFromCartUseCase,
+    val updateProductInCartUseCase: UpdateProductInCartUseCase,
+    val getUserCartItemUseCase: GetUserCartItemUseCase,
+    val setUserCartProductsUseCase: SetUserCartProductsUseCase
 )

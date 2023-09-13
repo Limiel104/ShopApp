@@ -22,6 +22,7 @@ import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.FAVOURITES_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
@@ -71,7 +72,7 @@ fun ProductDetailsBottomSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = product.price,
+                text = product.priceToString(),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp
             )
@@ -116,7 +117,7 @@ fun ProductDetailsBottomSheetPreview() {
         val product = Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "",
@@ -137,7 +138,7 @@ fun ProductDetailsBottomSheetFalsePreview() {
         val product = Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "",

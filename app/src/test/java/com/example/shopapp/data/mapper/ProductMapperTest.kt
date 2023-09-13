@@ -28,7 +28,7 @@ class ProductMapperTest {
         product = Product(
             id = 1,
             title = "Shirt",
-            price = "159,99 PLN",
+            price = 159.99,
             description = "Product description",
             category = "men's clothing",
             imageUrl = "imageUrl",

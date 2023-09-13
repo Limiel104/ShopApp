@@ -24,7 +24,9 @@ import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.HOME_TOP_BAR
 
 @Composable
-fun HomeTopBar() {
+fun HomeTopBar(
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +45,7 @@ fun HomeTopBar() {
             icon = Icons.Outlined.ShoppingCart,
             description = CART_BTN,
             outsidePaddingValue = 0,
-            onClick = {}
+            onClick = { onClick() }
         )
     }
 }
@@ -52,6 +54,8 @@ fun HomeTopBar() {
 @Composable
 fun HomeTopBarPreview() {
     ShopAppTheme {
-        HomeTopBar()
+        HomeTopBar(
+            onClick = {}
+        )
     }
 }

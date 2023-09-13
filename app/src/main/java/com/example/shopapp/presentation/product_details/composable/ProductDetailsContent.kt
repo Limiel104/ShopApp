@@ -1,10 +1,12 @@
 package com.example.shopapp.presentation.product_details.composable
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
 import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
 
@@ -20,7 +23,9 @@ import com.example.shopapp.util.Constants.productDescription
 fun ProductDetailsContent(
     scaffoldState: BottomSheetScaffoldState,
     product: Product,
-    onNavigateBack: () -> Unit
+    isLoading: Boolean,
+    onNavigateBack: () -> Unit,
+    onAddToCart: () -> Unit
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
@@ -42,8 +47,20 @@ fun ProductDetailsContent(
         ) {
             ProductDetailsImageItem(
                 imageUrl = product.imageUrl,
-                onNavigateBack = { onNavigateBack() }
+                onNavigateBack = { onNavigateBack() },
+                onAddToCart = { onAddToCart() }
             )
+        }
+    }
+
+    if(isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(PRODUCT_DETAILS_CPI),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
@@ -63,7 +80,7 @@ fun ProductDetailsContentPreview() {
         val product = Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "",
@@ -71,9 +88,11 @@ fun ProductDetailsContentPreview() {
         )
 
         ProductDetailsContent(
-            product = product,
             scaffoldState = scaffoldState,
-            onNavigateBack = {}
+            product = product,
+            isLoading = false,
+            onNavigateBack = {},
+            onAddToCart = {}
         )
     }
 }

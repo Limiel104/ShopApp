@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
 import com.example.shopapp.util.Constants.TAG
@@ -38,6 +39,7 @@ class ProductDetailsViewModel @Inject constructor(
         }
 
         getProduct(_productDetailsState.value.productId)
+        getCurrentUser()
     }
 
     fun onEvent(event: ProductDetailsEvent) {
@@ -45,6 +47,19 @@ class ProductDetailsViewModel @Inject constructor(
             ProductDetailsEvent.GoBack -> {
                 viewModelScope.launch {
                     _eventFlow.emit(ProductDetailsUiEvent.NavigateBack)
+                }
+            }
+            is ProductDetailsEvent.OnAddToCart -> {
+                if(_productDetailsState.value.userUID != "") {
+                    addOrUpdateProductInCart(
+                        _productDetailsState.value.userUID,
+                        _productDetailsState.value.productId
+                    )
+                }
+                else {
+                    viewModelScope.launch {
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
+                    }
                 }
             }
         }
@@ -67,6 +82,96 @@ class ProductDetailsViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     Log.i(TAG, response.message.toString())
+                }
+            }
+        }
+    }
+
+    private fun getCurrentUser() {
+        viewModelScope.launch {
+            val currentUser = shopUseCases.getCurrentUserUseCase()
+            if(currentUser != null) {
+                _productDetailsState.value = productDetailsState.value.copy(
+                    userUID = currentUser.uid
+                )
+            }
+        }
+    }
+
+    fun addOrUpdateProductInCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.getUserCartItemUseCase(userUID,productId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading get user cart item: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        if (!response.data.isNullOrEmpty()) {
+                            val cartItem = CartItem(
+                                cartItemId = response.data[0].cartItemId,
+                                userUID = response.data[0].userUID,
+                                productId = response.data[0].productId,
+                                amount = response.data[0].amount+1
+                            )
+                            updateProductInCart(cartItem)
+                        }
+                        else {
+                            addProductToCart(userUID,productId)
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun addProductToCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.addProductToCartUseCase(userUID,productId,1).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product add to cart: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product added to the cart")
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateProductInCart(cartItem: CartItem) {
+        viewModelScope.launch {
+            shopUseCases.updateProductInCartUseCase(cartItem).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product update in cart: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product updated in the cart")
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
                 }
             }
         }

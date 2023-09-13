@@ -25,7 +25,7 @@ class GetUserFavouritesUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository)
+        getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository)
     }
 
     @After
@@ -86,8 +86,8 @@ class GetUserFavouritesUseCaseTest {
             val response = getUserFavouritesUseCase(userUID).first()
 
             coVerify(exactly = 1) { getUserFavouritesUseCase(userUID) }
-            assertThat(response.message).isEqualTo("Error")
             assertThat(response.data).isNull()
+            assertThat(response.message).isEqualTo("Error")
         }
     }
 }

@@ -18,8 +18,7 @@ class FilterProductsUseCase() {
         val filteredProductsByPrice: MutableList<Product> = mutableListOf()
 
         filteredProductsByCategory.forEach { product ->
-            val productPrice = product.price.replace(",",".").replace("[^0-9.]".toRegex(),"").toFloat()
-            if(productPrice in minPrice..maxPrice) {
+            if(product.price.toFloat() in minPrice..maxPrice) {
                 filteredProductsByPrice.add(product)
             }
         }

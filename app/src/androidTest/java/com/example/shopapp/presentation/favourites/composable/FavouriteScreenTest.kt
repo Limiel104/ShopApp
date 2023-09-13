@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.MainActivity
+import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
@@ -66,7 +67,7 @@ class FavouriteScreenTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -75,7 +76,7 @@ class FavouriteScreenTest {
             Product(
                 id = 2,
                 title = "Trousers",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = "women's clothing",
                 imageUrl = "imageUrl",
@@ -84,7 +85,7 @@ class FavouriteScreenTest {
             Product(
                 id = 3,
                 title = "Hoodie",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -93,7 +94,7 @@ class FavouriteScreenTest {
             Product(
                 id = 4,
                 title = "Blouse",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = "men's clothing",
                 imageUrl = "imageUrl",
@@ -102,7 +103,7 @@ class FavouriteScreenTest {
             Product(
                 id = 4,
                 title = "Earrings",
-                price = "400,59 PLN",
+                price = 400.59,
                 description = Constants.productDescription,
                 category = "jewelery",
                 imageUrl = "imageUrl",
@@ -131,7 +132,8 @@ class FavouriteScreenTest {
                             productList = productList,
                             isLoading = isLoading,
                             onProductSelected = {},
-                            onDelete = {}
+                            onDelete = {},
+                            onGoToCart = {}
                         )
                     }
                 }
@@ -224,7 +226,7 @@ class FavouriteScreenTest {
         )
 
         composeRule.onNodeWithTag(PRODUCT_ITEM_TITLE + " ${productList[0].title}", useUnmergedTree = true).onChildAt(0).assertTextEquals(productList[0].title)
-        composeRule.onNodeWithTag(PRODUCT_ITEM_TITLE + " ${productList[0].title}", useUnmergedTree = true).onChildAt(1).assertTextEquals(productList[0].price)
+        composeRule.onNodeWithTag(PRODUCT_ITEM_TITLE + " ${productList[0].title}", useUnmergedTree = true).onChildAt(1).assertTextEquals(productList[0].priceToString())
         composeRule.onNodeWithContentDescription(DELETE_BTN+ " ${productList[0].title}").assertIsDisplayed()
         composeRule.onNodeWithContentDescription(DELETE_BTN+ " ${productList[0].title}").assertHasClickAction()
         composeRule.onNodeWithTag(ADD_TO_CART_BTN+ " ${productList[0].title}").assertIsDisplayed()
@@ -234,7 +236,7 @@ class FavouriteScreenTest {
     }
 
     @Test
-    fun favouritesScreen() {
+    fun favouritesScreenCircularProgressIndicator_IsDisplayedCorrectly() {
         setScreenState(
             productList = productList,
             isLoading = true

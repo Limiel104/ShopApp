@@ -68,6 +68,11 @@ class HomeViewModel @Inject constructor(
                     _eventFlow.emit(HomeUiEvent.NavigateToCategory(event.value))
                 }
             }
+            is HomeEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(HomeUiEvent.NavigateToCart)
+                }
+            }
         }
     }
 }

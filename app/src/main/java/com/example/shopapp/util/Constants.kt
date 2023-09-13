@@ -53,6 +53,7 @@ object Constants {
     const val PRODUCT_ITEM_TITLE: String = "Product item title"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
+    const val PRODUCT_DETAILS_CPI: String = "Product details circular progress indicator"
     const val SIGNUP_CONTENT: String = "Signup content"
     const val SIGNUP_EMAIL_TF: String = "Signup email"
     const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
@@ -63,6 +64,16 @@ object Constants {
     const val SIGNUP_BTN: String = "Signup button"
     const val SIGNUP_CPI: String = "Signup circular progress indicator"
     const val USER_NOT_LOGGED_IN_CONTENT: String = "User not logged in content"
+    const val CART_CONTENT: String = "Cart content"
+    const val CART_TOP_BAR: String = "Cart top bar"
+    const val CART_LAZY_COLUMN: String = "Cart lazy column"
+    const val PLUS_BTN: String = "Plus button"
+    const val MINUS_BTN: String = "Minus button"
+    const val ORDER_BTN: String = "Order button"
+    const val ORDER_PLACED_DIALOG: String = "Order placed dialog"
+    const val CART_CPI: String = "Cart circular progress indicator"
+    const val HOME_BTN: String = "Home button"
+    const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -73,6 +84,10 @@ object Constants {
     const val ADD_TO_CART_BTN: String = "Add to cart button"
     const val DELETE_BTN: String = "Delete button"
 
+    //Snackbar
+    const val snackbarMessage: String = "Cart item deleted"
+    const val snackbarActionLabel: String = "Undo"
+
     //TEST VALUES
     const val badgeCount: Int = 10
     const val badgeCountZero: Int = 0
@@ -82,6 +97,8 @@ object Constants {
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
     const val productItemImageHeight: Int = 200
+    const val cartProductItemImageWidth: Int = 60
+    const val cartProductItemImageHeight: Int = 80
 
     //VALUES
     const val bottomSheetPeekHeight: Int = 100
@@ -96,14 +113,16 @@ object Constants {
     const val PRODUCT_DETAILS_VM: String = "ProductDetails ViewModel"
     const val LOGIN_VM: String = "LoginScreen ViewModel"
     const val SIGNUP_VM: String = "SignupScreen ViewModel"
+    const val CART_VM: String = "CartScreen ViewModel"
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
     const val FAVOURITES_SCREEN_LE: String = "FavouriteScreen Launched Effect"
     const val HOME_SCREEN_LE: String = "HomeScreen Launched Effect"
     const val PRODUCT_DETAILS_SCREEN_LE: String = "ProductDetailsScreen Launched Effect"
-    const val LOGIN_SCREEN_LE: String = "LoginScreen ViewModel"
-    const val SIGNUP_SCREEN_LE: String = "SignupScreen ViewModel"
+    const val LOGIN_SCREEN_LE: String = "LoginScreen Launched Effect"
+    const val SIGNUP_SCREEN_LE: String = "SignupScreen Launched Effect"
+    const val CART_SCREEN_LE: String = "CartScreen Launched Effect"
 
     //ERRORS
     const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
@@ -118,4 +137,5 @@ object Constants {
     //FIREBASE
     const val USERS_COLLECTION: String = "users"
     const val FAVOURITES_COLLECTION: String = "favourites"
+    const val CARTS_COLLECTION: String = "carts"
 }

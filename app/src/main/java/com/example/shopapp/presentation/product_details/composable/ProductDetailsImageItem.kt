@@ -18,7 +18,8 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
 @Composable
 fun ProductDetailsImageItem(
     imageUrl: String,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onAddToCart: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -44,7 +45,7 @@ fun ProductDetailsImageItem(
             IconButtonCard(
                 icon = Icons.Default.ShoppingCart,
                 description = ADD_TO_CART_BTN,
-                onClick = {}
+                onClick = { onAddToCart() }
             )
         }
     }
@@ -56,7 +57,8 @@ fun ProductDetailsImageItemPreview() {
     ShopAppTheme() {
         ProductDetailsImageItem(
             imageUrl = "",
-            onNavigateBack = {}
+            onNavigateBack = {},
+            onAddToCart = {}
         )
     }
 }

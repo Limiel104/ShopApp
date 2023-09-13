@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.shopapp.presentation.account.composable.AccountScreen
+import com.example.shopapp.presentation.cart.composable.CartScreen
 import com.example.shopapp.presentation.category.composable.CategoryScreen
 import com.example.shopapp.presentation.category_list.composable.CategoryListScreen
 import com.example.shopapp.presentation.favourites.composable.FavouriteScreen
@@ -97,6 +98,14 @@ fun NavigationGraph(
             route = Screen.SignupScreen.route
         ) {
             SignupScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
+        }
+        composable(
+            route = Screen.CartScreen.route
+        ) {
+            CartScreen(
                 navController = navController,
                 bottomBarHeight = bottomBarHeight
             )

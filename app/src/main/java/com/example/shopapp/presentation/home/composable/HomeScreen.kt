@@ -26,10 +26,13 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG,HOME_SCREEN_LE)
             when(event) {
                 is HomeUiEvent.NavigateToCategory -> {
-                    Log.i(TAG,HOME_SCREEN_LE)
                     navController.navigate(Screen.CategoryScreen.route + "categoryId="+ event.categoryId)
+                }
+                is HomeUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
                 }
             }
         }
@@ -39,8 +42,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
         offerList = offerList,
-        onOfferSelected = {categoryId: String ->
-            viewModel.onEvent(HomeEvent.OnOfferSelected(categoryId))
-        }
+        onOfferSelected = { viewModel.onEvent(HomeEvent.OnOfferSelected(it)) },
+        onGoToCart = { viewModel.onEvent(HomeEvent.GoToCart) }
     )
 }

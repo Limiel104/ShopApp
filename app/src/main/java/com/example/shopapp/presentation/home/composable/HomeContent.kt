@@ -28,10 +28,14 @@ fun HomeContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
     offerList: List<Offer>,
-    onOfferSelected: (String) -> Unit
+    onOfferSelected: (String) -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Scaffold(
-        topBar = { HomeTopBar() },
+        topBar = {
+            HomeTopBar(
+                onClick = { onGoToCart() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -91,7 +95,8 @@ fun HomeContentPreview() {
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             offerList = offerList,
-            onOfferSelected = {}
+            onOfferSelected = {},
+            onGoToCart = {}
         )
     }
 }

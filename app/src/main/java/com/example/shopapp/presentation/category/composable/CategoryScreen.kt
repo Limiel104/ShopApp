@@ -38,13 +38,16 @@ fun CategoryScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
+            Log.i(TAG, CATEGORY_SCREEN_LE)
             when(event) {
                 is CategoryUiEvent.NavigateToProductDetails -> {
-                    Log.i(TAG, CATEGORY_SCREEN_LE)
                     navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
                 }
                 is CategoryUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+                is CategoryUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
                 }
             }
         }
@@ -69,6 +72,7 @@ fun CategoryScreen(
         onDismiss = { viewModel.onEvent(CategoryEvent.OnDialogDismissed) },
         onValueChange = { viewModel.onEvent(CategoryEvent.OnPriceSliderPositionChange(it)) },
         onOrderChange = { viewModel.onEvent(CategoryEvent.OnOrderChange(it)) },
-        onCheckedChange = { viewModel.onEvent(CategoryEvent.OnCheckBoxToggled(it)) }
+        onCheckedChange = { viewModel.onEvent(CategoryEvent.OnCheckBoxToggled(it)) },
+        onGoToCart = { viewModel.onEvent(CategoryEvent.GoToCart) }
     )
 }

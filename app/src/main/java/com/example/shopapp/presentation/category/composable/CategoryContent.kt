@@ -49,14 +49,15 @@ fun CategoryContent(
     onDismiss: () -> Unit,
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
     onOrderChange: (ProductOrder) -> Unit,
-    onCheckedChange: (String) -> Unit
+    onCheckedChange: (String) -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CategoryTopBar(
                 categoryName = categoryName,
                 onSortAndFilterSelected = { onSortAndFilterSelected() },
-                onCartSelected = {}
+                onCartSelected = { onGoToCart() }
             ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
@@ -141,7 +142,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 1,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -150,7 +151,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 2,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -159,7 +160,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 3,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -168,7 +169,7 @@ private fun getProductList(): List<Product> {
         Product(
             id = 4,
             title = "Shirt",
-            price = "195,59 PLN",
+            price = 195.59,
             description = productDescription,
             category = "men's clothing",
             imageUrl = "imageUrl",
@@ -200,7 +201,8 @@ fun CategoryContentPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -228,7 +230,8 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -261,7 +264,8 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -289,7 +293,8 @@ fun CategoryContentDialogPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }
@@ -317,7 +322,8 @@ fun CategoryContentCPIPreview() {
             onDismiss = {},
             onValueChange = {},
             onOrderChange = {},
-            onCheckedChange = {}
+            onCheckedChange = {},
+            onGoToCart = {}
         )
     }
 }

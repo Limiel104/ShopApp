@@ -24,7 +24,7 @@ class AddProductToFavouritesUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository)
+        addProductToFavouritesUseCase = AddProductToFavouritesUseCase(favouritesRepository)
     }
 
     @After
@@ -65,8 +65,8 @@ class AddProductToFavouritesUseCaseTest {
             val response = addProductToFavouritesUseCase(productId,userUID).first()
 
             coVerify(exactly = 1) { addProductToFavouritesUseCase(productId,userUID) }
-            assertThat(response.message).isEqualTo("Error")
             assertThat(response.data).isNull()
+            assertThat(response.message).isEqualTo("Error")
         }
     }
 }

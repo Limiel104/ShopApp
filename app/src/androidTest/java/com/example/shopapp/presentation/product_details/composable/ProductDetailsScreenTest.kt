@@ -17,6 +17,7 @@ import androidx.compose.ui.test.assertTouchHeightIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -40,6 +41,7 @@ import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
 import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
@@ -56,16 +58,34 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 class ProductDetailsScreenTest {
 
+    private lateinit var product: Product
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<MainActivity>()
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Before
     fun setUp() {
         hiltRule.inject()
+
+        product = Product(
+            id = 1,
+            title = "Shirt",
+            price = 195.59,
+            description = productDescription,
+            category = "men's clothing",
+            imageUrl = "",
+            isInFavourites = true
+        )
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    private fun setScreenState(
+        product: Product,
+        isLoading: Boolean = false
+    ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
             ShopAppTheme() {
@@ -84,20 +104,12 @@ class ProductDetailsScreenTest {
                             }
                         )
                     ) {
-                        val product = Product(
-                            id = 1,
-                            title = "Shirt",
-                            price = "195,59 PLN",
-                            description = productDescription,
-                            category = "men's clothing",
-                            imageUrl = "",
-                            isInFavourites = true
-                        )
-
                         ProductDetailsContent(
                             scaffoldState = rememberBottomSheetScaffoldState(),
                             product = product,
-                            onNavigateBack = {}
+                            isLoading = isLoading,
+                            onNavigateBack = {},
+                            onAddToCart = {}
                         )
                     }
                 }
@@ -107,6 +119,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsImageItem_hasCorrectNumberOfItems() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertExists()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).fetchSemanticsNode().children.size
@@ -115,6 +131,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsImageItem_imageIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         val deviceHeight = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().bottom
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
@@ -128,6 +148,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsImageItem_buttonsAreDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         val buttonList = listOf(GO_BACK_BTN, ADD_TO_CART_BTN)
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
         val leftPositionList = listOf(20.dp,deviceWidth-20.dp-36.dp)
@@ -146,6 +170,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_hasCorrectNumberOfItems() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertExists()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsNotDisplayed()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
@@ -156,6 +184,9 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_isDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertExists()
@@ -169,6 +200,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_swipeUpAndDownWorksCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertExists()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsNotDisplayed()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
@@ -181,6 +216,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_productTitleIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
@@ -191,6 +230,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_productPriceIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
@@ -201,6 +244,9 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_favouriteButtonIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
@@ -216,6 +262,10 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_productDescriptionTitleIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
@@ -226,6 +276,9 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_productDescriptionIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
@@ -239,6 +292,9 @@ class ProductDetailsScreenTest {
 
     @Test
     fun productDetailsScreenProductDetailsBottomSheet_addToCartButtonIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
@@ -249,5 +305,27 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertHasClickAction()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertLeftPositionInRootIsEqualTo(15.dp)
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertWidthIsEqualTo(deviceWidth-30.dp)
+    }
+
+    @Test
+    fun favouritesScreenCircularProgressIndicator_IsDisplayedCorrectly() {
+        setScreenState(
+            product = product,
+            isLoading = true
+        )
+
+        val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
+        val deviceHeight = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().bottom
+        val leftPosition = deviceWidth.value/2
+        val topPosition = deviceHeight.value/2
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).assertHeightIsEqualTo(deviceHeight)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).assertWidthIsEqualTo(deviceWidth)
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_CPI).onChild().assertWidthIsEqualTo(40.dp)
     }
 }

@@ -22,7 +22,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
@@ -31,7 +31,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 2,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -40,7 +40,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 3,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Jewelery.id,
                 imageUrl = "imageUrl",
@@ -49,7 +49,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 4,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -92,7 +92,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 1,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
@@ -101,7 +101,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 2,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
@@ -110,7 +110,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 3,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Jewelery.id,
                 imageUrl = "imageUrl",
@@ -119,7 +119,7 @@ class SetUserFavouritesUseCaseTest {
             Product(
                 id = 4,
                 title = "Shirt",
-                price = "195,59 PLN",
+                price = 195.59,
                 description = Constants.productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
