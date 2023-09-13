@@ -76,7 +76,8 @@ class AccountScreenTest {
                             bottomBarHeight = bottomBarHeight.dp,
                             userName = "John",
                             userClubPoints = 234,
-                            onLogout = {}
+                            onLogout = {},
+                            onGoToCart = {}
                         )
                     }
                 }

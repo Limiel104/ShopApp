@@ -16,6 +16,7 @@ import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
@@ -38,6 +39,7 @@ class CartViewModelTest {
     private lateinit var cartItemToUpdate2: CartItem
     private lateinit var products: List<Product>
     private lateinit var cartProducts: List<CartProduct>
+    private lateinit var restoredCartItem: CartItem
     @MockK
     private lateinit var user: FirebaseUser
 
@@ -182,6 +184,13 @@ class CartViewModelTest {
                 amount = 7
             )
         ).shuffled()
+
+        restoredCartItem = CartItem(
+            cartItemId = "cartItemId22",
+            userUID = "userUID",
+            productId = 3,
+            amount = 1
+        )
     }
 
     @After
@@ -564,6 +573,66 @@ class CartViewModelTest {
     }
 
     @Test
+    fun `restore product to cart is successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addProductToCartUseCase("userUID",3,1)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.restoreProductToCart(restoredCartItem)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addProductToCartUseCase("userUID",3,1)
+        }
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `add product to cart is loading - product was not in cart yet`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addProductToCartUseCase("userUID",3,1)
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.restoreProductToCart(restoredCartItem)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addProductToCartUseCase("userUID",3,1)
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
     fun `event onPlus`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
@@ -666,5 +735,113 @@ class CartViewModelTest {
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(cartProductsState).containsExactlyElementsIn(cartProducts)
         assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `event onDelete and onRestore - restore product to the cart after delete is successful`() {
+        val cartItemIdSlot = slot<String>()
+        val userSlot = slot<String>()
+        val productIdSlot = slot<Int>()
+        val amountSlot = slot<Int>()
+
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(capture(cartItemIdSlot))
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.addProductToCartUseCase(
+                capture(userSlot),
+                capture(productIdSlot),
+                capture(amountSlot)
+            )
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.onEvent(CartEvent.OnDelete(3))
+        cartViewModel.onEvent(CartEvent.OnCartItemRestore)
+
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.addProductToCartUseCase(any(),any(),any())
+        }
+        assertThat(isLoading).isFalse()
+        assertThat(cartItemIdSlot.captured).isEqualTo("cartItemId2")
+        assertThat(userSlot.captured).isEqualTo("userUID")
+        assertThat(productIdSlot.captured).isEqualTo(3)
+        assertThat(amountSlot.captured).isEqualTo(1)
+    }
+
+    @Test
+    fun `event onPlaceOrder - dialog state is set correctly`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+
+        cartViewModel = setViewModel()
+
+        val initialState = getCurrentCartState()
+        cartViewModel.onEvent(CartEvent.OnOrderPlaced)
+        val resultState = getCurrentCartState()
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        }
+        assertThat(initialState.isDialogActivated).isFalse()
+        assertThat(resultState.isDialogActivated).isTrue()
+    }
+
+    @Test
+    fun `event onGoHome - cart is empty after placing order`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.onEvent(CartEvent.OnGoHome)
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+        }
     }
 }

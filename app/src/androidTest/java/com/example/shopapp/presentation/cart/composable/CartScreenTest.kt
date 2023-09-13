@@ -142,6 +142,8 @@ class CartScreenTest {
                             onPlus = {},
                             onMinus = {},
                             onGoBack = {},
+                            onDelete = {},
+                            onOrderPlaced = {},
                             onGoHome = {}
                         )
                     }
@@ -211,7 +213,7 @@ class CartScreenTest {
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertIsDisplayed()
         val numberOfChildrenVisible = composeRule.onNodeWithTag(CART_LAZY_COLUMN).fetchSemanticsNode().children.size
-        assertThat(numberOfChildrenVisible).isEqualTo(5)
+        assertThat(numberOfChildrenVisible).isEqualTo(10)
     }
 
     @Test

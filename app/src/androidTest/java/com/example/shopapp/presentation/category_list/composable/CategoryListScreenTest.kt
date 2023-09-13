@@ -69,7 +69,8 @@ class CategoryListScreenTest {
                             scaffoldState = rememberScaffoldState(),
                             bottomBarHeight = bottomBarHeight.dp,
                             categoryList = getCategory(),
-                            onCategorySelected = {}
+                            onCategorySelected = {},
+                            onGoToCart = {}
                         )
                     }
                 }

@@ -181,7 +181,8 @@ class CategoryScreenTest {
                             onDismiss = {},
                             onValueChange = {},
                             onOrderChange = {},
-                            onCheckedChange = {}
+                            onCheckedChange = {},
+                            onGoToCart = {}
                         )
                     }
                 }
