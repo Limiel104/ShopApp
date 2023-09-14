@@ -8,7 +8,7 @@
     <string name="activation_points_amount">Activate for</string>
     <string name="hi">Hi</string>
     <string name="my_profile">My profile</string>
-    <string name="orders_and_returns">Orders and Returns</string>
+    <string name="orders">Orders</string>
     <string name="price_ascending">Price Low to High</string>
     <string name="price_descending">Price High to Low</string>
     <string name="favourite_title">Favourites</string>

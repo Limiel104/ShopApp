@@ -14,6 +14,7 @@ import com.example.shopapp.presentation.category_list.composable.CategoryListScr
 import com.example.shopapp.presentation.favourites.composable.FavouriteScreen
 import com.example.shopapp.presentation.home.composable.HomeScreen
 import com.example.shopapp.presentation.login.composable.LoginScreen
+import com.example.shopapp.presentation.orders.composable.OrdersScreen
 import com.example.shopapp.presentation.product_details.composable.ProductDetailsScreen
 import com.example.shopapp.presentation.signup.composable.SignupScreen
 import com.example.shopapp.util.Screen
@@ -106,6 +107,14 @@ fun NavigationGraph(
             route = Screen.CartScreen.route
         ) {
             CartScreen(
+                navController = navController,
+                bottomBarHeight = bottomBarHeight
+            )
+        }
+        composable(
+            route = Screen.OrdersScreen.route
+        ) {
+            OrdersScreen(
                 navController = navController,
                 bottomBarHeight = bottomBarHeight
             )

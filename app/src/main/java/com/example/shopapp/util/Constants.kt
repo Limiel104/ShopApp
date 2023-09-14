@@ -4,7 +4,7 @@ object Constants {
     //TEST TAGS
     const val ACTIVATE_COUPON_BTN: String = "Activate coupon button"
     const val MY_PROFILE_BTN: String = "My profile button"
-    const val ORDERS_AND_RETURNS_BTN: String = "Orders and returns button"
+    const val ORDERS_BTN: String = "Orders button"
     const val LOGOUT_BTN: String = "Sign out button"
     const val LOGIN_CONTENT: String = "Login content"
     const val LOGIN_EMAIL_TF: String = "Login email"
@@ -74,6 +74,8 @@ object Constants {
     const val CART_CPI: String = "Cart circular progress indicator"
     const val HOME_BTN: String = "Home button"
     const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
+    const val ORDERS_CONTENT: String = "Orders content"
+    const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
 
     //Content Description
     const val CART_BTN: String = "Cart button"

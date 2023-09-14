@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.account.composable
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -21,9 +22,10 @@ import com.example.shopapp.R
 import com.example.shopapp.util.Constants.ACCOUNT_CONTENT
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
-import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
+import com.example.shopapp.util.Constants.ORDERS_BTN
 import com.example.shopapp.util.Constants.LOGOUT_BTN
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AccountContent(
     scaffoldState: ScaffoldState,
@@ -31,7 +33,8 @@ fun AccountContent(
     userName: String,
     userClubPoints: Int,
     onLogout: () -> Unit,
-    onGoToCart: () -> Unit
+    onGoToCart: () -> Unit,
+    onGoToOrders: () -> Unit
 ) {
     val coupons = listOf(10,20,50)
 
@@ -48,11 +51,10 @@ fun AccountContent(
             .padding(horizontal = 10.dp)
             .padding(bottom = bottomBarHeight)
             .testTag(ACCOUNT_CONTENT)
-    ) { innerPadding ->
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
         ) {
             PointsCard(
                 userClubPoints = userClubPoints
@@ -84,9 +86,9 @@ fun AccountContent(
             Spacer(modifier = Modifier.height(10.dp))
 
             ShopButtonItem(
-                text = stringResource(id = R.string.orders_and_returns),
-                testTag = ORDERS_AND_RETURNS_BTN,
-                onClick = {}
+                text = stringResource(id = R.string.orders),
+                testTag = ORDERS_BTN,
+                onClick = { onGoToOrders() }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -110,7 +112,8 @@ fun AccountContentPreview() {
             userName = "John",
             userClubPoints = 234,
             onLogout = {},
-            onGoToCart = {}
+            onGoToCart = {},
+            onGoToOrders = {}
         )
     }
 }
