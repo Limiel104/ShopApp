@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrdersRepository {
 
-    suspend fun addOrder(userUID: String, order: Order): Flow<Resource<Boolean>>
+    suspend fun addOrder(order: Order): Flow<Resource<Boolean>>
 
     suspend fun getUserOrders(userUID: String): Flow<Resource<List<Order>>>
 }

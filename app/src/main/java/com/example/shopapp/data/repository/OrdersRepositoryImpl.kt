@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class OrdersRepositoryImpl @Inject constructor(
     private val ordersRef: CollectionReference
 ): OrdersRepository {
-    override suspend fun addOrder(userUID: String, order: Order): Flow<Resource<Boolean>> {
+    override suspend fun addOrder(order: Order): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
 
@@ -25,7 +25,7 @@ class OrdersRepositoryImpl @Inject constructor(
                 ordersRef.document(documentId).set(
                     mapOf(
                         "orderId" to documentId,
-                        "userUID" to userUID,
+                        "userUID" to order.userUID,
                         "date" to order.date,
                         "amount" to order.amount,
                         "products" to order.products

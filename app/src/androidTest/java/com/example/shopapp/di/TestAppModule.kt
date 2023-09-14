@@ -12,8 +12,10 @@ import com.example.shopapp.data.repository.UserStorageRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
 import com.example.shopapp.domain.repository.CartRepository
 import com.example.shopapp.domain.repository.FavouritesRepository
+import com.example.shopapp.domain.repository.OrdersRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddOrderUseCase
 import com.example.shopapp.domain.use_case.AddProductToCartUseCase
 import com.example.shopapp.domain.use_case.AddProductToFavouritesUseCase
 import com.example.shopapp.domain.use_case.AddUserUseCase
@@ -29,6 +31,7 @@ import com.example.shopapp.domain.use_case.GetProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
+import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
 import com.example.shopapp.domain.use_case.SetUserCartProductsUseCase
@@ -119,7 +122,8 @@ object TestAppModule {
         authRepository: AuthRepository,
         userStorageRepository: UserStorageRepository,
         favouritesRepository: FavouritesRepository,
-        cartRepository: CartRepository
+        cartRepository: CartRepository,
+        ordersRepository: OrdersRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -148,7 +152,9 @@ object TestAppModule {
             deleteProductFromCartUseCase = DeleteProductFromCartUseCase(cartRepository),
             updateProductInCartUseCase = UpdateProductInCartUseCase(cartRepository),
             getUserCartItemUseCase = GetUserCartItemUseCase(cartRepository),
-            setUserCartProductsUseCase = SetUserCartProductsUseCase()
+            setUserCartProductsUseCase = SetUserCartProductsUseCase(),
+            addOrderUseCase = AddOrderUseCase(ordersRepository),
+            getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository)
         )
     }
 }
