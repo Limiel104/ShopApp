@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.CartItem
+import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,19 +86,20 @@ class CartViewModel @Inject constructor(
                 deletedCartItem?.let { restoreProductToCart(it) }
             }
             is CartEvent.OnOrderPlaced -> {
-                _cartState.value = cartState.value.copy(
-                    isDialogActivated = true
+                val order = Order(
+                    orderId = "",
+                    userUID = _cartState.value.userUID,
+                    date = Date(),
+                    totalAmount = _cartState.value.totalAmount,
+                    products = getProductsMap()
                 )
+                addOrder(order)
             }
             is CartEvent.OnGoHome -> {
                 viewModelScope.launch {
                     _cartState.value = cartState.value.copy(
                         isDialogActivated = false
                     )
-
-                    for(cartItem in _cartState.value.cartItems) {
-                        deleteCartItem(cartItem.cartItemId)
-                    }
 
                     _eventFlow.emit(CartUiEvent.NavigateToHome)
                 }
@@ -246,7 +249,6 @@ class CartViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success -> {
-
                         Log.i(TAG,"Product was deleted from cart")
                     }
                     is Resource.Error -> {
@@ -274,6 +276,44 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product restored to the cart")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getProductsMap(): Map<String, Int> {
+        val products = mutableMapOf<String,Int>()
+
+        _cartState.value.cartProducts.forEach { cartProduct ->
+            products[cartProduct.id.toString()] = cartProduct.amount
+        }
+
+        return products
+    }
+
+    fun addOrder(order: Order) {
+        viewModelScope.launch {
+            shopUseCases.addOrderUseCase(order).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading add order: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Order was placed")
+                        _cartState.value = cartState.value.copy(
+                            isDialogActivated = true
+                        )
+                        for(cartItem in _cartState.value.cartItems) {
+                            deleteCartItem(cartItem.cartItemId)
+                        }
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

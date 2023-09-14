@@ -27,7 +27,7 @@ class OrdersRepositoryImpl @Inject constructor(
                         "orderId" to documentId,
                         "userUID" to order.userUID,
                         "date" to order.date,
-                        "amount" to order.amount,
+                        "amount" to order.totalAmount,
                         "products" to order.products
                     )
                 ).await()
