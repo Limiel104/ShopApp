@@ -2,6 +2,7 @@ package com.example.shopapp.presentation.cart
 
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.CartProduct
+import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -23,6 +24,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.Date
 
 class CartViewModelTest {
 
@@ -40,6 +42,7 @@ class CartViewModelTest {
     private lateinit var products: List<Product>
     private lateinit var cartProducts: List<CartProduct>
     private lateinit var restoredCartItem: CartItem
+    private lateinit var order: Order
     @MockK
     private lateinit var user: FirebaseUser
 
@@ -190,6 +193,19 @@ class CartViewModelTest {
             userUID = "userUID",
             productId = 3,
             amount = 1
+        )
+
+        order = Order(
+            orderId = "",
+            userUID = "userUID",
+            date = Date(),
+            totalAmount = 1598.66,
+            products = mapOf(
+                Pair("3",1),
+                Pair("1",2),
+                Pair("4",3),
+                Pair("6",7)
+            )
         )
     }
 
@@ -633,6 +649,43 @@ class CartViewModelTest {
     }
 
     @Test
+    fun `place order was successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase(Category.All.id)
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addOrderUseCase(order)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(order)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addOrderUseCase(order)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+        }
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
     fun `event onPlus`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
@@ -797,6 +850,12 @@ class CartViewModelTest {
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.addOrderUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
 
         cartViewModel = setViewModel()
 
@@ -809,6 +868,11 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase(Category.All.id)
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addOrderUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
         }
         assertThat(initialState.isDialogActivated).isFalse()
         assertThat(resultState.isDialogActivated).isTrue()
@@ -838,10 +902,6 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase(Category.All.id)
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
-            shopUseCases.deleteProductFromCartUseCase(any())
-            shopUseCases.deleteProductFromCartUseCase(any())
-            shopUseCases.deleteProductFromCartUseCase(any())
-            shopUseCases.deleteProductFromCartUseCase(any())
         }
     }
 }
