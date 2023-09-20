@@ -2,7 +2,7 @@ package com.example.shopapp.presentation.cart
 
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.CartProduct
-import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -42,7 +42,7 @@ class CartViewModelTest {
     private lateinit var products: List<Product>
     private lateinit var cartProducts: List<CartProduct>
     private lateinit var restoredCartItem: CartItem
-    private lateinit var order: Order
+    private lateinit var firebaseOrder: FirebaseOrder
     @MockK
     private lateinit var user: FirebaseUser
 
@@ -195,7 +195,7 @@ class CartViewModelTest {
             amount = 1
         )
 
-        order = Order(
+        firebaseOrder = FirebaseOrder(
             orderId = "",
             userUID = "userUID",
             date = Date(),
@@ -660,7 +660,7 @@ class CartViewModelTest {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
         coEvery {
-            shopUseCases.addOrderUseCase(order)
+            shopUseCases.addOrderUseCase(firebaseOrder)
         } returns flowOf(Resource.Success(true))
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
@@ -668,7 +668,7 @@ class CartViewModelTest {
 
         cartViewModel = setViewModel()
 
-        cartViewModel.addOrder(order)
+        cartViewModel.addOrder(firebaseOrder)
         val loadingState = getCurrentCartState().isLoading
 
         coVerifySequence {
@@ -676,7 +676,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase(Category.All.id)
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
-            shopUseCases.addOrderUseCase(order)
+            shopUseCases.addOrderUseCase(firebaseOrder)
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())

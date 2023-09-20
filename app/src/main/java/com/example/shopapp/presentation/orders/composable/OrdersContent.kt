@@ -10,13 +10,20 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.shopapp.R
+import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
@@ -35,20 +42,29 @@ fun OrdersContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
+            .padding(top = 10.dp, bottom = bottomBarHeight)
             .testTag(ORDERS_CONTENT)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = stringResource(id = R.string.your_orders),
+                color = MaterialTheme.colors.secondary,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+
             LazyColumn(
                 modifier = Modifier
                     .testTag(ORDERS_LAZY_COLUMN)
             ) {
                 itemsIndexed(orders) { _, order ->
                     OrderItem(
-                        order = order
+                        order = order,
+                        isExpanded = true
                     )
                 }
             }
@@ -65,38 +81,65 @@ fun OrdersContentPreview() {
         orders = listOf(
             Order(
                 orderId = "orderId1",
-                userUID = "userUID",
                 date = Date(),
                 totalAmount = 123.43,
-                products = mapOf(
-                    Pair("3",5),
-                    Pair("6",1),
-                    Pair("7",1),
-                    Pair("9",1),
-                    Pair("12",2)
+                products = listOf(
+                    CartProduct(
+                        id = 4,
+                        title = "title 4",
+                        price = 23.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
                 )
             ),
             Order(
                 orderId = "orderId2",
-                userUID = "userUID",
                 date = Date(),
                 totalAmount = 54.00,
-                products = mapOf(
-                    Pair("2",1),
-                    Pair("8",1),
-                    Pair("9",3),
-                    Pair("11",1)
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "title 2",
+                        price = 53.34,
+                        imageUrl = "",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "title 3",
+                        price = 56.00,
+                        imageUrl = "",
+                        amount = 1
+                    ),
+                    CartProduct(
+                        id = 4,
+                        title = "title 4",
+                        price = 23.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
                 )
             ),
             Order(
                 orderId = "orderId3",
-                userUID = "userUID",
                 date = Date(),
                 totalAmount = 73.99,
-                products = mapOf(
-                    Pair("1",1),
-                    Pair("4",1),
-                    Pair("10",1)
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "title 2",
+                        price = 53.34,
+                        imageUrl = "",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "title 3",
+                        price = 56.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
                 )
             )
         )

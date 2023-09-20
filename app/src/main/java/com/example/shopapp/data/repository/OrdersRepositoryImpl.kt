@@ -1,6 +1,6 @@
 package com.example.shopapp.data.repository
 
-import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.repository.OrdersRepository
 import com.example.shopapp.util.Resource
 import com.google.firebase.firestore.CollectionReference
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class OrdersRepositoryImpl @Inject constructor(
     private val ordersRef: CollectionReference
 ): OrdersRepository {
-    override suspend fun addOrder(order: Order): Flow<Resource<Boolean>> {
+    override suspend fun addOrder(firebaseOrder: FirebaseOrder): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
 
@@ -25,10 +25,10 @@ class OrdersRepositoryImpl @Inject constructor(
                 ordersRef.document(documentId).set(
                     mapOf(
                         "orderId" to documentId,
-                        "userUID" to order.userUID,
-                        "date" to order.date,
-                        "amount" to order.totalAmount,
-                        "products" to order.products
+                        "userUID" to firebaseOrder.userUID,
+                        "date" to firebaseOrder.date,
+                        "amount" to firebaseOrder.totalAmount,
+                        "products" to firebaseOrder.products
                     )
                 ).await()
                 emit(Resource.Success(true))
@@ -46,8 +46,8 @@ class OrdersRepositoryImpl @Inject constructor(
             .whereEqualTo("userUID",userUID)
             .addSnapshotListener { snapshot, e ->
                 val response = if(snapshot != null) {
-                    val orders = snapshot.toObjects(Order::class.java)
-                    Resource.Success(orders)
+                    val firebaseOrders = snapshot.toObjects(FirebaseOrder::class.java)
+                    Resource.Success(firebaseOrders)
                 }
                 else {
                     Resource.Error(e!!.localizedMessage as String)

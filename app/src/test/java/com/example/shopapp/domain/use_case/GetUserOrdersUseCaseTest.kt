@@ -1,6 +1,6 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.repository.OrdersRepository
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
@@ -22,15 +22,15 @@ class GetUserOrdersUseCaseTest {
     @MockK
     private lateinit var ordersRepository: OrdersRepository
     private lateinit var getUserOrdersUseCase: GetUserOrdersUseCase
-    private lateinit var orders: List<Order>
+    private lateinit var firebaseOrders: List<FirebaseOrder>
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository)
 
-        orders = listOf(
-            Order(
+        firebaseOrders = listOf(
+            FirebaseOrder(
                 orderId = "orderId1",
                 userUID = "userUID",
                 date = Date(),
@@ -41,7 +41,7 @@ class GetUserOrdersUseCaseTest {
                     Pair("7",1)
                 )
             ),
-            Order(
+            FirebaseOrder(
                 orderId = "orderId2",
                 userUID = "userUID",
                 date = Date(),
@@ -52,7 +52,7 @@ class GetUserOrdersUseCaseTest {
                     Pair("9",3)
                 )
             ),
-            Order(
+            FirebaseOrder(
                 orderId = "orderId3",
                 userUID = "userUID",
                 date = Date(),
@@ -74,7 +74,7 @@ class GetUserOrdersUseCaseTest {
     fun`getting user orders was successful`() {
         runBlocking {
             val userUID = "userUID"
-            val result = Resource.Success(orders)
+            val result = Resource.Success(firebaseOrders)
 
             coEvery { ordersRepository.getUserOrders(userUID) } returns flowOf(result)
 
@@ -82,7 +82,7 @@ class GetUserOrdersUseCaseTest {
 
             coVerify(exactly = 1) { getUserOrdersUseCase(userUID) }
             assertThat(response).isEqualTo(result)
-            assertThat(response.data).containsExactlyElementsIn(orders)
+            assertThat(response.data).containsExactlyElementsIn(firebaseOrders)
             assertThat(response.message).isNull()
         }
     }

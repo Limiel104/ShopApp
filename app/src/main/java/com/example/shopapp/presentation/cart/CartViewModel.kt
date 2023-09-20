@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.CartItem
-import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -86,14 +86,14 @@ class CartViewModel @Inject constructor(
                 deletedCartItem?.let { restoreProductToCart(it) }
             }
             is CartEvent.OnOrderPlaced -> {
-                val order = Order(
+                val firebaseOrder = FirebaseOrder(
                     orderId = "",
                     userUID = _cartState.value.userUID,
                     date = Date(),
                     totalAmount = _cartState.value.totalAmount,
                     products = getProductsMap()
                 )
-                addOrder(order)
+                addOrder(firebaseOrder)
             }
             is CartEvent.OnGoHome -> {
                 viewModelScope.launch {
@@ -296,9 +296,9 @@ class CartViewModel @Inject constructor(
         return products
     }
 
-    fun addOrder(order: Order) {
+    fun addOrder(firebaseOrder: FirebaseOrder) {
         viewModelScope.launch {
-            shopUseCases.addOrderUseCase(order).collect { response ->
+            shopUseCases.addOrderUseCase(firebaseOrder).collect { response ->
                 when(response) {
                     is Resource.Loading -> {
                         Log.i(TAG,"Loading add order: ${response.isLoading}")
