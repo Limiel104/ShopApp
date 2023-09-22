@@ -29,5 +29,6 @@ data class ShopUseCases(
     val getUserCartItemUseCase: GetUserCartItemUseCase,
     val setUserCartProductsUseCase: SetUserCartProductsUseCase,
     val addOrderUseCase: AddOrderUseCase,
-    val getUserOrdersUseCase: GetUserOrdersUseCase
+    val getUserOrdersUseCase: GetUserOrdersUseCase,
+    val setOrdersUseCase: SetOrdersUseCase
 )

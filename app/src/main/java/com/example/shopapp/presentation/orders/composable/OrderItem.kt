@@ -70,7 +70,7 @@ fun OrderItem(
         if (isExpanded) {
             LazyColumn(
                 modifier = Modifier
-                    .height((order.products.size*95).dp)
+                    .height((order.products.size*100).dp)
                     .padding(start = 10.dp)
             ) {
                 itemsIndexed(order.products) { _, product ->

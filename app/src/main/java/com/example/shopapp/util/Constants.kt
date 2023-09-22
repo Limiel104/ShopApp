@@ -117,6 +117,7 @@ object Constants {
     const val LOGIN_VM: String = "LoginScreen ViewModel"
     const val SIGNUP_VM: String = "SignupScreen ViewModel"
     const val CART_VM: String = "CartScreen ViewModel"
+    const val ORDERS_VM: String = "Orders ViewModel"
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"

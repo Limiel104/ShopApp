@@ -34,6 +34,7 @@ import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
+import com.example.shopapp.domain.use_case.SetOrdersUseCase
 import com.example.shopapp.domain.use_case.SetUserCartProductsUseCase
 import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
@@ -154,7 +155,8 @@ object TestAppModule {
             getUserCartItemUseCase = GetUserCartItemUseCase(cartRepository),
             setUserCartProductsUseCase = SetUserCartProductsUseCase(),
             addOrderUseCase = AddOrderUseCase(ordersRepository),
-            getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository)
+            getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository),
+            setOrdersUseCase = SetOrdersUseCase()
         )
     }
 }
