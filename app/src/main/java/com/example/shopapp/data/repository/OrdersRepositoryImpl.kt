@@ -27,7 +27,7 @@ class OrdersRepositoryImpl @Inject constructor(
                         "orderId" to documentId,
                         "userUID" to firebaseOrder.userUID,
                         "date" to firebaseOrder.date,
-                        "amount" to firebaseOrder.totalAmount,
+                        "totalAmount" to firebaseOrder.totalAmount,
                         "products" to firebaseOrder.products
                     )
                 ).await()
