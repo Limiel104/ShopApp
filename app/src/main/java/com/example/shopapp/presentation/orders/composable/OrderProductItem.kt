@@ -44,8 +44,7 @@ fun OrderProductItem(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(start = 10.dp)
-                .weight(1f),
+                .padding(start = 10.dp),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.Start
         ) {

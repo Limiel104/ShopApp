@@ -76,6 +76,7 @@ object Constants {
     const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
     const val ORDERS_CONTENT: String = "Orders content"
     const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
+    const val ORDERS_TOP_BAR: String = "Orders top bar"
 
     //Content Description
     const val CART_BTN: String = "Cart button"

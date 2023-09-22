@@ -10,19 +10,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
@@ -37,6 +32,7 @@ fun OrdersContent(
     orders: List<Order>
 ) {
     Scaffold(
+        topBar = { OrdersTopBar() },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -50,13 +46,6 @@ fun OrdersContent(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.your_orders),
-                color = MaterialTheme.colors.secondary,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-
             LazyColumn(
                 modifier = Modifier
                     .testTag(ORDERS_LAZY_COLUMN)
