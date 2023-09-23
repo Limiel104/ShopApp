@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.shopapp.presentation.orders.OrdersEvent
 import com.example.shopapp.presentation.orders.OrdersViewModel
 
 @Composable
@@ -19,6 +20,7 @@ fun OrdersScreen(
     OrdersContent(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
-        orders = orders
+        orders = orders,
+        onOrderSelected = { viewModel.onEvent(OrdersEvent.OnOrderSelected(it)) }
     )
 }

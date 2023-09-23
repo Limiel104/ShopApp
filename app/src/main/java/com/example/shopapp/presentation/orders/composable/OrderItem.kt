@@ -33,7 +33,7 @@ import java.util.Date
 @Composable
 fun OrderItem(
     order: Order,
-    isExpanded: Boolean
+    onOrderSelected: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -58,16 +58,16 @@ fun OrderItem(
             )
 
             IconButton(
-                onClick = {}
+                onClick = { onOrderSelected(order.orderId) }
             ) {
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    imageVector = if(order.isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "expand"
                 )
             }
         }
 
-        if (isExpanded) {
+        if(order.isExpanded) {
             LazyColumn(
                 modifier = Modifier
                     .height((order.products.size*100).dp)
@@ -91,9 +91,10 @@ fun OrderItemPreviewNotExpanded() {
             orderId = "orderId1",
             date = Date(),
             totalAmount = 123.43,
-            products = emptyList()
+            products = emptyList(),
+            isExpanded = false
         ),
-        isExpanded = false
+        onOrderSelected = {}
     )
 }
 
@@ -127,8 +128,9 @@ fun OrderItemPreviewExpanded() {
                     imageUrl = "",
                     amount = 1
                 )
-            )
+            ),
+            isExpanded = true
         ),
-        isExpanded = true
+        onOrderSelected = {}
     )
 }

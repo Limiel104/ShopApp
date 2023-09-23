@@ -7,6 +7,7 @@ import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.data.repository.AuthRepositoryImpl
 import com.example.shopapp.data.repository.CartRepositoryImpl
 import com.example.shopapp.data.repository.FavouritesRepositoryImpl
+import com.example.shopapp.data.repository.OrdersRepositoryImpl
 import com.example.shopapp.data.repository.ProductRepositoryImpl
 import com.example.shopapp.data.repository.UserStorageRepositoryImpl
 import com.example.shopapp.domain.repository.AuthRepository
@@ -46,7 +47,10 @@ import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
-import com.example.shopapp.util.Constants
+import com.example.shopapp.util.Constants.CARTS_COLLECTION
+import com.example.shopapp.util.Constants.FAVOURITES_COLLECTION
+import com.example.shopapp.util.Constants.ORDERS_COLLECTION
+import com.example.shopapp.util.Constants.USERS_COLLECTION
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -99,22 +103,29 @@ object TestAppModule {
     @Provides
     @Singleton
     fun provideUserStorageRepository(): UserStorageRepository {
-        val usersRef = Firebase.firestore.collection(Constants.USERS_COLLECTION)
+        val usersRef = Firebase.firestore.collection(USERS_COLLECTION)
         return UserStorageRepositoryImpl(usersRef)
     }
 
     @Provides
     @Singleton
     fun provideFavouritesStorageRepository(): FavouritesRepository {
-        val usersRef = Firebase.firestore.collection(Constants.FAVOURITES_COLLECTION)
+        val usersRef = Firebase.firestore.collection(FAVOURITES_COLLECTION)
         return FavouritesRepositoryImpl(usersRef)
     }
 
     @Provides
     @Singleton
     fun provideCartRepository(): CartRepository {
-        val cartsRef = Firebase.firestore.collection(Constants.CARTS_COLLECTION)
+        val cartsRef = Firebase.firestore.collection(CARTS_COLLECTION)
         return CartRepositoryImpl(cartsRef)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrdersRepository(): OrdersRepository {
+        val ordersRef = Firebase.firestore.collection(ORDERS_COLLECTION)
+        return OrdersRepositoryImpl(ordersRef)
     }
 
     @Provides

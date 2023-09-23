@@ -6,5 +6,6 @@ data class Order(
     val orderId: String,
     val date: Date,
     val totalAmount: Double,
-    val products: List<CartProduct>
+    val products: List<CartProduct>,
+    val isExpanded: Boolean
 )

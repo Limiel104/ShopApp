@@ -29,7 +29,8 @@ import java.util.Date
 fun OrdersContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    orders: List<Order>
+    orders: List<Order>,
+    onOrderSelected: (String) -> Unit
 ) {
     Scaffold(
         topBar = { OrdersTopBar() },
@@ -53,7 +54,7 @@ fun OrdersContent(
                 itemsIndexed(orders) { _, order ->
                     OrderItem(
                         order = order,
-                        isExpanded = true
+                        onOrderSelected = { onOrderSelected(it) }
                     )
                 }
             }
@@ -80,7 +81,8 @@ fun OrdersContentPreview() {
                         imageUrl = "",
                         amount = 1
                     )
-                )
+                ),
+                isExpanded = true
             ),
             Order(
                 orderId = "orderId2",
@@ -108,7 +110,8 @@ fun OrdersContentPreview() {
                         imageUrl = "",
                         amount = 1
                     )
-                )
+                ),
+                isExpanded = true
             ),
             Order(
                 orderId = "orderId3",
@@ -129,8 +132,10 @@ fun OrdersContentPreview() {
                         imageUrl = "",
                         amount = 1
                     )
-                )
+                ),
+                isExpanded = false
             )
-        )
+        ),
+        onOrderSelected = {}
     )
 }

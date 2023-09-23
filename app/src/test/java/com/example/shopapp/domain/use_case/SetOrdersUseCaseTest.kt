@@ -5,7 +5,7 @@ import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants
+import com.example.shopapp.util.Constants.productDescription
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -52,7 +52,7 @@ class SetOrdersUseCaseTest {
                 id = 1,
                 title = "Polo Shirt",
                 price = 55.99,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -61,7 +61,7 @@ class SetOrdersUseCaseTest {
                 id = 2,
                 title = "Cargo Pants",
                 price = 90.00,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -70,7 +70,7 @@ class SetOrdersUseCaseTest {
                 id = 3,
                 title = "Skirt",
                 price = 78.78,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -79,7 +79,7 @@ class SetOrdersUseCaseTest {
                 id = 4,
                 title = "Jeans",
                 price = 235.99,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -88,7 +88,7 @@ class SetOrdersUseCaseTest {
                 id = 5,
                 title = "Shirt",
                 price = 85.99,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Women.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -97,7 +97,7 @@ class SetOrdersUseCaseTest {
                 id = 6,
                 title = "Blouse",
                 price = 99.99,
-                description = Constants.productDescription,
+                description = productDescription,
                 category = Category.Men.id,
                 imageUrl = "imageUrl",
                 isInFavourites = false
@@ -131,7 +131,8 @@ class SetOrdersUseCaseTest {
                         imageUrl = "imageUrl",
                         amount = 1
                     )
-                )
+                ),
+                isExpanded = false
             ),
             Order(
                 orderId = "orderId2",
@@ -152,7 +153,8 @@ class SetOrdersUseCaseTest {
                         imageUrl = "imageUrl",
                         amount = 3
                     )
-                )
+                ),
+                isExpanded = false
             )
         )
     }

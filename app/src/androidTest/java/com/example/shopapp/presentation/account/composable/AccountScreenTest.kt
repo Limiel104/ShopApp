@@ -174,7 +174,7 @@ class AccountScreenTest {
     @Test
     fun accountScreenButtons_areDisplayedCorrectly() {
         val buttonList = listOf(MY_PROFILE_BTN, ORDERS_BTN, LOGOUT_BTN)
-        val textList = listOf("My profile", "Orders and Returns", "Logout")
+        val textList = listOf("My profile", "Orders", "Logout")
         val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
 
         buttonList.zip(textList) { button, text ->

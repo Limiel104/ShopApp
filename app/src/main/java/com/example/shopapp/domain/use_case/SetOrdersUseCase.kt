@@ -32,7 +32,8 @@ class SetOrdersUseCase {
                 orderId = firebaseOrder.orderId,
                 date = firebaseOrder.date,
                 totalAmount = firebaseOrder.totalAmount,
-                products = orderProducts
+                products = orderProducts,
+                isExpanded = false
             )
 
             orders.add(order)

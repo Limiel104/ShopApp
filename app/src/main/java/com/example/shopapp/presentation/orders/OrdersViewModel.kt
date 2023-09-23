@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.FirebaseOrder
+import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -32,6 +33,16 @@ class OrdersViewModel @Inject constructor(
     init {
         Log.i(TAG, ORDERS_VM)
         getCurrentUser()
+    }
+
+    fun onEvent(event: OrdersEvent) {
+        when(event) {
+            is OrdersEvent.OnOrderSelected -> {
+                _ordersState.value = ordersState.value.copy(
+                    orders = changeOrderExpandState(event.value)
+                )
+            }
+        }
     }
 
     fun getCurrentUser() {
@@ -109,5 +120,28 @@ class OrdersViewModel @Inject constructor(
         _ordersState.value = ordersState.value.copy(
             orders = shopUseCases.setOrdersUseCase(firebaseOrders,products)
         )
+    }
+
+    fun changeOrderExpandState(orderId: String): List<Order> {
+        val newOrders: MutableList<Order> = mutableListOf()
+        val orders = _ordersState.value.orders
+
+        for(order in orders) {
+            if(order.orderId == orderId) {
+                val newOrder = Order(
+                    orderId = order.orderId,
+                    date = order.date,
+                    totalAmount = order.totalAmount,
+                    products = order.products,
+                    isExpanded = !order.isExpanded
+                )
+                newOrders.add(newOrder)
+            }
+            else {
+                newOrders.add(order)
+            }
+        }
+
+        return newOrders
     }
 }

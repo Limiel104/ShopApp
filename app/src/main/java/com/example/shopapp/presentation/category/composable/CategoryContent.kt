@@ -72,7 +72,6 @@ fun CategoryContent(
                 .fillMaxSize()
                 .padding(horizontal = 10.dp)
         ) {
-
             AnimatedVisibility(
                 visible = isSortAndFilterSectionVisible,
                 enter = fadeIn() + slideInVertically(),
