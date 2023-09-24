@@ -16,11 +16,13 @@ fun OrdersScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val orders = viewModel.ordersState.value.orders
+    val isLoading = viewModel.ordersState.value.isLoading
 
     OrdersContent(
         scaffoldState = scaffoldState,
         bottomBarHeight = bottomBarHeight,
         orders = orders,
+        isLoading = isLoading,
         onOrderSelected = { viewModel.onEvent(OrdersEvent.OnOrderSelected(it)) }
     )
 }

@@ -261,7 +261,7 @@ class CategoryScreenTest {
     }
 
     @Test
-    fun categoryListScreenTopBar_sortAndFilterButtonIsDisplayedCorrectly() {
+    fun categoryScreenTopBar_sortAndFilterButtonIsDisplayedCorrectly() {
         setScreenState(
             productList = productList,
             categoryFilterMap = categoryFilterMap
@@ -279,7 +279,7 @@ class CategoryScreenTest {
     }
 
     @Test
-    fun categoryListScreenTopBar_cartButtonIsDisplayedCorrectly() {
+    fun categoryScreenTopBar_cartButtonIsDisplayedCorrectly() {
         setScreenState(
             productList = productList,
             categoryFilterMap = categoryFilterMap

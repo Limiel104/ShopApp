@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +18,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
+import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
+import com.example.shopapp.util.Constants.SORT_BTN
 
 @Composable
 fun OrdersTopBar() {
@@ -25,14 +29,21 @@ fun OrdersTopBar() {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
-            .padding(10.dp, 15.dp)
+            .padding(vertical = 15.dp)
             .testTag(ORDERS_TOP_BAR),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = stringResource(id = R.string.your_orders),
             fontWeight = FontWeight.SemiBold
+        )
+
+        IconButtonCard(
+            icon = Icons.Outlined.Sort,
+            description = SORT_BTN,
+            outsidePaddingValue = 0,
+            onClick = {}
         )
     }
 }

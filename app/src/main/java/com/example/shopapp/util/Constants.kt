@@ -77,6 +77,8 @@ object Constants {
     const val ORDERS_CONTENT: String = "Orders content"
     const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
     const val ORDERS_TOP_BAR: String = "Orders top bar"
+    const val SORT_BTN: String = "Sort button"
+    const val ORDERS_CPI: String = "Orders circular progress indicator"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
