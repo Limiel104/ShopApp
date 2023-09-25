@@ -14,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,8 @@ import com.example.shopapp.util.Constants.cartProductItemImageWidth
 
 @Composable
 fun OrderProductItem(
-    product: CartProduct
+    product: CartProduct,
+    orderId: String
 ) {
     Row(
         modifier = Modifier
@@ -33,6 +35,7 @@ fun OrderProductItem(
             .background(MaterialTheme.colors.background)
             .height(IntrinsicSize.Max)
             .padding(bottom = 15.dp)
+            .testTag(orderId + product.title)
     ) {
         ImageItem(
             imageUrl = product.imageUrl,
@@ -75,6 +78,7 @@ fun OrderProductItemPreview() {
             price = 53.34,
             imageUrl = "",
             amount = 2
-        )
+        ),
+        orderId = "orderId1"
     )
 }

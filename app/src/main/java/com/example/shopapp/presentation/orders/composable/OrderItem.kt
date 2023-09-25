@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
+import com.example.shopapp.presentation.common.format.priceToString
+import com.example.shopapp.util.Constants.EXPAND_OR_COLLAPSE_BTN
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -54,7 +56,7 @@ fun OrderItem(
             )
 
             Text(
-                text = "${order.totalAmount} PLN".replace(".", ",")
+                text = order.priceToString()
             )
 
             IconButton(
@@ -62,7 +64,7 @@ fun OrderItem(
             ) {
                 Icon(
                     imageVector = if(order.isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "expand"
+                    contentDescription = EXPAND_OR_COLLAPSE_BTN
                 )
             }
         }
@@ -75,7 +77,8 @@ fun OrderItem(
             ) {
                 itemsIndexed(order.products) { _, product ->
                   OrderProductItem(
-                      product = product
+                      product = product,
+                      orderId = order.orderId
                   )
                 }
             }

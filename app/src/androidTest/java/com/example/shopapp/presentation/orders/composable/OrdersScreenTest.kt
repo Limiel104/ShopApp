@@ -3,6 +3,7 @@ package com.example.shopapp.presentation.orders.composable
 import androidx.activity.compose.setContent
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
@@ -26,6 +27,8 @@ import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.EXPAND_OR_COLLAPSE_BTN
+import com.example.shopapp.util.Constants.IMAGE
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
@@ -33,13 +36,14 @@ import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.Date
 
 @HiltAndroidTest
@@ -47,6 +51,8 @@ import java.util.Date
 class OrdersScreenTest {
 
     private lateinit var orders: List<Order>
+    private lateinit var date: Date
+    private lateinit var ordersExpanded: List<Order>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -56,10 +62,11 @@ class OrdersScreenTest {
 
     @Before
     fun setUp() {
+        date = Date()
         orders = listOf(
             Order(
                 orderId = "orderId1",
-                date = Date(),
+                date = date,
                 totalAmount = 123.43,
                 products = listOf(
                     CartProduct(
@@ -124,6 +131,74 @@ class OrdersScreenTest {
                 isExpanded = false
             )
         )
+        ordersExpanded = listOf(
+            Order(
+                orderId = "orderId1",
+                date = date,
+                totalAmount = 123.43,
+                products = listOf(
+                    CartProduct(
+                        id = 4,
+                        title = "title 4",
+                        price = 23.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
+                ),
+                isExpanded = true
+            ),
+            Order(
+                orderId = "orderId2",
+                date = Date(),
+                totalAmount = 54.00,
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "title 2",
+                        price = 53.34,
+                        imageUrl = "",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "title 3",
+                        price = 56.00,
+                        imageUrl = "",
+                        amount = 1
+                    ),
+                    CartProduct(
+                        id = 4,
+                        title = "title 4",
+                        price = 23.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
+                ),
+                isExpanded = true
+            ),
+            Order(
+                orderId = "orderId3",
+                date = Date(),
+                totalAmount = 73.99,
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "title 2",
+                        price = 53.34,
+                        imageUrl = "",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "title 3",
+                        price = 56.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
+                ),
+                isExpanded = true
+            )
+        )
     }
 
     private fun setScreenState(
@@ -183,7 +258,7 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(ORDERS_TOP_BAR).fetchSemanticsNode().children.size
-        Truth.assertThat(numberOfChildren).isEqualTo(2)
+        assertThat(numberOfChildren).isEqualTo(2)
     }
 
     @Test
@@ -236,7 +311,7 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertIsDisplayed()
         val numberOfChildrenVisible = composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).fetchSemanticsNode().children.size
-        Truth.assertThat(numberOfChildrenVisible).isEqualTo(3)
+        assertThat(numberOfChildrenVisible).isEqualTo(3)
     }
 
     @Test
@@ -250,6 +325,71 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertIsDisplayed()
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertPositionInRootIsEqualTo(20.dp,66.dp)
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth-40.dp)
+    }
+
+    @Test
+    fun ordersScreenOrderNotExpanded_hasCorrectNumberOfItems() {
+        setScreenState(
+            orders = orders
+        )
+
+        composeRule.onNodeWithTag(orders[0].orderId).assertExists()
+        composeRule.onNodeWithTag(orders[0].orderId).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(orders[0].orderId).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(3)
+    }
+
+    @Test
+    fun ordersScreenOrderNotExpanded_isDisplayedCorrectly() {
+        setScreenState(
+            orders = orders
+        )
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy HH:mm").format(date)
+
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(0).assertTextEquals(formattedDate)
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(1).assertTextEquals("123,43 PLN")
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertContentDescriptionContains(EXPAND_OR_COLLAPSE_BTN)
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertHasClickAction()
+
+        val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-40.dp)
+    }
+
+    @Test
+    fun ordersScreenOrderExpanded_hasCorrectNumberOfItems() {
+        setScreenState(
+            orders = ordersExpanded
+        )
+
+        composeRule.onNodeWithTag(orders[0].orderId).assertExists()
+        composeRule.onNodeWithTag(orders[0].orderId).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(orders[0].orderId).fetchSemanticsNode().children.size
+        val numberOfChildrenExpanded = composeRule.onNodeWithTag(orders[0].orderId + orders[0].products[0].title).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(3)
+        assertThat(numberOfChildrenExpanded).isEqualTo(4)
+    }
+
+    @Test
+    fun ordersScreenOrderExpanded_isDisplayedCorrectly() {
+        setScreenState(
+            orders = ordersExpanded
+        )
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy HH:mm").format(date)
+        val expandedOrderTag = orders[0].orderId + orders[0].products[0].title
+
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(0).assertTextEquals(formattedDate)
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(1).assertTextEquals("123,43 PLN")
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertContentDescriptionContains(EXPAND_OR_COLLAPSE_BTN)
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertHasClickAction()
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(0).onChildAt(0).assertContentDescriptionEquals(IMAGE)
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(1).assertTextEquals("title 4")
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(2).assertTextEquals("23,00 PLN")
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(3).assertTextEquals("Amount: 1")
+
+        val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-40.dp)
     }
 
     @Test

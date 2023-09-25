@@ -78,6 +78,7 @@ object Constants {
     const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
     const val ORDERS_TOP_BAR: String = "Orders top bar"
     const val SORT_BTN: String = "Sort button"
+    const val EXPAND_OR_COLLAPSE_BTN: String = "Expand or collapse button"
     const val ORDERS_CPI: String = "Orders circular progress indicator"
 
     //Content Description
