@@ -7,6 +7,8 @@ import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
@@ -16,8 +18,10 @@ import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.EXPAND_OR_COLLAPSE_BTN
@@ -32,6 +37,7 @@ import com.example.shopapp.util.Constants.IMAGE
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
+import com.example.shopapp.util.Constants.ORDERS_SORT_SECTION
 import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
@@ -203,7 +209,9 @@ class OrdersScreenTest {
 
     private fun setScreenState(
         orders: List<Order>,
-        isLoading: Boolean = false
+        isLoading: Boolean = false,
+        orderOrder: OrderOrder = OrderOrder.DateDescending(),
+        isSortSectionVisible: Boolean = false
     ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
@@ -220,7 +228,11 @@ class OrdersScreenTest {
                             bottomBarHeight = bottomBarHeight.dp,
                             orders = orders,
                             isLoading = isLoading,
-                            onOrderSelected = {}
+                            orderOrder = orderOrder,
+                            isSortSectionVisible = isSortSectionVisible,
+                            onOrderSelected = {},
+                            onOrderChange = {},
+                            onSortSelected = {}
                         )
                     }
                 }
@@ -240,7 +252,6 @@ class OrdersScreenTest {
                         route = Screen.OrdersScreen.route
                     ) {
                         OrdersScreen(
-                            navController = navController,
                             bottomBarHeight = bottomBarHeight.dp
                         )
                     }
@@ -300,6 +311,61 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp)
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(36.dp)
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(36.dp)
+    }
+
+    @Test
+    fun ordersScreenSortSection_clickToggle_isVisible() {
+        setScreen()
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertDoesNotExist()
+        composeRule.onNodeWithContentDescription(SORT_BTN).performClick()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertExists()
+    }
+
+    @Test
+    fun ordersScreenSortSection_clickToggleTwoTimes_isNotVisible() {
+        setScreen()
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertDoesNotExist()
+        composeRule.onNodeWithContentDescription(SORT_BTN).performClick()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertIsDisplayed()
+        composeRule.onNodeWithContentDescription(SORT_BTN).performClick()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertDoesNotExist()
+    }
+
+    @Test
+    fun ordersScreenSortSection_isDisplayedCorrectly() {
+        setScreenState(
+            orders = orders,
+            isSortSectionVisible = true
+        )
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).assertIsDisplayed()
+
+        val sortOptions = composeRule.onNodeWithTag(ORDERS_SORT_SECTION).fetchSemanticsNode().children.size
+        assertThat(sortOptions).isEqualTo(2)
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertTextEquals("Oldest to Newest")
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertHasClickAction()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(1).assertTextEquals("Newest to Oldest")
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertHasClickAction()
+    }
+
+    @Test
+    fun ordersScreenSortSection_onlyOneItemCanBeSelectedAtTheSameTime() {
+        setScreen()
+
+        composeRule.onNodeWithContentDescription(SORT_BTN).performClick()
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertIsOff()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(1).assertIsOn()
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).performClick()
+
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertIsOn()
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(1).assertIsOff()
     }
 
     @Test

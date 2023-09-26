@@ -9,6 +9,7 @@ import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.ORDERS_VM
 import com.example.shopapp.util.Constants.TAG
@@ -40,6 +41,14 @@ class OrdersViewModel @Inject constructor(
             is OrdersEvent.OnOrderSelected -> {
                 _ordersState.value = ordersState.value.copy(
                     orders = changeOrderExpandState(event.value)
+                )
+            }
+            is OrdersEvent.OnOrderChange -> {
+                sortOrders(event.value)
+            }
+            is OrdersEvent.ToggleSortSection -> {
+                _ordersState.value = ordersState.value.copy(
+                    isSortSectionVisible = !_ordersState.value.isSortSectionVisible
                 )
             }
         }
@@ -143,5 +152,18 @@ class OrdersViewModel @Inject constructor(
         }
 
         return newOrders
+    }
+
+    fun sortOrders(orderOrder: OrderOrder) {
+        _ordersState.value = ordersState.value.copy(
+            orderOrder = orderOrder
+        )
+
+        _ordersState.value = ordersState.value.copy(
+            orders = shopUseCases.sortOrdersUseCase(
+                orderOrder = orderOrder,
+                orders = _ordersState.value.orders
+            )
+        )
     }
 }

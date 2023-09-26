@@ -40,6 +40,7 @@ import com.example.shopapp.domain.use_case.SetUserCartProductsUseCase
 import com.example.shopapp.domain.use_case.SetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.use_case.SignupUseCase
+import com.example.shopapp.domain.use_case.SortOrdersUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
 import com.example.shopapp.domain.use_case.UpdateProductInCartUseCase
@@ -167,7 +168,8 @@ object TestAppModule {
             setUserCartProductsUseCase = SetUserCartProductsUseCase(),
             addOrderUseCase = AddOrderUseCase(ordersRepository),
             getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository),
-            setOrdersUseCase = SetOrdersUseCase()
+            setOrdersUseCase = SetOrdersUseCase(),
+            sortOrdersUseCase = SortOrdersUseCase()
         )
     }
 }

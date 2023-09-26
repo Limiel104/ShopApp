@@ -79,6 +79,7 @@ object Constants {
     const val ORDERS_TOP_BAR: String = "Orders top bar"
     const val SORT_BTN: String = "Sort button"
     const val EXPAND_OR_COLLAPSE_BTN: String = "Expand or collapse button"
+    const val ORDERS_SORT_SECTION: String = "Orders sort section"
     const val ORDERS_CPI: String = "Orders circular progress indicator"
 
     //Content Description
@@ -130,6 +131,7 @@ object Constants {
     const val LOGIN_SCREEN_LE: String = "LoginScreen Launched Effect"
     const val SIGNUP_SCREEN_LE: String = "SignupScreen Launched Effect"
     const val CART_SCREEN_LE: String = "CartScreen Launched Effect"
+    const val ORDERS_SCREEN_LE: String = "OrdersScreen Launched Effect"
 
     //ERRORS
     const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"

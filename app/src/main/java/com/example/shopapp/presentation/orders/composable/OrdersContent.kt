@@ -1,6 +1,11 @@
 package com.example.shopapp.presentation.orders.composable
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
@@ -35,10 +41,17 @@ fun OrdersContent(
     bottomBarHeight: Dp,
     orders: List<Order>,
     isLoading: Boolean,
-    onOrderSelected: (String) -> Unit
+    orderOrder: OrderOrder,
+    isSortSectionVisible: Boolean,
+    onOrderSelected: (String) -> Unit,
+    onOrderChange: (OrderOrder) -> Unit,
+    onSortSelected: () -> Unit
 ) {
     Scaffold(
-        topBar = { OrdersTopBar() },
+        topBar = {
+            OrdersTopBar(
+                onSortSelected = { onSortSelected() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
@@ -52,6 +65,17 @@ fun OrdersContent(
                 .fillMaxSize()
                 .padding(horizontal = 10.dp)
         ) {
+            AnimatedVisibility(
+                visible = isSortSectionVisible,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                OrdersSortSection(
+                    orderOrder = orderOrder,
+                    onOrderChange = { onOrderChange(it) }
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .testTag(ORDERS_LAZY_COLUMN)
@@ -157,7 +181,27 @@ fun OrdersContentPreview() {
         bottomBarHeight = 56.dp,
         orders = getOrders(),
         isLoading = false,
-        onOrderSelected = {}
+        orderOrder = OrderOrder.DateDescending(),
+        isSortSectionVisible = false,
+        onOrderSelected = {},
+        onOrderChange = {},
+        onSortSelected = {}
+    )
+}
+
+@Preview
+@Composable
+fun OrdersContentPreviewSortSectionVisible() {
+    OrdersContent(
+        scaffoldState = rememberScaffoldState(),
+        bottomBarHeight = 56.dp,
+        orders = getOrders(),
+        isLoading = false,
+        orderOrder = OrderOrder.DateDescending(),
+        isSortSectionVisible = true,
+        onOrderSelected = {},
+        onOrderChange = {},
+        onSortSelected = {}
     )
 }
 
@@ -169,6 +213,10 @@ fun OrdersContentCPIPreview() {
         bottomBarHeight = bottomBarHeight.dp,
         orders = getOrders(),
         isLoading = true,
-        onOrderSelected = {}
+        orderOrder = OrderOrder.DateDescending(),
+        isSortSectionVisible = false,
+        onOrderSelected = {},
+        onOrderChange = {},
+        onSortSelected = {}
     )
 }

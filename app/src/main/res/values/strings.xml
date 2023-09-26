@@ -51,4 +51,6 @@
     <string name="thank_you">Thank You!</string>
     <string name="delete_cart_product">Delete cart product</string>
     <string name="your_orders">Your Orders</string>
+    <string name="date_ascending">Oldest to Newest</string>
+    <string name="date_descending">Newest to Oldest</string>
 </resources>

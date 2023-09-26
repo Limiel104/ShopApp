@@ -24,7 +24,9 @@ import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 
 @Composable
-fun OrdersTopBar() {
+fun OrdersTopBar(
+    onSortSelected: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +45,7 @@ fun OrdersTopBar() {
             icon = Icons.Outlined.Sort,
             description = SORT_BTN,
             outsidePaddingValue = 0,
-            onClick = {}
+            onClick = { onSortSelected() }
         )
     }
 }
@@ -52,6 +54,8 @@ fun OrdersTopBar() {
 @Composable
 fun OrdersTopBarPreview() {
     ShopAppTheme {
-        OrdersTopBar()
+        OrdersTopBar(
+            onSortSelected = {}
+        )
     }
 }

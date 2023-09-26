@@ -115,7 +115,6 @@ fun NavigationGraph(
             route = Screen.OrdersScreen.route
         ) {
             OrdersScreen(
-                navController = navController,
                 bottomBarHeight = bottomBarHeight
             )
         }
