@@ -1,0 +1,350 @@
+package com.example.shopapp.presentation.orders
+
+import com.example.shopapp.domain.model.CartProduct
+import com.example.shopapp.domain.model.FirebaseOrder
+import com.example.shopapp.domain.model.Order
+import com.example.shopapp.domain.model.Product
+import com.example.shopapp.domain.use_case.ShopUseCases
+import com.example.shopapp.util.Category
+import com.example.shopapp.util.Constants
+import com.example.shopapp.util.MainDispatcherRule
+import com.example.shopapp.util.Resource
+import com.google.common.truth.Truth.assertThat
+import com.google.firebase.auth.FirebaseUser
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerifySequence
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import java.util.Date
+
+class OrdersViewModelTest {
+
+    @MockK
+    private lateinit var shopUseCases: ShopUseCases
+    private lateinit var ordersViewModel: OrdersViewModel
+    private lateinit var orders: List<Order>
+    @MockK
+    private lateinit var user: FirebaseUser
+    private lateinit var products: List<Product>
+    private lateinit var firebaseOrders: List<FirebaseOrder>
+    private lateinit var date1: Date
+    private lateinit var date2: Date
+    private lateinit var date3: Date
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @Before
+    fun setUp() {
+        MockKAnnotations.init(this)
+        every { shopUseCases.getCurrentUserUseCase() } returns user
+        every { user.uid } returns "userUID"
+
+        date1 = Date(2023,9,18)
+        date2 = Date(2023,9,21)
+        date3 = Date(2023,9,27)
+
+        firebaseOrders = listOf(
+            FirebaseOrder(
+                orderId = "orderId1",
+                userUID = "userUID",
+                date = date3,
+                totalAmount = 290.75,
+                products = mapOf(
+                    Pair("1",2),
+                    Pair("3",1),
+                    Pair("6",1)
+                )
+            ),
+            FirebaseOrder(
+                orderId = "orderId2",
+                userUID = "userUID",
+                date = date1,
+                totalAmount = 347.97,
+                products = mapOf(
+                    Pair("2",1),
+                    Pair("5",3)
+                )
+            ),
+            FirebaseOrder(
+                orderId = "orderId3",
+                userUID = "userUID",
+                date = date2,
+                totalAmount = 471.98,
+                products = mapOf(
+                    Pair("4",2)
+                )
+            )
+        )
+
+        products = listOf(
+            Product(
+                id = 1,
+                title = "Polo Shirt",
+                price = 55.99,
+                description = Constants.productDescription,
+                category = Category.Women.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 2,
+                title = "Cargo Pants",
+                price = 90.00,
+                description = Constants.productDescription,
+                category = Category.Men.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 3,
+                title = "Skirt",
+                price = 78.78,
+                description = Constants.productDescription,
+                category = Category.Men.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 4,
+                title = "Jeans",
+                price = 235.99,
+                description = Constants.productDescription,
+                category = Category.Men.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 5,
+                title = "Shirt",
+                price = 85.99,
+                description = Constants.productDescription,
+                category = Category.Women.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 6,
+                title = "Blouse",
+                price = 99.99,
+                description = Constants.productDescription,
+                category = Category.Men.id,
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            )
+        ).shuffled()
+
+        orders = listOf(
+            Order(
+                orderId = "orderId1",
+                date = date3,
+                totalAmount = 290.75,
+                products = listOf(
+                    CartProduct(
+                        id = 1,
+                        title = "Polo Shirt",
+                        price = 55.99,
+                        imageUrl = "imageUrl",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "Skirt",
+                        price = 78.78,
+                        imageUrl = "imageUrl",
+                        amount = 1
+                    ),
+                    CartProduct(
+                        id = 6,
+                        title = "Blouse",
+                        price = 99.99,
+                        imageUrl = "imageUrl",
+                        amount = 1
+                    )
+                ),
+                isExpanded = false
+            ),
+            Order(
+                orderId = "orderId2",
+                date = date1,
+                totalAmount = 347.97,
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "Cargo Pants",
+                        price = 90.00,
+                        imageUrl = "imageUrl",
+                        amount = 1
+                    ),
+                    CartProduct(
+                        id = 5,
+                        title = "Shirt",
+                        price = 85.99,
+                        imageUrl = "imageUrl",
+                        amount = 3
+                    )
+                ),
+                isExpanded = false
+            ),
+            Order(
+                orderId = "orderId3",
+                date = date2,
+                totalAmount = 471.98,
+                products = listOf(
+                    CartProduct(
+                        id = 4,
+                        title = "Jeans",
+                        price = 235.99,
+                        imageUrl = "imageUrl",
+                        amount = 1
+                    )
+                ),
+                isExpanded = false
+            )
+        )
+    }
+
+    @After
+    fun tearDown() {
+        confirmVerified(shopUseCases)
+        clearAllMocks()
+    }
+
+    private fun setViewModel(): OrdersViewModel {
+        return OrdersViewModel(shopUseCases)
+    }
+
+    private fun getCurrentOrdersState(): OrdersState {
+        return ordersViewModel.ordersState.value
+    }
+
+    @Test
+    fun `get orders result is successful`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Success(firebaseOrders))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Error("Error"))
+
+        ordersViewModel = setViewModel()
+        val resultFirebaseOrders = getCurrentOrdersState().firebaseOrders
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+        }
+        assertThat(resultFirebaseOrders).isEqualTo(firebaseOrders)
+    }
+
+    @Test
+    fun `get orders result is error`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Error("Error"))
+
+        ordersViewModel = setViewModel()
+        val resultFirebaseOrders = getCurrentOrdersState().firebaseOrders
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+        }
+        assertThat(resultFirebaseOrders).isEmpty()
+    }
+
+    @Test
+    fun `get orders result is loading`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Loading(true))
+
+        ordersViewModel = setViewModel()
+        val resultFirebaseOrders = getCurrentOrdersState().firebaseOrders
+        val loadingState = getCurrentOrdersState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+        }
+        assertThat(resultFirebaseOrders).isEmpty()
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `get products result is successful`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Success(firebaseOrders))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setOrdersUseCase(firebaseOrders,products)
+        } returns orders
+
+        ordersViewModel = setViewModel()
+        val resultProducts = getCurrentOrdersState().products
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setOrdersUseCase(firebaseOrders,products)
+        }
+        assertThat(resultProducts).isEqualTo(products)
+    }
+
+    @Test
+    fun `get products result is error`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Success(firebaseOrders))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Error("Error"))
+
+        ordersViewModel = setViewModel()
+        val resultProducts = getCurrentOrdersState().products
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+        }
+        assertThat(resultProducts).isEmpty()
+    }
+
+    @Test
+    fun `get products result is loading`() {
+        coEvery {
+            shopUseCases.getUserOrdersUseCase("userUID")
+        } returns flowOf(Resource.Success(firebaseOrders))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Loading(true))
+
+        ordersViewModel = setViewModel()
+        val resultProducts = getCurrentOrdersState().products
+        val loadingState = getCurrentOrdersState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserOrdersUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+        }
+        assertThat(resultProducts).isEmpty()
+        assertThat(loadingState).isTrue()
+    }
+}
