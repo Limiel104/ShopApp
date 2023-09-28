@@ -110,6 +110,7 @@ class OrdersViewModel @Inject constructor(
                                     products = products
                                 )
                                 setOrdersProducts()
+                                sortOrders(_ordersState.value.orderOrder)
                             }
                         }
                     }
@@ -150,7 +151,6 @@ class OrdersViewModel @Inject constructor(
                 newOrders.add(order)
             }
         }
-
         return newOrders
     }
 
