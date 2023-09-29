@@ -4,7 +4,7 @@ object Constants {
     //TEST TAGS
     const val ACTIVATE_COUPON_BTN: String = "Activate coupon button"
     const val MY_PROFILE_BTN: String = "My profile button"
-    const val ORDERS_AND_RETURNS_BTN: String = "Orders and returns button"
+    const val ORDERS_BTN: String = "Orders button"
     const val LOGOUT_BTN: String = "Sign out button"
     const val LOGIN_CONTENT: String = "Login content"
     const val LOGIN_EMAIL_TF: String = "Login email"
@@ -74,6 +74,13 @@ object Constants {
     const val CART_CPI: String = "Cart circular progress indicator"
     const val HOME_BTN: String = "Home button"
     const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
+    const val ORDERS_CONTENT: String = "Orders content"
+    const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
+    const val ORDERS_TOP_BAR: String = "Orders top bar"
+    const val SORT_BTN: String = "Sort button"
+    const val EXPAND_OR_COLLAPSE_BTN: String = "Expand or collapse button"
+    const val ORDERS_SORT_SECTION: String = "Orders sort section"
+    const val ORDERS_CPI: String = "Orders circular progress indicator"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -114,6 +121,7 @@ object Constants {
     const val LOGIN_VM: String = "LoginScreen ViewModel"
     const val SIGNUP_VM: String = "SignupScreen ViewModel"
     const val CART_VM: String = "CartScreen ViewModel"
+    const val ORDERS_VM: String = "Orders ViewModel"
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
@@ -123,6 +131,7 @@ object Constants {
     const val LOGIN_SCREEN_LE: String = "LoginScreen Launched Effect"
     const val SIGNUP_SCREEN_LE: String = "SignupScreen Launched Effect"
     const val CART_SCREEN_LE: String = "CartScreen Launched Effect"
+    const val ORDERS_SCREEN_LE: String = "OrdersScreen Launched Effect"
 
     //ERRORS
     const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
@@ -138,4 +147,5 @@ object Constants {
     const val USERS_COLLECTION: String = "users"
     const val FAVOURITES_COLLECTION: String = "favourites"
     const val CARTS_COLLECTION: String = "carts"
+    const val ORDERS_COLLECTION: String = "orders"
 }

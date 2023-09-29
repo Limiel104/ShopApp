@@ -37,7 +37,7 @@ import com.example.shopapp.util.Constants.COUPON_ITEM_20
 import com.example.shopapp.util.Constants.COUPON_ITEM_50
 import com.example.shopapp.util.Constants.LOGOUT_BTN
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
-import com.example.shopapp.util.Constants.ORDERS_AND_RETURNS_BTN
+import com.example.shopapp.util.Constants.ORDERS_BTN
 import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -77,7 +77,8 @@ class AccountScreenTest {
                             userName = "John",
                             userClubPoints = 234,
                             onLogout = {},
-                            onGoToCart = {}
+                            onGoToCart = {},
+                            onGoToOrders = {}
                         )
                     }
                 }
@@ -172,8 +173,8 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenButtons_areDisplayedCorrectly() {
-        val buttonList = listOf(MY_PROFILE_BTN, ORDERS_AND_RETURNS_BTN, LOGOUT_BTN)
-        val textList = listOf("My profile", "Orders and Returns", "Logout")
+        val buttonList = listOf(MY_PROFILE_BTN, ORDERS_BTN, LOGOUT_BTN)
+        val textList = listOf("My profile", "Orders", "Logout")
         val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
 
         buttonList.zip(textList) { button, text ->
