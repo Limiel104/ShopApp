@@ -2,6 +2,8 @@ package com.example.shopapp.presentation.signup.composable
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +24,8 @@ fun SignupScreen(
     bottomBarHeight: Dp,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
+    val scaffoldState = rememberScaffoldState()
+    val scrollState = rememberScrollState()
     val email = viewModel.signupState.value.email
     val emailError = viewModel.signupState.value.emailError
     val password = viewModel.signupState.value.password
@@ -49,6 +53,8 @@ fun SignupScreen(
     }
 
     SignupContent(
+        scaffoldState = scaffoldState,
+        scrollState  = scrollState,
         bottomBarHeight = bottomBarHeight,
         email = email,
         emailError = emailError,
@@ -56,6 +62,14 @@ fun SignupScreen(
         passwordError = passwordError,
         confirmPassword = confirmPassword,
         confirmPasswordError = confirmPasswordError,
+        name = "John Smith",
+        nameError = null,
+        street = "Street 1",
+        streetError = null,
+        city = "Berlin",
+        cityError = null,
+        zipCode = "123456",
+        zipCodeError = null,
         isLoading = isLoading,
         onEmailChange = { viewModel.onEvent(SignupEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(SignupEvent.EnteredPassword(it)) },
