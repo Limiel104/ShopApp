@@ -32,6 +32,16 @@ fun SignupScreen(
     val passwordError = viewModel.signupState.value.passwordError
     val confirmPassword = viewModel.signupState.value.confirmPassword
     val confirmPasswordError = viewModel.signupState.value.confirmPasswordError
+    val firstName = viewModel.signupState.value.firstName
+    val firstNameError = viewModel.signupState.value.firstNameError
+    val lastName = viewModel.signupState.value.lastName
+    val lastNameError = viewModel.signupState.value.lastNameError
+    val street = viewModel.signupState.value.street
+    val streetError = viewModel.signupState.value.streetError
+    val city = viewModel.signupState.value.city
+    val cityError = viewModel.signupState.value.cityError
+    val zipCode = viewModel.signupState.value.zipCode
+    val zipCodeError = viewModel.signupState.value.zipCodeError
     val isLoading = viewModel.signupState.value.isLoading
     val context = LocalContext.current
 
@@ -62,18 +72,26 @@ fun SignupScreen(
         passwordError = passwordError,
         confirmPassword = confirmPassword,
         confirmPasswordError = confirmPasswordError,
-        name = "John Smith",
-        nameError = null,
-        street = "Street 1",
-        streetError = null,
-        city = "Berlin",
-        cityError = null,
-        zipCode = "123456",
-        zipCodeError = null,
+        firstName = firstName,
+        firstNameError = firstNameError,
+        lastName = lastName,
+        lastNameError = lastNameError,
+        street = street,
+        streetError = streetError,
+        city = city,
+        cityError = cityError,
+        zipCode = zipCode,
+        zipCodeError = zipCodeError,
         isLoading = isLoading,
         onEmailChange = { viewModel.onEvent(SignupEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(SignupEvent.EnteredPassword(it)) },
         onConfirmPasswordChange = { viewModel.onEvent(SignupEvent.EnteredConfirmPassword(it)) },
-        onSignup = { viewModel.onEvent(SignupEvent.Signup) }
+        onFirstNameChange = { viewModel.onEvent(SignupEvent.EnteredFirstName(it)) },
+        onLastNameChange = { viewModel.onEvent(SignupEvent.EnteredLastName(it)) },
+        onStreetChange = { viewModel.onEvent(SignupEvent.EnteredStreet(it)) },
+        onCityChange = { viewModel.onEvent(SignupEvent.EnteredCity(it)) },
+        onZipCodeChange = { viewModel.onEvent(SignupEvent.EnteredZipCode(it)) },
+        onSignup = { viewModel.onEvent(SignupEvent.Signup) },
+        onGoBack = {}
     )
 }

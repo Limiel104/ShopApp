@@ -5,4 +5,5 @@ sealed class AccountUiEvent {
     object NavigateToSignup: AccountUiEvent()
     object NavigateToCart: AccountUiEvent()
     object NavigateToOrders: AccountUiEvent()
+    data class ShowErrorMessage(val message: String): AccountUiEvent()
 }

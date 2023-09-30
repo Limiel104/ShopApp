@@ -36,21 +36,23 @@ import com.example.shopapp.util.Constants.SIGNUP_CONTENT
 import com.example.shopapp.util.Constants.SIGNUP_CPI
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
-import com.example.shopapp.util.Constants.SIGNUP_NAME_ERROR
-import com.example.shopapp.util.Constants.SIGNUP_NAME_TF
+import com.example.shopapp.util.Constants.SIGNUP_FIRSTNAME_ERROR
+import com.example.shopapp.util.Constants.SIGNUP_FIRSTNAME_TF
+import com.example.shopapp.util.Constants.SIGNUP_LASTNAME_ERROR
+import com.example.shopapp.util.Constants.SIGNUP_LASTNAME_TF
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
 import com.example.shopapp.util.Constants.SIGNUP_STREET_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_STREET_TF
 import com.example.shopapp.util.Constants.SIGNUP_ZIP_CODE_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_ZIP_CODE_TF
-import com.example.shopapp.util.Constants.cityError
+import com.example.shopapp.util.Constants.cityEmptyError
 import com.example.shopapp.util.Constants.confirmPasswordError
 import com.example.shopapp.util.Constants.emailEmptyError
-import com.example.shopapp.util.Constants.nameError
+import com.example.shopapp.util.Constants.fieldEmptyError
 import com.example.shopapp.util.Constants.passwordEmptyError
-import com.example.shopapp.util.Constants.streetError
-import com.example.shopapp.util.Constants.zipCodeError
+import com.example.shopapp.util.Constants.streetEmptyError
+import com.example.shopapp.util.Constants.zipCodeEmptyError
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -64,8 +66,10 @@ fun SignupContent(
     passwordError: String?,
     confirmPassword: String,
     confirmPasswordError: String?,
-    name: String,
-    nameError: String?,
+    firstName: String,
+    firstNameError: String?,
+    lastName: String,
+    lastNameError: String?,
     street: String,
     streetError: String?,
     city: String,
@@ -76,10 +80,19 @@ fun SignupContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
-    onSignup: () -> Unit
+    onFirstNameChange: (String) -> Unit,
+    onLastNameChange: (String) -> Unit,
+    onStreetChange: (String) -> Unit,
+    onCityChange: (String) -> Unit,
+    onZipCodeChange: (String) -> Unit,
+    onSignup: () -> Unit,
+    onGoBack: () -> Unit,
 ) {
     Scaffold(
-        topBar = { SignupTopBar() },
+        topBar = {
+            SignupTopBar(
+                onClick = { onGoBack() }
+            ) },
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxWidth()
@@ -158,18 +171,34 @@ fun SignupContent(
             Spacer(modifier = Modifier.height(10.dp))
 
             ShopTextFieldItem(
-                text = name,
-                label = stringResource(id = R.string.name),
-                placeholder = stringResource(id = R.string.name),
-                testTag = SIGNUP_NAME_TF,
-                isError = nameError != null,
-                onValueChange = {}
+                text = firstName,
+                label = stringResource(id = R.string.first_name),
+                placeholder = stringResource(id = R.string.first_name),
+                testTag = SIGNUP_FIRSTNAME_TF,
+                isError = firstNameError != null,
+                onValueChange = { onFirstNameChange(it) }
             )
 
-            if(nameError != null) {
+            if(firstNameError != null) {
                 ErrorTextFieldItem(
-                    errorMessage = nameError,
-                    testTag = SIGNUP_NAME_ERROR
+                    errorMessage = firstNameError,
+                    testTag = SIGNUP_FIRSTNAME_ERROR
+                )
+            }
+
+            ShopTextFieldItem(
+                text = lastName,
+                label = stringResource(id = R.string.last_name),
+                placeholder = stringResource(id = R.string.last_name),
+                testTag = SIGNUP_LASTNAME_TF,
+                isError = lastNameError != null,
+                onValueChange = { onLastNameChange(it) }
+            )
+
+            if(lastNameError != null) {
+                ErrorTextFieldItem(
+                    errorMessage = lastNameError,
+                    testTag = SIGNUP_LASTNAME_ERROR
                 )
             }
 
@@ -181,7 +210,7 @@ fun SignupContent(
                 placeholder = stringResource(id = R.string.street),
                 testTag = SIGNUP_STREET_TF,
                 isError = streetError != null,
-                onValueChange = {}
+                onValueChange = { onStreetChange(it) }
             )
 
             if(streetError != null) {
@@ -203,7 +232,7 @@ fun SignupContent(
                         placeholder = stringResource(id = R.string.city),
                         testTag = SIGNUP_CITY_TF,
                         isError = cityError != null,
-                        onValueChange = {}
+                        onValueChange = { onCityChange(it) }
                     )
 
                     if(cityError != null) {
@@ -225,7 +254,7 @@ fun SignupContent(
                         placeholder = stringResource(id = R.string.zip_code),
                         testTag = SIGNUP_ZIP_CODE_TF,
                         isError = zipCodeError != null,
-                        onValueChange = {}
+                        onValueChange = { onZipCodeChange(it) }
                     )
 
                     if(zipCodeError != null) {
@@ -244,6 +273,8 @@ fun SignupContent(
                 testTag = SIGNUP_BTN,
                 onClick = { onSignup() }
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 
@@ -273,8 +304,10 @@ fun SignupContentPreview() {
             passwordError = null,
             confirmPassword = "abcdef2+A",
             confirmPasswordError = null,
-            name = "John Smith",
-            nameError = null,
+            firstName = "John",
+            firstNameError = null,
+            lastName = "Smith",
+            lastNameError = null,
             street = "Street 1",
             streetError = null,
             city = "Berlin",
@@ -285,7 +318,13 @@ fun SignupContentPreview() {
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
-            onSignup = {}
+            onFirstNameChange = {},
+            onLastNameChange = {},
+            onStreetChange = {},
+            onCityChange = {},
+            onZipCodeChange = {},
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -304,19 +343,27 @@ fun SignupContentErrorPreview() {
             passwordError = passwordEmptyError,
             confirmPassword = "abcdeff2+A",
             confirmPasswordError = confirmPasswordError,
-            name = "3453",
-            nameError = nameError,
+            firstName = "John",
+            firstNameError = fieldEmptyError,
+            lastName = "Smith",
+            lastNameError = fieldEmptyError,
             street = "Street 1",
-            streetError = streetError,
+            streetError = streetEmptyError,
             city = "Berlin",
-            cityError = cityError,
+            cityError = cityEmptyError,
             zipCode = "123456",
-            zipCodeError = zipCodeError,
+            zipCodeError = zipCodeEmptyError,
             isLoading = false,
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
-            onSignup = {}
+            onFirstNameChange = {},
+            onLastNameChange = {},
+            onStreetChange = {},
+            onCityChange = {},
+            onZipCodeChange = {},
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -335,8 +382,10 @@ fun SignupContentCPIPreview() {
             passwordError = null,
             confirmPassword = "abcdeff2+A",
             confirmPasswordError = null,
-            name = "John Smith",
-            nameError = null,
+            firstName = "John",
+            firstNameError = null,
+            lastName = "Smith",
+            lastNameError = null,
             street = "Street 1",
             streetError = null,
             city = "Berlin",
@@ -347,7 +396,13 @@ fun SignupContentCPIPreview() {
             onEmailChange = {},
             onPasswordChange = {},
             onConfirmPasswordChange = {},
-            onSignup = {}
+            onFirstNameChange = {},
+            onLastNameChange = {},
+            onStreetChange = {},
+            onCityChange = {},
+            onZipCodeChange = {},
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }

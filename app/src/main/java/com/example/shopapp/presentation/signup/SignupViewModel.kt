@@ -5,6 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Address
+import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.SIGNUP_VM
 import com.example.shopapp.util.Constants.TAG
@@ -47,12 +49,42 @@ class SignupViewModel @Inject constructor(
                     confirmPassword = event.value
                 )
             }
+            is SignupEvent.EnteredFirstName -> {
+                _signupState.value = signupState.value.copy(
+                    firstName = event.value
+                )
+            }
+            is SignupEvent.EnteredLastName -> {
+                _signupState.value = signupState.value.copy(
+                    lastName = event.value
+                )
+            }
+            is SignupEvent.EnteredStreet -> {
+                _signupState.value = signupState.value.copy(
+                    street = event.value
+                )
+            }
+            is SignupEvent.EnteredCity -> {
+                _signupState.value = signupState.value.copy(
+                    city = event.value
+                )
+            }
+            is SignupEvent.EnteredZipCode -> {
+                _signupState.value = signupState.value.copy(
+                    zipCode = event.value
+                )
+            }
             is SignupEvent.Signup -> {
                 val email = _signupState.value.email
                 val password = _signupState.value.password
                 val confirmPassword = _signupState.value.confirmPassword
+                val firstName = _signupState.value.firstName
+                val lastName = _signupState.value.lastName
+                val street = _signupState.value.street
+                val city = _signupState.value.city
+                val zipCode = _signupState.value.zipCode
 
-                if(isValidationSuccessful(email,password,confirmPassword)){
+                if(isValidationSuccessful(email,password,confirmPassword,firstName,lastName,street,city,zipCode)){
                     signup(email,password)
                 }
                 else {
@@ -81,7 +113,12 @@ class SignupViewModel @Inject constructor(
                         _signupState.value = signupState.value.copy(
                             emailError =  null,
                             passwordError = null,
-                            confirmPasswordError = null
+                            confirmPasswordError = null,
+                            firstNameError = null,
+                            lastNameError = null,
+                            streetError = null,
+                            cityError = null,
+                            zipCodeError = null
                         )
 
                         val errorMessage = response.message
@@ -95,8 +132,18 @@ class SignupViewModel @Inject constructor(
     fun addUser() {
         viewModelScope.launch {
             val userUID = shopUseCases.getCurrentUserUseCase()!!.uid
+            val user = User(
+                userUID = userUID,
+                firstName = _signupState.value.firstName,
+                lastName = _signupState.value.lastName,
+                address = Address(
+                    street = _signupState.value.street,
+                    city = _signupState.value.city,
+                    zipCode = _signupState.value.zipCode
+                )
+            )
 
-            shopUseCases.addUserUseCase(userUID).collect { response ->
+            shopUseCases.addUserUseCase(user).collect { response ->
                 when(response) {
                     is Resource.Loading -> {
                         Log.i(TAG,"Loading = ${response.isLoading}")
@@ -120,23 +167,43 @@ class SignupViewModel @Inject constructor(
     fun isValidationSuccessful(
         email: String,
         password: String,
-        confirmPassword: String
+        confirmPassword: String,
+        firstName: String,
+        lastName: String,
+        street: String,
+        city: String,
+        zipCode: String
     ): Boolean {
         val emailValidationResult = shopUseCases.validateEmailUseCase(email)
         val passwordValidationResult = shopUseCases.validateSignupPasswordUseCase(password)
         val confirmPasswordValidationResult = shopUseCases.validateConfirmPasswordUseCase(password, confirmPassword)
+        val firstNameValidationResult = shopUseCases.validateNameUseCase(firstName)
+        val lastNameValidationResult = shopUseCases.validateNameUseCase(lastName)
+        val streetValidationResult = shopUseCases.validateStreetUseCase(street)
+        val cityValidationResult = shopUseCases.validateCityUseCase(city)
+        val zipCodeValidationResult = shopUseCases.validateZipCodeUseCase(zipCode)
 
         val hasError = listOf(
             emailValidationResult,
             passwordValidationResult,
-            confirmPasswordValidationResult
+            confirmPasswordValidationResult,
+            firstNameValidationResult,
+            lastNameValidationResult,
+            streetValidationResult,
+            cityValidationResult,
+            zipCodeValidationResult
         ).any { !it.isSuccessful }
 
         if(hasError) {
             _signupState.value = signupState.value.copy(
                 emailError =  emailValidationResult.errorMessage,
                 passwordError = passwordValidationResult.errorMessage,
-                confirmPasswordError = confirmPasswordValidationResult.errorMessage
+                confirmPasswordError = confirmPasswordValidationResult.errorMessage,
+                firstNameError = firstNameValidationResult.errorMessage,
+                lastNameError = lastNameValidationResult.errorMessage,
+                streetError = streetValidationResult.errorMessage,
+                cityError = cityValidationResult.errorMessage,
+                zipCodeError = zipCodeValidationResult.errorMessage
             )
             return false
         }

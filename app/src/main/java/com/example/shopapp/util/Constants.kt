@@ -61,8 +61,10 @@ object Constants {
     const val SIGNUP_PASSWORD_ERROR: String = "Signup password error"
     const val SIGNUP_CONFIRM_PASSWORD_TF: String = "Signup confirm password"
     const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
-    const val SIGNUP_NAME_TF: String = "Signup name"
-    const val SIGNUP_NAME_ERROR: String = "Signup name error"
+    const val SIGNUP_FIRSTNAME_TF: String = "Signup first name"
+    const val SIGNUP_FIRSTNAME_ERROR: String = "Signup first name error"
+    const val SIGNUP_LASTNAME_TF: String = "Signup last name"
+    const val SIGNUP_LASTNAME_ERROR: String = "Signup last name error"
     const val SIGNUP_STREET_TF: String = "Signup street"
     const val SIGNUP_STREET_ERROR: String = "Signup street error"
     const val SIGNUP_CITY_TF: String = "Signup city"
@@ -117,6 +119,8 @@ object Constants {
 
     //VALUES
     const val bottomSheetPeekHeight: Int = 100
+    const val passwordMinLength: Int = 8
+    const val zipCodeLength: Int = 6
 
     //LOGS
     const val TAG: String = "TAG"
@@ -142,18 +146,26 @@ object Constants {
     const val ORDERS_SCREEN_LE: String = "OrdersScreen Launched Effect"
 
     //ERRORS
-    const val specialChars = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
+    const val specialChars: String = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
+    const val specialCharsStreet: String = "~`!@#$%^&*()_+={}[]|\\:;\"<>,.?"
+    const val specialCharsCity: String = "~`!@#$%^&*()_=+{}[]:;\"<>,.?/"
+    const val specialCharsZipCode: String = "~`!@#$%^&*()_=+{}[]|\\:;\"'<>,.?/"
     const val emailEmptyError: String = "Email can't be empty"
     const val passwordEmptyError: String = "Password can't be empty"
     const val shortPasswordError: String = "Password is too short"
-    const val containsAtLeastOneDigitError: String = "Password should have at least one digit"
-    const val containsAtLeastOneCapitalLetterError: String = "Password should have at least one capital letter"
-    const val containsAtLeastOneSpecialCharError: String = "Password should have at least one special character"
+    const val passwordContainsAtLeastOneDigitError: String = "Password should have at least one digit"
+    const val passwordContainsAtLeastOneCapitalLetterError: String = "Password should have at least one capital letter"
+    const val passwordContainsAtLeastOneSpecialCharError: String = "Password should have at least one special character"
     const val confirmPasswordError: String = "Passwords don't mach"
-    const val nameError: String = "Name can't be empty"
-    const val streetError: String = "Street can't be empty"
-    const val cityError: String = "City can't be empty"
-    const val zipCodeError: String = "Zip code can't be empty"
+    const val fieldEmptyError: String = "Field can't be empty"
+    const val fieldContainsDigitsError: String = "No digits allowed for this field"
+    const val filedContainsSpecialCharsError: String = "Special characters not allowed for this field"
+    const val streetEmptyError: String = "Street can't be empty"
+    const val streetContainsAtLeastOneDigitError: String = "Street should have at least one digit"
+    const val fieldContainsAtLeastOneLetterError: String = "Field should have at least one letter"
+    const val cityEmptyError: String = "City can't be empty"
+    const val zipCodeEmptyError: String = "Zip code can't be empty"
+    const val zipCodeBadFormat: String = "Bad format"
 
     //FIREBASE
     const val USERS_COLLECTION: String = "users"

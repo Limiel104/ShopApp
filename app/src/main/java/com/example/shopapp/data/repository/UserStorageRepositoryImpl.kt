@@ -15,17 +15,18 @@ import javax.inject.Inject
 class UserStorageRepositoryImpl @Inject constructor(
     private val usersRef: CollectionReference
 ): UserStorageRepository {
-    override suspend fun addUser(userUID: String): Flow<Resource<Boolean>> {
+    override suspend fun addUser(user: User): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
 
             try {
-                usersRef.document(userUID).set(
+                usersRef.document(user.userUID).set(
                     mapOf(
-                        "userUID" to userUID,
-                        "firstName" to "",
-                        "lastName" to "",
-                        "points" to 0
+                        "userUID" to user.userUID,
+                        "firstName" to user.firstName,
+                        "lastName" to user.lastName,
+                        "address" to user.address,
+                        "points" to user.points
                     )
                 ).await()
                 emit(Resource.Success(true))
@@ -65,9 +66,10 @@ class UserStorageRepositoryImpl @Inject constructor(
                 usersRef.document(user.userUID).update(
                     mapOf(
                         "userUID" to user.userUID,
-                        "firstName" to "",
-                        "lastName" to "",
-                        "points" to 0
+                        "firstName" to user.firstName,
+                        "lastName" to user.lastName,
+                        "address" to user.address,
+                        "points" to user.points
                     )
                 ).await()
                 emit(Resource.Success(true))

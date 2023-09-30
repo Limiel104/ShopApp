@@ -8,6 +8,10 @@ data class ShopUseCases(
     val validateLoginPasswordUseCase: ValidateLoginPasswordUseCase,
     val validateSignupPasswordUseCase: ValidateSignupPasswordUseCase,
     val validateConfirmPasswordUseCase: ValidateConfirmPasswordUseCase,
+    val validateNameUseCase: ValidateNameUseCase,
+    val validateStreetUseCase: ValidateStreetUseCase,
+    val validateCityUseCase: ValidateCityUseCase,
+    val validateZipCodeUseCase: ValidateZipCodeUseCase,
     val getCurrentUserUseCase: GetCurrentUserUseCase,
     val loginUseCase: LoginUseCase,
     val signupUseCase: SignupUseCase,
@@ -31,5 +35,6 @@ data class ShopUseCases(
     val addOrderUseCase: AddOrderUseCase,
     val getUserOrdersUseCase: GetUserOrdersUseCase,
     val setOrdersUseCase: SetOrdersUseCase,
-    val sortOrdersUseCase: SortOrdersUseCase
+    val sortOrdersUseCase: SortOrdersUseCase,
+    val getUserUseCase: GetUserUseCase
 )

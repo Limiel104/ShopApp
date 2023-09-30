@@ -5,10 +5,10 @@ import com.example.shopapp.domain.repository.UserStorageRepository
 import com.example.shopapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 
-class AddUserUseCase(
+class GetUserUseCase(
     private val userStorageRepository: UserStorageRepository
 ) {
-    suspend operator fun invoke(user: User): Flow<Resource<Boolean>> {
-        return userStorageRepository.addUser(user)
+    suspend operator fun invoke(userUID: String): Flow<Resource<List<User>>> {
+        return userStorageRepository.getUser(userUID)
     }
 }

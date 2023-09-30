@@ -38,16 +38,21 @@ import com.example.shopapp.domain.use_case.FilterProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
+import com.example.shopapp.domain.use_case.GetUserUseCase
 import com.example.shopapp.domain.use_case.SetOrdersUseCase
 import com.example.shopapp.domain.use_case.SetUserCartProductsUseCase
 import com.example.shopapp.domain.use_case.SortOrdersUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
 import com.example.shopapp.domain.use_case.UpdateProductInCartUseCase
+import com.example.shopapp.domain.use_case.ValidateCityUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
 import com.example.shopapp.domain.use_case.ValidateLoginPasswordUseCase
+import com.example.shopapp.domain.use_case.ValidateNameUseCase
 import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
+import com.example.shopapp.domain.use_case.ValidateStreetUseCase
+import com.example.shopapp.domain.use_case.ValidateZipCodeUseCase
 import com.example.shopapp.util.Constants.CARTS_COLLECTION
 import com.example.shopapp.util.Constants.FAVOURITES_COLLECTION
 import com.example.shopapp.util.Constants.ORDERS_COLLECTION
@@ -151,6 +156,10 @@ object AppModule {
             validateLoginPasswordUseCase = ValidateLoginPasswordUseCase(),
             validateSignupPasswordUseCase = ValidateSignupPasswordUseCase(),
             validateConfirmPasswordUseCase = ValidateConfirmPasswordUseCase(),
+            validateNameUseCase = ValidateNameUseCase(),
+            validateStreetUseCase = ValidateStreetUseCase(),
+            validateCityUseCase = ValidateCityUseCase(),
+            validateZipCodeUseCase = ValidateZipCodeUseCase(),
             getCurrentUserUseCase = GetCurrentUserUseCase(authRepository),
             loginUseCase = LoginUseCase(authRepository),
             signupUseCase = SignupUseCase(authRepository),
@@ -174,7 +183,8 @@ object AppModule {
             addOrderUseCase = AddOrderUseCase(ordersRepository),
             getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository),
             setOrdersUseCase = SetOrdersUseCase(),
-            sortOrdersUseCase = SortOrdersUseCase()
+            sortOrdersUseCase = SortOrdersUseCase(),
+            getUserUseCase = GetUserUseCase(userStorageRepository)
         )
     }
 }
