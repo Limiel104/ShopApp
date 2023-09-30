@@ -55,6 +55,8 @@ object Constants {
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
     const val PRODUCT_DETAILS_CPI: String = "Product details circular progress indicator"
     const val SIGNUP_CONTENT: String = "Signup content"
+    const val SIGNUP_TOP_BAR: String = "Signup top bar"
+    const val SIGNUP_COLUMN: String = "Signup column"
     const val SIGNUP_EMAIL_TF: String = "Signup email"
     const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
     const val SIGNUP_PASSWORD_TF: String = "Signup password"

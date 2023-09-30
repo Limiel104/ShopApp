@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.IconButtonCard
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
-import com.example.shopapp.util.Constants.ACCOUNT_TOP_BAR
+import com.example.shopapp.util.Constants.GO_BACK_BTN
+import com.example.shopapp.util.Constants.SIGNUP_TOP_BAR
 
 @Composable
 fun SignupTopBar(
@@ -34,13 +34,13 @@ fun SignupTopBar(
             .fillMaxWidth()
             .background(MaterialTheme.colors.background)
             .padding(vertical = 15.dp)
-            .testTag(ACCOUNT_TOP_BAR),
+            .testTag(SIGNUP_TOP_BAR),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
         IconButtonCard(
             icon = Icons.Outlined.ArrowBack,
-            description = Constants.GO_BACK_BTN,
+            description = GO_BACK_BTN,
             outsidePaddingValue = 0,
             onClick = { onClick() }
         )

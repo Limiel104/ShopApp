@@ -30,6 +30,7 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.SIGNUP_BTN
 import com.example.shopapp.util.Constants.SIGNUP_CITY_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_CITY_TF
+import com.example.shopapp.util.Constants.SIGNUP_COLUMN
 import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_TF
 import com.example.shopapp.util.Constants.SIGNUP_CONTENT
@@ -104,7 +105,8 @@ fun SignupContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .testTag(SIGNUP_COLUMN),
             horizontalAlignment = Alignment.Start
         ) {
             ShopTextFieldItem(
@@ -126,7 +128,7 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             ShopTextFieldItem(
                 text = password,
@@ -147,7 +149,7 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             ShopTextFieldItem(
                 text = confirmPassword,
@@ -168,7 +170,7 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             ShopTextFieldItem(
                 text = firstName,
@@ -186,6 +188,8 @@ fun SignupContent(
                 )
             }
 
+            Spacer(modifier = Modifier.height(5.dp))
+
             ShopTextFieldItem(
                 text = lastName,
                 label = stringResource(id = R.string.last_name),
@@ -202,7 +206,7 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             ShopTextFieldItem(
                 text = street,
@@ -220,7 +224,7 @@ fun SignupContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Row() {
                 Column(
@@ -243,7 +247,7 @@ fun SignupContent(
                     }
                 }
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(5.dp))
 
                 Column(
                     modifier = Modifier.weight(1F)
@@ -266,7 +270,7 @@ fun SignupContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             ShopButtonItem(
                 text = stringResource(id = R.string.signup),
