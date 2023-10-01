@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.filedContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 import com.example.shopapp.util.Constants.specialCharsZipCode
 import com.example.shopapp.util.Constants.zipCodeBadFormat
 import com.example.shopapp.util.Constants.zipCodeEmptyError
@@ -32,7 +32,7 @@ class ValidateZipCodeUseCase {
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,
-                errorMessage = filedContainsSpecialCharsError
+                errorMessage = fieldContainsSpecialCharsError
             )
         }
         val isDashInCorrectPlace = zipCode[2] == '-'

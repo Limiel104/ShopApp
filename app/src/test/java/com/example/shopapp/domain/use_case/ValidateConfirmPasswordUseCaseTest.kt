@@ -24,7 +24,7 @@ class ValidateConfirmPasswordUseCaseTest {
     }
 
     @Test
-    fun `validate password and confirmPassword are not hte same and correct errors are returned`() {
+    fun `validate password and confirmPassword are not the same and correct errors are returned`() {
         val password = "Qwerty1+"
         val confirmPassword = "Qwerty"
 

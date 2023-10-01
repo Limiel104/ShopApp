@@ -4,7 +4,7 @@ import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.util.Constants.cityEmptyError
 import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
 import com.example.shopapp.util.Constants.fieldContainsDigitsError
-import com.example.shopapp.util.Constants.filedContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 import com.example.shopapp.util.Constants.specialCharsCity
 
 class ValidateCityUseCase {
@@ -33,7 +33,7 @@ class ValidateCityUseCase {
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,
-                errorMessage = filedContainsSpecialCharsError
+                errorMessage = fieldContainsSpecialCharsError
             )
         }
         return ValidationResult(

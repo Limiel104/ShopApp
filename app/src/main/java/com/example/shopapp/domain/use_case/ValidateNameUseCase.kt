@@ -4,7 +4,7 @@ import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.util.Constants.fieldContainsDigitsError
 import com.example.shopapp.util.Constants.fieldEmptyError
 import com.example.shopapp.util.Constants.specialChars
-import com.example.shopapp.util.Constants.filedContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 
 class ValidateNameUseCase {
     operator fun invoke(name: String): ValidationResult {
@@ -25,7 +25,7 @@ class ValidateNameUseCase {
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,
-                errorMessage = filedContainsSpecialCharsError
+                errorMessage = fieldContainsSpecialCharsError
             )
         }
         return ValidationResult(

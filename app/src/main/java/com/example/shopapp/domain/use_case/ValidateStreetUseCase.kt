@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.filedContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 import com.example.shopapp.util.Constants.specialCharsStreet
 import com.example.shopapp.util.Constants.streetContainsAtLeastOneDigitError
 import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
@@ -33,7 +33,7 @@ class ValidateStreetUseCase {
         if (containsSpecialChar) {
             return ValidationResult(
                 isSuccessful = false,
-                errorMessage = filedContainsSpecialCharsError
+                errorMessage = fieldContainsSpecialCharsError
             )
         }
         return ValidationResult(

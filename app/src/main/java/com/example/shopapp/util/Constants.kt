@@ -149,9 +149,9 @@ object Constants {
 
     //ERRORS
     const val specialChars: String = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
-    const val specialCharsStreet: String = "~`!@#$%^&*()_+={}[]|\\:;\"<>,.?"
-    const val specialCharsCity: String = "~`!@#$%^&*()_=+{}[]:;\"<>,.?/"
-    const val specialCharsZipCode: String = "~`!@#$%^&*()_=+{}[]|\\:;\"'<>,.?/"
+    const val specialCharsStreet: String = "~`!@#$%^&*()_=+{}[]|\\:;\"<>,.?"
+    const val specialCharsCity: String = "~`!@#$%^&*()_=+{}[]|\\:;\"<>,.?/"
+    const val specialCharsZipCode: String = "~`!@#$%^&*()_=+{}[]|\\:;\"<>,.?/'"
     const val emailEmptyError: String = "Email can't be empty"
     const val passwordEmptyError: String = "Password can't be empty"
     const val shortPasswordError: String = "Password is too short"
@@ -161,7 +161,7 @@ object Constants {
     const val confirmPasswordError: String = "Passwords don't mach"
     const val fieldEmptyError: String = "Field can't be empty"
     const val fieldContainsDigitsError: String = "No digits allowed for this field"
-    const val filedContainsSpecialCharsError: String = "Special characters not allowed for this field"
+    const val fieldContainsSpecialCharsError: String = "Special characters not allowed for this field"
     const val streetEmptyError: String = "Street can't be empty"
     const val streetContainsAtLeastOneDigitError: String = "Street should have at least one digit"
     const val fieldContainsAtLeastOneLetterError: String = "Field should have at least one letter"

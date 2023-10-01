@@ -58,7 +58,7 @@ import com.example.shopapp.util.Constants.emailEmptyError
 import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
 import com.example.shopapp.util.Constants.fieldContainsDigitsError
 import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.filedContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneCapitalLetterError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneDigitError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneSpecialCharError
@@ -1105,7 +1105,7 @@ class SignupScreenTest {
 
         composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertExists()
         composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(filedContainsSpecialCharsError)
+        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
@@ -1195,7 +1195,7 @@ class SignupScreenTest {
 
         composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertExists()
         composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(filedContainsSpecialCharsError)
+        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
@@ -1330,7 +1330,7 @@ class SignupScreenTest {
 
         composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
         composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(filedContainsSpecialCharsError)
+        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
@@ -1465,7 +1465,7 @@ class SignupScreenTest {
 
         composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
         composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(filedContainsSpecialCharsError)
+        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
@@ -1555,7 +1555,7 @@ class SignupScreenTest {
 
         composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertExists()
         composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(filedContainsSpecialCharsError)
+        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
