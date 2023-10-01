@@ -193,7 +193,7 @@ class CartScreenTest {
     }
 
     @Test
-    fun cartScreenTopBar_categoryNameIsDisplayedCorrectly() {
+    fun cartScreenTopBar_titleIsDisplayedCorrectly() {
         setScreenState(
             cartProducts = cartProductList
         )
