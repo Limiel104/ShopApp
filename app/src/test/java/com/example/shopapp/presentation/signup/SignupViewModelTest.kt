@@ -138,6 +138,76 @@ class SignupViewModelTest {
     }
 
     @Test
+    fun `event enteredFirstName sets firstName state`() {
+        signupViewModel = setViewModel()
+
+        val firstName = "John"
+        val initialFirstName = getCurrentSignupState().firstName
+        signupViewModel.onEvent(SignupEvent.EnteredFirstName(firstName))
+
+        val resultFirstName = getCurrentSignupState().firstName
+
+        assertThat(initialFirstName).isEqualTo("")
+        assertThat(resultFirstName).isEqualTo(firstName)
+    }
+
+    @Test
+    fun `event enteredLastName sets lastName state`() {
+        signupViewModel = setViewModel()
+
+        val lastName = "Smith"
+        val initialLastName = getCurrentSignupState().lastName
+        signupViewModel.onEvent(SignupEvent.EnteredLastName(lastName))
+
+        val resultLastName = getCurrentSignupState().lastName
+
+        assertThat(initialLastName).isEqualTo("")
+        assertThat(resultLastName).isEqualTo(lastName)
+    }
+
+    @Test
+    fun `event enteredStreet sets street state`() {
+        signupViewModel = setViewModel()
+
+        val street = "Street 1"
+        val initialStreet = getCurrentSignupState().street
+        signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
+
+        val resultStreet = getCurrentSignupState().street
+
+        assertThat(initialStreet).isEqualTo("")
+        assertThat(resultStreet).isEqualTo(street)
+    }
+
+    @Test
+        fun `event enteredCity sets city state`() {
+        signupViewModel = setViewModel()
+
+        val city = "Warsaw"
+        val initialCity= getCurrentSignupState().city
+        signupViewModel.onEvent(SignupEvent.EnteredCity(city))
+
+        val resultCity= getCurrentSignupState().city
+
+        assertThat(initialCity).isEqualTo("")
+        assertThat(resultCity).isEqualTo(city)
+    }
+
+    @Test
+    fun `event enteredZipCode sets zipCode state`() {
+        signupViewModel = setViewModel()
+
+        val zipCode = "12-345"
+        val initialZipCode= getCurrentSignupState().zipCode
+        signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
+
+        val resultZipCode= getCurrentSignupState().zipCode
+
+        assertThat(initialZipCode).isEqualTo("")
+        assertThat(resultZipCode).isEqualTo(zipCode)
+    }
+
+    @Test
     fun `validation is successful`() {
         val email = "email@email.com"
         val password = "Qwerty1+"
@@ -719,11 +789,42 @@ class SignupViewModelTest {
             zipCode = "12-345"
         )
         signupViewModel.addUser()
+        val loadingState = getCurrentSignupState().isLoading
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.addUserUseCase(user)
         }
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `addUser is loading`() {
+        coEvery {
+            shopUseCases.addUserUseCase(user)
+        } returns flowOf(Resource.Loading(true))
+
+        signupViewModel = setViewModel()
+        setSignupState(
+            email = "email@email.com",
+            password = "Qwerty1+",
+            confirmPassword = "Qwerty1+",
+            firstName = "John",
+            lastName = "Smith",
+            street = "Street 1",
+            city = "Warsaw",
+            zipCode = "12-345"
+        )
+        val initialLoginState = getCurrentSignupState().isLoading
+        signupViewModel.addUser()
+        val loadingState = getCurrentSignupState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.addUserUseCase(user)
+        }
+        assertThat(initialLoginState).isFalse()
+        assertThat(loadingState).isTrue()
     }
 
     @Test
@@ -750,12 +851,14 @@ class SignupViewModelTest {
             zipCode = "12-345"
         )
         signupViewModel.signup(email,password)
+        val loadingState = getCurrentSignupState().isLoading
 
         coVerifySequence {
             shopUseCases.signupUseCase(email,password)
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.addUserUseCase(user)
         }
+        assertThat(loadingState).isFalse()
     }
 
     @Test
