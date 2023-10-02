@@ -78,7 +78,8 @@ class AccountScreenTest {
                             userClubPoints = 234,
                             onLogout = {},
                             onGoToCart = {},
-                            onGoToOrders = {}
+                            onGoToOrders = {},
+                            onGoToProfile = {}
                         )
                     }
                 }

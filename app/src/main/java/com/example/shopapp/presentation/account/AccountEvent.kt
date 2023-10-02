@@ -6,4 +6,5 @@ sealed class AccountEvent {
     object OnLogout: AccountEvent()
     object GoToCart: AccountEvent()
     object GoToOrders: AccountEvent()
+    object GoToProfile: AccountEvent()
 }

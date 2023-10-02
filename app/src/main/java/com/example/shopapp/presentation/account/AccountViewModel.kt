@@ -59,6 +59,11 @@ class AccountViewModel @Inject constructor(
                     _eventFlow.emit(AccountUiEvent.NavigateToOrders)
                 }
             }
+            is AccountEvent.GoToProfile -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(AccountUiEvent.NavigateToProfile)
+                }
+            }
         }
     }
 

@@ -46,6 +46,9 @@ fun AccountScreen(
                 is AccountUiEvent.NavigateToOrders -> {
                     navController.navigate(Screen.OrdersScreen.route)
                 }
+                is AccountUiEvent.NavigateToProfile -> {
+                    navController.navigate(Screen.ProfileScreen.route)
+                }
                 is AccountUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
@@ -61,7 +64,8 @@ fun AccountScreen(
             userClubPoints = points,
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onGoToCart = { viewModel.onEvent(AccountEvent.GoToCart) },
-            onGoToOrders = { viewModel.onEvent(AccountEvent.GoToOrders) }
+            onGoToOrders = { viewModel.onEvent(AccountEvent.GoToOrders) },
+            onGoToProfile = { viewModel.onEvent(AccountEvent.GoToProfile) }
         )
     }
     else {
