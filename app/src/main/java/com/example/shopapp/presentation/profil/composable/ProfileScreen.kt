@@ -25,6 +25,18 @@ fun ProfileScreen(
     ProfileContent(
         scaffoldState = rememberScaffoldState(),
         bottomBarHeight = bottomBarHeight,
-        user = user
+        user = user,
+        firstNameError = null,
+        lastNameError = null,
+        streetError = null,
+        cityError = null,
+        zipCodeError = null,
+        onFirstNameChange = {},
+        onLastNameChange = {},
+        onStreetChange = {},
+        onCityChange = {},
+        onZipCodeChange = {},
+        onGoBack = {},
+        onSave = {}
     )
 }

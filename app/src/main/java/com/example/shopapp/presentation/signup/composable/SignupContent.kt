@@ -22,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.presentation.account.composable.SignupTopBar
 import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.common.composable.ShopTextFieldItem
