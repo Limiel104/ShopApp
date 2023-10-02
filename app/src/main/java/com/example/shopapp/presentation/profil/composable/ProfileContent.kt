@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -20,12 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.domain.model.User
 import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.common.composable.ShopTextFieldItem
 import com.example.shopapp.util.Constants.PROFILE_CITY_ERROR
 import com.example.shopapp.util.Constants.PROFILE_CITY_TF
+import com.example.shopapp.util.Constants.PROFILE_COLUMN
 import com.example.shopapp.util.Constants.PROFILE_CONTENT
 import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_ERROR
 import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_TF
@@ -36,17 +37,22 @@ import com.example.shopapp.util.Constants.PROFILE_STREET_TF
 import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_ERROR
 import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_TF
 import com.example.shopapp.util.Constants.SAVE_BTN
+import com.example.shopapp.util.Constants.bottomBarHeight
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ProfileContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    user: User,
+    firstName: String,
     firstNameError: String?,
+    lastName: String,
     lastNameError: String?,
+    street: String,
     streetError: String?,
+    city: String,
     cityError: String?,
+    zipCode: String,
     zipCodeError: String?,
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
@@ -71,11 +77,12 @@ fun ProfileContent(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .testTag(PROFILE_COLUMN),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             ShopTextFieldItem(
-                text = user.firstName,
+                text = firstName,
                 label = stringResource(id = R.string.first_name),
                 placeholder = stringResource(id = R.string.first_name),
                 testTag = PROFILE_FIRSTNAME_TF,
@@ -91,7 +98,7 @@ fun ProfileContent(
             }
 
             ShopTextFieldItem(
-                text = user.lastName,
+                text = lastName,
                 label = stringResource(id = R.string.last_name),
                 placeholder = stringResource(id = R.string.last_name),
                 testTag = PROFILE_LASTNAME_TF,
@@ -107,7 +114,7 @@ fun ProfileContent(
             }
 
             ShopTextFieldItem(
-                text = user.address.street,
+                text = street,
                 label = stringResource(id = R.string.street),
                 placeholder = stringResource(id = R.string.street),
                 testTag = PROFILE_STREET_TF,
@@ -127,7 +134,7 @@ fun ProfileContent(
                     modifier = Modifier.weight(1F)
                 ) {
                     ShopTextFieldItem(
-                        text = user.address.city,
+                        text = city,
                         label = stringResource(id = R.string.city),
                         placeholder = stringResource(id = R.string.city),
                         testTag = PROFILE_CITY_TF,
@@ -149,7 +156,7 @@ fun ProfileContent(
                     modifier = Modifier.weight(1F)
                 ) {
                     ShopTextFieldItem(
-                        text = user.address.zipCode,
+                        text = zipCode,
                         label = stringResource(id = R.string.zip_code),
                         placeholder = stringResource(id = R.string.zip_code),
                         testTag = PROFILE_ZIP_CODE_TF,
@@ -177,5 +184,25 @@ fun ProfileContent(
 @Preview
 @Composable
 fun ProfileContentPreview() {
-
+    ProfileContent(
+        scaffoldState = rememberScaffoldState(),
+        bottomBarHeight = bottomBarHeight.dp,
+        firstName = "John",
+        firstNameError = null,
+        lastName = "Smith",
+        lastNameError = null,
+        street = "Street 1",
+        streetError = null,
+        city = "Warsaw",
+        cityError = null,
+        zipCode = "12-345",
+        zipCodeError = null,
+        onFirstNameChange = {},
+        onLastNameChange = {},
+        onStreetChange = {},
+        onCityChange = {},
+        onZipCodeChange = {},
+        onGoBack = {},
+        onSave = {}
+    )
 }

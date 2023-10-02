@@ -94,6 +94,7 @@ object Constants {
     const val ORDERS_SORT_SECTION: String = "Orders sort section"
     const val ORDERS_CPI: String = "Orders circular progress indicator"
     const val PROFILE_CONTENT: String = "Profile content"
+    const val PROFILE_COLUMN: String = "Profile column"
     const val PROFILE_TOP_BAR: String = "Profile top bar"
     const val PROFILE_FIRSTNAME_TF: String = "Profile first name tf"
     const val PROFILE_LASTNAME_TF: String = "Profile last name tf"
