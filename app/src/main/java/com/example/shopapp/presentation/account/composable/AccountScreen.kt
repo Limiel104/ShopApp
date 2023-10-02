@@ -1,9 +1,11 @@
 package com.example.shopapp.presentation.account.composable
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -11,8 +13,8 @@ import com.example.shopapp.presentation.account.AccountEvent
 import com.example.shopapp.presentation.account.AccountUiEvent
 import com.example.shopapp.presentation.account.AccountViewModel
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.ACCOUNT_SCREEN_LE
+import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -23,12 +25,14 @@ fun AccountScreen(
     viewModel: AccountViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
-    val name = viewModel.accountState.value.name
+    val firstName = viewModel.accountState.value.user.firstName
+    val points = viewModel.accountState.value.user.points
     val isUserLoggedIn = viewModel.accountState.value.isUserLoggedIn
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            Log.i(Constants.TAG, ACCOUNT_SCREEN_LE)
+            Log.i(TAG, ACCOUNT_SCREEN_LE)
             when(event) {
                 is AccountUiEvent.NavigateToLogin -> {
                     navController.navigate(Screen.LoginScreen.route)
@@ -42,6 +46,9 @@ fun AccountScreen(
                 is AccountUiEvent.NavigateToOrders -> {
                     navController.navigate(Screen.OrdersScreen.route)
                 }
+                is AccountUiEvent.ShowErrorMessage -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -50,8 +57,8 @@ fun AccountScreen(
         AccountContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            userName = name,
-            userClubPoints = 234,
+            userName = firstName,
+            userClubPoints = points,
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onGoToCart = { viewModel.onEvent(AccountEvent.GoToCart) },
             onGoToOrders = { viewModel.onEvent(AccountEvent.GoToOrders) }

@@ -15,7 +15,7 @@ fun Product.priceToString(): String {
     return formattedPrice.replace(".", ",")
 }
 
-fun Order.priceToString(): String {
+fun Order.totalAmountToString(): String {
     val formattedPrice = String.format("%.2f PLN", totalAmount)
     return formattedPrice.replace(".", ",")
 }

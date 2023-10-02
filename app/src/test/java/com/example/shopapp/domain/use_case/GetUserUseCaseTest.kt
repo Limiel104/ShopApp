@@ -17,17 +17,18 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class AddUserUseCaseTest {
+class GetUserUseCaseTest {
 
     @MockK
     private lateinit var userStorageRepository: UserStorageRepository
-    private lateinit var addUserUseCase: AddUserUseCase
+    private lateinit var getUserUseCase: GetUserUseCase
     private lateinit var user: User
+
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.addUserUseCase = AddUserUseCase(userStorageRepository)
+        getUserUseCase = GetUserUseCase(userStorageRepository)
 
         user = User(
             userUID = "userUID",
@@ -47,35 +48,35 @@ class AddUserUseCaseTest {
     }
 
     @Test
-    fun `user was added successfully`() {
+    fun `get user was successful`() {
         runBlocking {
-            val result = Resource.Success(true)
+            val result = Resource.Success(listOf(user))
 
-            coEvery { userStorageRepository.addUser(user) } returns flowOf(result)
+            coEvery {
+                userStorageRepository.getUser("userUID")
+            } returns flowOf(result)
 
-            val response = addUserUseCase(user).first()
+            val response = getUserUseCase("userUID").first()
 
-            coVerify(exactly = 1) { addUserUseCase(user) }
+            coVerify(exactly = 1) { getUserUseCase("userUID") }
             assertThat(response).isEqualTo(result)
-            assertThat(response.data).isTrue()
+            assertThat(response.data).containsExactlyElementsIn(listOf(user))
             assertThat(response.message).isNull()
         }
     }
 
     @Test
-    fun `user was not added and error was returned`() {
+    fun `get user was not successful and error message was returned`() {
         runBlocking {
             coEvery {
-                userStorageRepository.addUser(user)
-            } returns flowOf(
-                Resource.Error("Error")
-            )
+                userStorageRepository.getUser("userUID")
+            } returns flowOf(Resource.Error("Error"))
 
-            val response = addUserUseCase(user).first()
+            val response = getUserUseCase("userUID").first()
 
-            coVerify(exactly = 1) { addUserUseCase(user) }
-            assertThat(response.message).isEqualTo("Error")
+            coVerify(exactly = 1) { getUserUseCase("userUID") }
             assertThat(response.data).isNull()
+            assertThat(response.message).isEqualTo("Error")
         }
     }
 }

@@ -53,4 +53,9 @@
     <string name="your_orders">Your Orders</string>
     <string name="date_ascending">Oldest to Newest</string>
     <string name="date_descending">Newest to Oldest</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
+    <string name="zip_code">Zip Code</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.shopapp.presentation.signup.composable
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -22,12 +24,24 @@ fun SignupScreen(
     bottomBarHeight: Dp,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
+    val scaffoldState = rememberScaffoldState()
+    val scrollState = rememberScrollState()
     val email = viewModel.signupState.value.email
     val emailError = viewModel.signupState.value.emailError
     val password = viewModel.signupState.value.password
     val passwordError = viewModel.signupState.value.passwordError
     val confirmPassword = viewModel.signupState.value.confirmPassword
     val confirmPasswordError = viewModel.signupState.value.confirmPasswordError
+    val firstName = viewModel.signupState.value.firstName
+    val firstNameError = viewModel.signupState.value.firstNameError
+    val lastName = viewModel.signupState.value.lastName
+    val lastNameError = viewModel.signupState.value.lastNameError
+    val street = viewModel.signupState.value.street
+    val streetError = viewModel.signupState.value.streetError
+    val city = viewModel.signupState.value.city
+    val cityError = viewModel.signupState.value.cityError
+    val zipCode = viewModel.signupState.value.zipCode
+    val zipCodeError = viewModel.signupState.value.zipCodeError
     val isLoading = viewModel.signupState.value.isLoading
     val context = LocalContext.current
 
@@ -49,6 +63,8 @@ fun SignupScreen(
     }
 
     SignupContent(
+        scaffoldState = scaffoldState,
+        scrollState  = scrollState,
         bottomBarHeight = bottomBarHeight,
         email = email,
         emailError = emailError,
@@ -56,10 +72,26 @@ fun SignupScreen(
         passwordError = passwordError,
         confirmPassword = confirmPassword,
         confirmPasswordError = confirmPasswordError,
+        firstName = firstName,
+        firstNameError = firstNameError,
+        lastName = lastName,
+        lastNameError = lastNameError,
+        street = street,
+        streetError = streetError,
+        city = city,
+        cityError = cityError,
+        zipCode = zipCode,
+        zipCodeError = zipCodeError,
         isLoading = isLoading,
         onEmailChange = { viewModel.onEvent(SignupEvent.EnteredEmail(it)) },
         onPasswordChange = { viewModel.onEvent(SignupEvent.EnteredPassword(it)) },
         onConfirmPasswordChange = { viewModel.onEvent(SignupEvent.EnteredConfirmPassword(it)) },
-        onSignup = { viewModel.onEvent(SignupEvent.Signup) }
+        onFirstNameChange = { viewModel.onEvent(SignupEvent.EnteredFirstName(it)) },
+        onLastNameChange = { viewModel.onEvent(SignupEvent.EnteredLastName(it)) },
+        onStreetChange = { viewModel.onEvent(SignupEvent.EnteredStreet(it)) },
+        onCityChange = { viewModel.onEvent(SignupEvent.EnteredCity(it)) },
+        onZipCodeChange = { viewModel.onEvent(SignupEvent.EnteredZipCode(it)) },
+        onSignup = { viewModel.onEvent(SignupEvent.Signup) },
+        onGoBack = {}
     )
 }

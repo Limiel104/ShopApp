@@ -1,8 +1,8 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.util.Constants.containsAtLeastOneCapitalLetterError
-import com.example.shopapp.util.Constants.containsAtLeastOneDigitError
-import com.example.shopapp.util.Constants.containsAtLeastOneSpecialCharError
+import com.example.shopapp.util.Constants.passwordContainsAtLeastOneCapitalLetterError
+import com.example.shopapp.util.Constants.passwordContainsAtLeastOneDigitError
+import com.example.shopapp.util.Constants.passwordContainsAtLeastOneSpecialCharError
 import com.example.shopapp.util.Constants.passwordEmptyError
 import com.example.shopapp.util.Constants.shortPasswordError
 import com.google.common.truth.Truth.assertThat
@@ -54,7 +54,7 @@ class ValidateSignupPasswordUseCaseTest {
         val result = validateSignupPasswordUseCase(password)
 
         assertThat(result.isSuccessful).isFalse()
-        assertThat(result.errorMessage).isEqualTo(containsAtLeastOneDigitError)
+        assertThat(result.errorMessage).isEqualTo(passwordContainsAtLeastOneDigitError)
     }
 
     @Test
@@ -64,7 +64,7 @@ class ValidateSignupPasswordUseCaseTest {
         val result = validateSignupPasswordUseCase(password)
 
         assertThat(result.isSuccessful).isFalse()
-        assertThat(result.errorMessage).isEqualTo(containsAtLeastOneCapitalLetterError)
+        assertThat(result.errorMessage).isEqualTo(passwordContainsAtLeastOneCapitalLetterError)
     }
 
     @Test
@@ -74,6 +74,6 @@ class ValidateSignupPasswordUseCaseTest {
         val result = validateSignupPasswordUseCase(password)
 
         assertThat(result.isSuccessful).isFalse()
-        assertThat(result.errorMessage).isEqualTo(containsAtLeastOneSpecialCharError)
+        assertThat(result.errorMessage).isEqualTo(passwordContainsAtLeastOneSpecialCharError)
     }
 }

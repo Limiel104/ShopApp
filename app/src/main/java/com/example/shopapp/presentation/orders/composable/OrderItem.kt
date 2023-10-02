@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
-import com.example.shopapp.presentation.common.format.priceToString
+import com.example.shopapp.presentation.common.format.totalAmountToString
 import com.example.shopapp.util.Constants.EXPAND_OR_COLLAPSE_BTN
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -56,7 +56,7 @@ fun OrderItem(
             )
 
             Text(
-                text = order.priceToString()
+                text = order.totalAmountToString()
             )
 
             IconButton(
