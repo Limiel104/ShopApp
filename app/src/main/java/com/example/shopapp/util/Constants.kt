@@ -150,6 +150,7 @@ object Constants {
     const val SIGNUP_VM: String = "SignupScreen ViewModel"
     const val CART_VM: String = "CartScreen ViewModel"
     const val ORDERS_VM: String = "Orders ViewModel"
+    const val PROFILE_VM: String = "Profile ViewModel"
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
@@ -160,6 +161,7 @@ object Constants {
     const val SIGNUP_SCREEN_LE: String = "SignupScreen Launched Effect"
     const val CART_SCREEN_LE: String = "CartScreen Launched Effect"
     const val ORDERS_SCREEN_LE: String = "OrdersScreen Launched Effect"
+    const val PROFILE_SCREEN_LE: String = "ProfileScreen Launched Effect"
 
     //ERRORS
     const val specialChars: String = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
