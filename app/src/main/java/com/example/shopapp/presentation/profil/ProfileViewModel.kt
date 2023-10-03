@@ -3,17 +3,22 @@ package com.example.shopapp.presentation.profil
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.PROFILE_VM
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val shopUseCases: ShopUseCases
 ): ViewModel() {
 
@@ -25,6 +30,14 @@ class ProfileViewModel @Inject constructor(
 
     init {
         Log.i(TAG,PROFILE_VM)
+
+        savedStateHandle.get<String>("userUID")?.let { userUID ->
+            _profileState.value = profileState.value.copy(
+                userUID = userUID
+            )
+        }
+
+        getUser(_profileState.value.userUID)
     }
 
     fun onEvent(event: ProfileEvent) {
@@ -66,6 +79,37 @@ class ProfileViewModel @Inject constructor(
                 }
                 else {
                     Log.i(TAG, "Form validation error")
+                }
+            }
+        }
+    }
+
+    fun getUser(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading user: ${response.isLoading}")
+                        _profileState.value = profileState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { user ->
+                            Log.i(TAG, "User: $user")
+                            _profileState.value = profileState.value.copy(
+                                firstName = user[0].firstName,
+                                lastName = user[0].lastName,
+                                street = user[0].address.street,
+                                city = user[0].address.city,
+                                zipCode = user[0].address.zipCode
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
                 }
             }
         }

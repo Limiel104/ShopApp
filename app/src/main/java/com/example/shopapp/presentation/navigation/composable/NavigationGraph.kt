@@ -120,7 +120,14 @@ fun NavigationGraph(
             )
         }
         composable(
-            route = Screen.ProfileScreen.route
+            route = Screen.ProfileScreen.route + "userUID" + "={userUID}",
+            arguments = listOf(
+                navArgument(
+                    name = "userUID"
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             ProfileScreen(
                 navController = navController,

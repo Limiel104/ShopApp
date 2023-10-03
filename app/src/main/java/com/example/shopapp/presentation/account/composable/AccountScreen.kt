@@ -47,7 +47,7 @@ fun AccountScreen(
                     navController.navigate(Screen.OrdersScreen.route)
                 }
                 is AccountUiEvent.NavigateToProfile -> {
-                    navController.navigate(Screen.ProfileScreen.route)
+                    navController.navigate(Screen.ProfileScreen.route + "userUID=" + event.userUID)
                 }
                 is AccountUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()

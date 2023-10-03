@@ -61,7 +61,8 @@ class AccountViewModel @Inject constructor(
             }
             is AccountEvent.GoToProfile -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(AccountUiEvent.NavigateToProfile)
+                    val userUID = _accountState.value.user.userUID
+                    _eventFlow.emit(AccountUiEvent.NavigateToProfile(userUID))
                 }
             }
         }

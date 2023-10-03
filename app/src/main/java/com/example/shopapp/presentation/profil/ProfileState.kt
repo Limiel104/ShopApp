@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.profil
 
 data class ProfileState(
+    val userUID: String = "",
     val firstName: String = "",
     val firstNameError: String? = null,
     val lastName: String = "",
