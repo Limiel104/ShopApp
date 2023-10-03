@@ -123,6 +123,7 @@ fun NavigationGraph(
             route = Screen.ProfileScreen.route
         ) {
             ProfileScreen(
+                navController = navController,
                 bottomBarHeight = bottomBarHeight
             )
         }

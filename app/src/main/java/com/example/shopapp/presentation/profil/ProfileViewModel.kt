@@ -54,7 +54,58 @@ class ProfileViewModel @Inject constructor(
                     zipCode = event.value
                 )
             }
-            is ProfileEvent.Save -> TODO()
+            is ProfileEvent.Save -> {
+                val firstName = _profileState.value.firstName
+                val lastName = _profileState.value.lastName
+                val street = _profileState.value.street
+                val city = _profileState.value.city
+                val zipCode = _profileState.value.zipCode
+
+                if(isValidationSuccessful(firstName,lastName,street,city,zipCode)){
+                    saveChanges()
+                }
+                else {
+                    Log.i(TAG, "Form validation error")
+                }
+            }
         }
+    }
+
+    fun isValidationSuccessful(
+        firstName: String,
+        lastName: String,
+        street: String,
+        city: String,
+        zipCode: String
+    ): Boolean {
+        val firstNameValidationResult = shopUseCases.validateNameUseCase(firstName)
+        val lastNameValidationResult = shopUseCases.validateNameUseCase(lastName)
+        val streetValidationResult = shopUseCases.validateStreetUseCase(street)
+        val cityValidationResult = shopUseCases.validateCityUseCase(city)
+        val zipCodeValidationResult = shopUseCases.validateZipCodeUseCase(zipCode)
+
+        val hasError = listOf(
+            firstNameValidationResult,
+            lastNameValidationResult,
+            streetValidationResult,
+            cityValidationResult,
+            zipCodeValidationResult
+        ).any { !it.isSuccessful }
+
+        if(hasError) {
+            _profileState.value = profileState.value.copy(
+                firstNameError = firstNameValidationResult.errorMessage,
+                lastNameError = lastNameValidationResult.errorMessage,
+                streetError = streetValidationResult.errorMessage,
+                cityError = cityValidationResult.errorMessage,
+                zipCodeError = zipCodeValidationResult.errorMessage
+            )
+            return false
+        }
+        return true
+    }
+
+    fun saveChanges() {
+
     }
 }

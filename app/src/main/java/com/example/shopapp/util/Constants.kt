@@ -106,6 +106,7 @@ object Constants {
     const val PROFILE_STREET_ERROR: String = "Profile street tf error"
     const val PROFILE_CITY_ERROR: String = "Profile city tf error"
     const val PROFILE_ZIP_CODE_ERROR: String = "Profile zip code tf error"
+    const val PROFILE_CPI: String = "Profile circular progress indicator"
     const val SAVE_BTN: String = "Save button"
 
     //Content Description

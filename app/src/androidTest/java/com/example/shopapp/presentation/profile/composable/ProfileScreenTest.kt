@@ -15,6 +15,7 @@ import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
@@ -29,11 +30,13 @@ import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.presentation.profil.composable.ProfileContent
 import com.example.shopapp.presentation.profil.composable.ProfileScreen
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PROFILE_CITY_ERROR
 import com.example.shopapp.util.Constants.PROFILE_CITY_TF
 import com.example.shopapp.util.Constants.PROFILE_COLUMN
 import com.example.shopapp.util.Constants.PROFILE_CONTENT
+import com.example.shopapp.util.Constants.PROFILE_CPI
 import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_ERROR
 import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_TF
 import com.example.shopapp.util.Constants.PROFILE_LASTNAME_ERROR
@@ -84,6 +87,7 @@ class ProfileScreenTest {
         cityError: String? = null,
         zipCode: String = "",
         zipCodeError: String? = null,
+        isLoading: Boolean = false
     ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
@@ -108,6 +112,7 @@ class ProfileScreenTest {
                             cityError = cityError,
                             zipCode = zipCode,
                             zipCodeError = zipCodeError,
+                            isLoading = isLoading,
                             onFirstNameChange = {},
                             onLastNameChange = {},
                             onStreetChange = {},
@@ -134,6 +139,7 @@ class ProfileScreenTest {
                         route = Screen.ProfileScreen.route
                     ) {
                         ProfileScreen(
+                            navController = navController,
                             bottomBarHeight = bottomBarHeight.dp
                         )
                     }
@@ -529,5 +535,534 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
         composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveDigit_errorDisplayedCorrectly() {
+        val firstName = "J0hn"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
+
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
+        val firstName = "John%"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
+
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveDigit_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith1"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith#"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenStreetTextField_performClickOnButtonWileStreetHasNoLetters_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "61"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.fieldContainsAtLeastOneLetterError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenStreetTextField_performClickOnButtonWileStreetDoesNotHaveOneDigit_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.streetContainsAtLeastOneDigitError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenStreetTextField_performClickOnButtonWileStreetDoesHaveSpecialChar_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1%"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenCityTextField_performClickOnButtonWileCityHasNoLetters_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "34"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsAtLeastOneLetterError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenCityTextField_performClickOnButtonWileCityDoesHaveDigit_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw5"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenCityTextField_performClickOnButtonWileCityDoesHaveSpecialChar_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw$"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenZipCodeTextField_performClickOnButtonWileZipCodeHasBadFormat_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(Constants.zipCodeBadFormat)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenZipCodeTextField_performClickOnButtonWileZipCodeDoesHaveSpecialChar_errorDisplayedCorrectly() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "{2-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenErrorTextFields_performClickOnButtonWileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        val errors = listOf(
+            PROFILE_FIRSTNAME_ERROR,
+            PROFILE_LASTNAME_ERROR,
+            PROFILE_STREET_ERROR,
+            PROFILE_CITY_ERROR,
+            PROFILE_ZIP_CODE_ERROR
+        )
+
+        val constants = listOf(
+            fieldEmptyError,
+            fieldEmptyError,
+            streetEmptyError,
+            cityEmptyError,
+            zipCodeEmptyError
+        )
+
+        errors.zip(constants) { error, constant ->
+            composeRule.onNodeWithTag(error).assertExists()
+            composeRule.onNodeWithTag(error).assertTextEquals(constant)
+        }
+    }
+
+    @Test
+    fun profileScreenErrorTextFields_noErrorsAfterClickingOnTheButton() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+
+        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+    }
+
+    @Test
+    fun profileScreenCircularProgressIndicator_IsDisplayedCorrectly() {
+        setScreenState(
+            isLoading = true
+        )
+        val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
+        val deviceHeight = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().bottom
+        val leftPosition = deviceWidth.value/2
+        val topPosition = deviceHeight.value/2
+
+        composeRule.onNodeWithTag(PROFILE_CPI).assertExists()
+        composeRule.onNodeWithTag(PROFILE_CPI).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_CPI).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(PROFILE_CPI).assertHeightIsEqualTo(deviceHeight)
+        composeRule.onNodeWithTag(PROFILE_CPI).assertWidthIsEqualTo(deviceWidth)
+
+        composeRule.onNodeWithTag(PROFILE_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
+        composeRule.onNodeWithTag(PROFILE_CPI).onChild().assertWidthIsEqualTo(40.dp)
+    }
+
+    @Test
+    fun profileScreenCircularProgressIndicator_isShowingUpWhenAllIsCorrect() {
+        val firstName = "John"
+        val lastName = "Smith"
+        val street = "Street 1"
+        val city = "Warsaw"
+        val zipCode = "12-345"
+        setScreen()
+
+        composeRule.onNodeWithTag(PROFILE_CPI).assertDoesNotExist()
+
+        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
+        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
+        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
+        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        composeRule.onNodeWithTag(SAVE_BTN).performClick()
+
+        composeRule.onNodeWithTag(PROFILE_CPI).assertExists()
     }
 }

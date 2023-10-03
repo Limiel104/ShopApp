@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.shopapp.presentation.profil.ProfileEvent
 import com.example.shopapp.presentation.profil.ProfileUiEvent
 import com.example.shopapp.presentation.profil.ProfileViewModel
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
+    navController: NavController,
     bottomBarHeight: Dp,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -40,7 +42,9 @@ fun ProfileScreen(
                 is ProfileUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
-                is ProfileUiEvent.Save -> TODO()
+                is ProfileUiEvent.Save -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -58,12 +62,13 @@ fun ProfileScreen(
         cityError = cityError,
         zipCode = zipCode,
         zipCodeError = zipCodeError,
+        isLoading = isLoading,
         onFirstNameChange = { viewModel.onEvent(ProfileEvent.EnteredFirstName(it)) },
         onLastNameChange = { viewModel.onEvent(ProfileEvent.EnteredLastName(it)) },
         onStreetChange = { viewModel.onEvent(ProfileEvent.EnteredStreet(it)) },
         onCityChange = { viewModel.onEvent(ProfileEvent.EnteredCity(it)) },
         onZipCodeChange = { viewModel.onEvent(ProfileEvent.EnteredZipCode(it)) },
         onGoBack = {},
-        onSave = {}
+        onSave = { viewModel.onEvent(ProfileEvent.Save) }
     )
 }
