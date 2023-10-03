@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Address
+import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.PROFILE_VM
 import com.example.shopapp.util.Constants.TAG
@@ -68,14 +70,27 @@ class ProfileViewModel @Inject constructor(
                 )
             }
             is ProfileEvent.Save -> {
-                val firstName = _profileState.value.firstName
-                val lastName = _profileState.value.lastName
-                val street = _profileState.value.street
-                val city = _profileState.value.city
-                val zipCode = _profileState.value.zipCode
+                val user = User(
+                    userUID = _profileState.value.userUID,
+                    firstName = _profileState.value.firstName,
+                    lastName = _profileState.value.lastName,
+                    address = Address(
+                        street = _profileState.value.street,
+                        city = _profileState.value.city,
+                        zipCode = _profileState.value.zipCode
+                    ),
+                    points = _profileState.value.points
+                )
 
-                if(isValidationSuccessful(firstName,lastName,street,city,zipCode)){
-                    saveChanges()
+                if(isValidationSuccessful(
+                        user.firstName,
+                        user.lastName,
+                        user.address.street,
+                        user.address.city,
+                        user.address.zipCode
+                    )
+                ) {
+                    saveChanges(user)
                 }
                 else {
                     Log.i(TAG, "Form validation error")
@@ -102,7 +117,8 @@ class ProfileViewModel @Inject constructor(
                                 lastName = user[0].lastName,
                                 street = user[0].address.street,
                                 city = user[0].address.city,
-                                zipCode = user[0].address.zipCode
+                                zipCode = user[0].address.zipCode,
+                                points = user[0].points
                             )
                         }
                     }
@@ -149,7 +165,26 @@ class ProfileViewModel @Inject constructor(
         return true
     }
 
-    fun saveChanges() {
-
+    fun saveChanges(user: User) {
+        viewModelScope.launch {
+            shopUseCases.updateUserUseCase(user).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading: ${response.isLoading}")
+                        _profileState.value = profileState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Updated user successfully")
+                        _eventFlow.emit(ProfileUiEvent.Save)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
     }
 }

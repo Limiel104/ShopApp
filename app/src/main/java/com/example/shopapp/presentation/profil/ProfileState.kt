@@ -12,5 +12,6 @@ data class ProfileState(
     val cityError: String? = null,
     val zipCode: String = "",
     val zipCodeError: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val points: Int = 0
 )
