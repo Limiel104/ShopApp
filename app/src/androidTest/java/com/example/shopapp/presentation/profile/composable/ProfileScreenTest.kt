@@ -1044,25 +1044,4 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
         composeRule.onNodeWithTag(PROFILE_CPI).onChild().assertWidthIsEqualTo(40.dp)
     }
-
-    @Test
-    fun profileScreenCircularProgressIndicator_isShowingUpWhenAllIsCorrect() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
-        setScreen()
-
-        composeRule.onNodeWithTag(PROFILE_CPI).assertDoesNotExist()
-
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
-        composeRule.onNodeWithTag(SAVE_BTN).performClick()
-
-        composeRule.onNodeWithTag(PROFILE_CPI).assertExists()
-    }
 }

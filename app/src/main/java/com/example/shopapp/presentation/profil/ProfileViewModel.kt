@@ -112,14 +112,16 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Success -> {
                         response.data?.let { user ->
                             Log.i(TAG, "User: $user")
-                            _profileState.value = profileState.value.copy(
-                                firstName = user[0].firstName,
-                                lastName = user[0].lastName,
-                                street = user[0].address.street,
-                                city = user[0].address.city,
-                                zipCode = user[0].address.zipCode,
-                                points = user[0].points
-                            )
+                            if(user.isNotEmpty()) {
+                                _profileState.value = profileState.value.copy(
+                                    firstName = user[0].firstName,
+                                    lastName = user[0].lastName,
+                                    street = user[0].address.street,
+                                    city = user[0].address.city,
+                                    zipCode = user[0].address.zipCode,
+                                    points = user[0].points
+                                )
+                            }
                         }
                     }
                     is Resource.Error -> {
