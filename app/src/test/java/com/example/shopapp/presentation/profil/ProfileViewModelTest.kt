@@ -18,6 +18,7 @@ import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.junit.After
@@ -54,7 +55,7 @@ class ProfileViewModelTest {
                 city = "Warsaw",
                 zipCode = "12-345"
             ),
-            points = 0
+            points = 123
         )
 
         updatedUser = User(
@@ -459,5 +460,341 @@ class ProfileViewModelTest {
         }
         assertThat(initialLoginState).isFalse()
         assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `event save is successful`() {
+        val firstName = "Bob"
+        val lastName = "Hall"
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+        val updateUserSlot = slot<User>()
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(isSuccessful = true)
+        coEvery {
+            shopUseCases.updateUserUseCase(capture(updateUserSlot))
+        } returns flowOf(Resource.Success(true))
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+            shopUseCases.updateUserUseCase(any())
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isNull()
+        assertThat(profileState.lastNameError).isNull()
+        assertThat(profileState.streetError).isNull()
+        assertThat(profileState.cityError).isNull()
+        assertThat(profileState.zipCodeError).isNull()
+        assertThat(updateUserSlot.captured).isEqualTo(updatedUser)
+    }
+
+    @Test
+    fun `event save is not successful when firstName and lastName are blank`() {
+        val firstName = ""
+        val lastName = ""
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = fieldEmptyError
+        )
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(isSuccessful = true)
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isEqualTo(fieldEmptyError)
+        assertThat(profileState.lastNameError).isEqualTo(fieldEmptyError)
+        assertThat(profileState.streetError).isNull()
+        assertThat(profileState.cityError).isNull()
+        assertThat(profileState.zipCodeError).isNull()
+    }
+
+    @Test
+    fun `event save is not successful when street is blank`() {
+        val firstName = "Bob"
+        val lastName = "Hall"
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = streetEmptyError
+        )
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(isSuccessful = true)
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isNull()
+        assertThat(profileState.lastNameError).isNull()
+        assertThat(profileState.streetError).isEqualTo(streetEmptyError)
+        assertThat(profileState.cityError).isNull()
+        assertThat(profileState.zipCodeError).isNull()
+    }
+
+    @Test
+    fun `event save is not successful when city is blank`() {
+        val firstName = "Bob"
+        val lastName = "Hall"
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = cityEmptyError
+        )
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(isSuccessful = true)
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isNull()
+        assertThat(profileState.lastNameError).isNull()
+        assertThat(profileState.streetError).isNull()
+        assertThat(profileState.cityError).isEqualTo(cityEmptyError)
+        assertThat(profileState.zipCodeError).isNull()
+    }
+
+    @Test
+    fun `event save is not successful when zip code is blank`() {
+        val firstName = "Bob"
+        val lastName = "Hall"
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = zipCodeEmptyError
+        )
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isNull()
+        assertThat(profileState.lastNameError).isNull()
+        assertThat(profileState.streetError).isNull()
+        assertThat(profileState.cityError).isNull()
+        assertThat(profileState.zipCodeError).isEqualTo(zipCodeEmptyError)
+    }
+
+    @Test
+    fun `event save is not successful when all fields are incorrect`() {
+        val firstName = "Bob"
+        val lastName = "Hall"
+        val street = "Street 2"
+        val city = "Berlin"
+        val zipCode = "98-765"
+
+        every {
+            shopUseCases.validateNameUseCase(any())
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = fieldEmptyError
+        )
+        every {
+            shopUseCases.validateStreetUseCase(street)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = streetEmptyError
+        )
+        every {
+            shopUseCases.validateCityUseCase(city)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = cityEmptyError
+        )
+        every {
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        } returns ValidationResult(
+            isSuccessful = false,
+            errorMessage = zipCodeEmptyError
+        )
+
+        profileViewModel = setViewModel()
+        profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
+        profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
+        profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
+        profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
+        profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
+
+        profileViewModel.onEvent(ProfileEvent.Save)
+        val profileState = getCurrentProfileState()
+
+        coVerifySequence {
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.validateNameUseCase(firstName)
+            shopUseCases.validateNameUseCase(lastName)
+            shopUseCases.validateStreetUseCase(street)
+            shopUseCases.validateCityUseCase(city)
+            shopUseCases.validateZipCodeUseCase(zipCode)
+        }
+        assertThat(profileState.firstName).isEqualTo(firstName)
+        assertThat(profileState.lastName).isEqualTo(lastName)
+        assertThat(profileState.street).isEqualTo(street)
+        assertThat(profileState.city).isEqualTo(city)
+        assertThat(profileState.zipCode).isEqualTo(zipCode)
+        assertThat(profileState.firstNameError).isEqualTo(fieldEmptyError)
+        assertThat(profileState.lastNameError).isEqualTo(fieldEmptyError)
+        assertThat(profileState.streetError).isEqualTo(streetEmptyError)
+        assertThat(profileState.cityError).isEqualTo(cityEmptyError)
+        assertThat(profileState.zipCodeError).isEqualTo(zipCodeEmptyError)
     }
 }
