@@ -191,4 +191,5 @@ object Constants {
     const val FAVOURITES_COLLECTION: String = "favourites"
     const val CARTS_COLLECTION: String = "carts"
     const val ORDERS_COLLECTION: String = "orders"
+    const val COUPONS_COLLECTION: String = "coupons"
 }
