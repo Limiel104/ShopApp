@@ -45,6 +45,7 @@ import com.example.shopapp.domain.use_case.SortOrdersUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
 import com.example.shopapp.domain.use_case.UpdateProductInCartUseCase
+import com.example.shopapp.domain.use_case.UpdateUserUseCase
 import com.example.shopapp.domain.use_case.ValidateCityUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateEmailUseCase
@@ -184,7 +185,8 @@ object AppModule {
             getUserOrdersUseCase = GetUserOrdersUseCase(ordersRepository),
             setOrdersUseCase = SetOrdersUseCase(),
             sortOrdersUseCase = SortOrdersUseCase(),
-            getUserUseCase = GetUserUseCase(userStorageRepository)
+            getUserUseCase = GetUserUseCase(userStorageRepository),
+            updateUserUseCase = UpdateUserUseCase(userStorageRepository)
         )
     }
 }

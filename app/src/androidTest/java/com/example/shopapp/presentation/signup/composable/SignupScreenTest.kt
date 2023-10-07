@@ -232,7 +232,6 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertExists()
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(SIGNUP_COLUMN).fetchSemanticsNode().children.size
-
         assertThat(numberOfChildren).isEqualTo(9)
     }
 
@@ -252,7 +251,6 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertExists()
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(SIGNUP_COLUMN).fetchSemanticsNode().children.size
-
         assertThat(numberOfChildren).isEqualTo(17)
     }
 

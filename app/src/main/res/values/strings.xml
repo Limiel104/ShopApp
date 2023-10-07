@@ -58,4 +58,6 @@
     <string name="street">Street</string>
     <string name="city">City</string>
     <string name="zip_code">Zip Code</string>
+    <string name="profile">My Profile</string>
+    <string name="save">Save</string>
 </resources>

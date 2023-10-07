@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.account.composable
+package com.example.shopapp.presentation.signup.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

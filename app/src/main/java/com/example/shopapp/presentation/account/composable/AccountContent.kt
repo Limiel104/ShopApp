@@ -34,7 +34,8 @@ fun AccountContent(
     userClubPoints: Int,
     onLogout: () -> Unit,
     onGoToCart: () -> Unit,
-    onGoToOrders: () -> Unit
+    onGoToOrders: () -> Unit,
+    onGoToProfile: () -> Unit
 ) {
     val coupons = listOf(10,20,50)
 
@@ -80,7 +81,7 @@ fun AccountContent(
             ShopButtonItem(
                 text = stringResource(id = R.string.my_profile),
                 testTag = MY_PROFILE_BTN,
-                onClick = {}
+                onClick = { onGoToProfile() }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -113,7 +114,8 @@ fun AccountContentPreview() {
             userClubPoints = 234,
             onLogout = {},
             onGoToCart = {},
-            onGoToOrders = {}
+            onGoToOrders = {},
+            onGoToProfile = {}
         )
     }
 }

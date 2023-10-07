@@ -58,7 +58,8 @@ class SignupViewModelTest {
                 street = "Street 1",
                 city = "Warsaw",
                 zipCode = "12-345"
-            )
+            ),
+            points = 0
         )
     }
 

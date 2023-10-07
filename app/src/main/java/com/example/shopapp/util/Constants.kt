@@ -93,6 +93,21 @@ object Constants {
     const val EXPAND_OR_COLLAPSE_BTN: String = "Expand or collapse button"
     const val ORDERS_SORT_SECTION: String = "Orders sort section"
     const val ORDERS_CPI: String = "Orders circular progress indicator"
+    const val PROFILE_CONTENT: String = "Profile content"
+    const val PROFILE_COLUMN: String = "Profile column"
+    const val PROFILE_TOP_BAR: String = "Profile top bar"
+    const val PROFILE_FIRSTNAME_TF: String = "Profile first name tf"
+    const val PROFILE_LASTNAME_TF: String = "Profile last name tf"
+    const val PROFILE_STREET_TF: String = "Profile street tf"
+    const val PROFILE_CITY_TF: String = "Profile city tf"
+    const val PROFILE_ZIP_CODE_TF: String = "Profile zip code tf"
+    const val PROFILE_FIRSTNAME_ERROR: String = "Profile first name tf error"
+    const val PROFILE_LASTNAME_ERROR: String = "Profile last name tf error"
+    const val PROFILE_STREET_ERROR: String = "Profile street tf error"
+    const val PROFILE_CITY_ERROR: String = "Profile city tf error"
+    const val PROFILE_ZIP_CODE_ERROR: String = "Profile zip code tf error"
+    const val PROFILE_CPI: String = "Profile circular progress indicator"
+    const val SAVE_BTN: String = "Save button"
 
     //Content Description
     const val CART_BTN: String = "Cart button"
@@ -136,6 +151,7 @@ object Constants {
     const val SIGNUP_VM: String = "SignupScreen ViewModel"
     const val CART_VM: String = "CartScreen ViewModel"
     const val ORDERS_VM: String = "Orders ViewModel"
+    const val PROFILE_VM: String = "Profile ViewModel"
     const val ACCOUNT_SCREEN_LE: String = "AccountScreen Launched Effect"
     const val CATEGORY_SCREEN_LE: String = "CategoryScreen Launched Effect"
     const val CATEGORY_LIST_SCREEN_LE: String = "CategoryListScreen Launched Effect"
@@ -146,6 +162,7 @@ object Constants {
     const val SIGNUP_SCREEN_LE: String = "SignupScreen Launched Effect"
     const val CART_SCREEN_LE: String = "CartScreen Launched Effect"
     const val ORDERS_SCREEN_LE: String = "OrdersScreen Launched Effect"
+    const val PROFILE_SCREEN_LE: String = "ProfileScreen Launched Effect"
 
     //ERRORS
     const val specialChars: String = "!@#$%^&*(){}[]:;\"'<,>.?/~`'\\|_=+"
