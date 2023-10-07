@@ -5,7 +5,6 @@ import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
@@ -106,7 +105,7 @@ class CartViewModelTest {
                 title = "Polo Shirt",
                 price = 55.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -115,7 +114,7 @@ class CartViewModelTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -124,7 +123,7 @@ class CartViewModelTest {
                 title = "Skirt",
                 price = 78.78,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -133,7 +132,7 @@ class CartViewModelTest {
                 title = "Jeans",
                 price = 235.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -142,7 +141,7 @@ class CartViewModelTest {
                 title = "Shirt",
                 price = 85.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -151,7 +150,7 @@ class CartViewModelTest {
                 title = "Blouse",
                 price = 99.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )
@@ -245,7 +244,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -258,7 +257,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         }
         assertThat(resultCartProducts).containsExactlyElementsIn(cartProducts)
@@ -270,7 +269,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(emptyList()))
 
         cartViewModel = setViewModel()
@@ -281,7 +280,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -331,7 +330,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -345,7 +344,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -358,7 +357,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Error("Error"))
 
         cartViewModel = setViewModel()
@@ -369,7 +368,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -381,7 +380,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Loading(true))
 
         cartViewModel = setViewModel()
@@ -392,7 +391,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isTrue()
@@ -404,7 +403,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -416,7 +415,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         }
         assertThat(resultCartItem).isEqualTo(cartItem)
@@ -428,7 +427,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -442,7 +441,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         }
         assertThat(totalAmount).isEqualTo("1598,66")
@@ -454,7 +453,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -474,7 +473,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
@@ -489,7 +488,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -509,7 +508,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
@@ -524,7 +523,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -544,7 +543,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
@@ -559,7 +558,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -579,7 +578,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
@@ -594,7 +593,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -611,7 +610,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         }
@@ -624,7 +623,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -641,7 +640,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         }
@@ -649,12 +648,12 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `place order was successful`() {
+    fun `get user points is loading`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -665,6 +664,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
         } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Loading(true))
 
         cartViewModel = setViewModel()
 
@@ -674,13 +676,154 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.addOrderUseCase(firebaseOrder)
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `update user points is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `amount of user points after placing order is calculated correctly`() {
+        val userUIDSlot = slot<String>()
+        val userPointsSlot = slot<Int>()
+
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase(capture(userUIDSlot),capture(userPointsSlot))
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase(userUIDSlot.captured,userPointsSlot.captured)
+        }
+        assertThat(loadingState).isFalse()
+        assertThat(userUIDSlot.captured).isEqualTo("userUID")
+        assertThat(userPointsSlot.captured).isEqualTo(1698)
+    }
+
+    @Test
+    fun `place order was successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         }
         assertThat(loadingState).isFalse()
     }
@@ -691,7 +834,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -711,7 +854,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
@@ -726,7 +869,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -746,7 +889,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate2)
         }
@@ -761,7 +904,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -781,7 +924,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
@@ -801,7 +944,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -827,7 +970,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.addProductToCartUseCase(any(),any(),any())
@@ -845,7 +988,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -855,6 +998,12 @@ class CartViewModelTest {
         } returns flowOf(Resource.Success(true))
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         } returns flowOf(Resource.Success(true))
 
         cartViewModel = setViewModel()
@@ -866,13 +1015,15 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
             shopUseCases.addOrderUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         }
         assertThat(initialState.isDialogActivated).isFalse()
         assertThat(resultState.isDialogActivated).isTrue()
@@ -884,7 +1035,7 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
@@ -900,7 +1051,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         }
     }

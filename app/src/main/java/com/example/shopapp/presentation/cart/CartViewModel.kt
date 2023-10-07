@@ -314,6 +314,58 @@ class CartViewModel @Inject constructor(
                         for(cartItem in _cartState.value.cartItems) {
                             deleteCartItem(cartItem.cartItemId)
                         }
+                        getUserPoints(_cartState.value.userUID)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getUserPoints(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserPointsUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading get user points: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { userPoints ->
+                            val userPointsAfterPlacingOrder = userPoints + _cartState.value.totalAmount.toInt()
+
+                            updateUserPoints(
+                                _cartState.value.userUID,
+                                userPointsAfterPlacingOrder
+                            )
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateUserPoints(userUID: String, points: Int) {
+        viewModelScope.launch {
+            shopUseCases.updateUserPointsUseCase(userUID,points).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading update user points: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"User points were updated")
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

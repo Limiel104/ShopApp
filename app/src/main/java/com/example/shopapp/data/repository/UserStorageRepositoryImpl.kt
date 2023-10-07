@@ -58,6 +58,34 @@ class UserStorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUserPoints(userUID: String): Flow<Resource<Int>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                val userPoints = usersRef
+                    .whereEqualTo("userUID", userUID)
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { snapshot ->
+                        snapshot.toObject(User::class.java)
+                    }
+                if(userPoints.isEmpty()) {
+                    emit(Resource.Success(-1))
+                }
+                else {
+                    emit(Resource.Success(userPoints[0].points))
+                }
+            }
+            catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage as String))
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
+
     override suspend fun updateUser(user: User): Flow<Resource<Boolean>> {
         return flow {
             emit(Resource.Loading(true))
@@ -68,8 +96,27 @@ class UserStorageRepositoryImpl @Inject constructor(
                         "userUID" to user.userUID,
                         "firstName" to user.firstName,
                         "lastName" to user.lastName,
-                        "address" to user.address,
-                        "points" to user.points
+                        "address" to user.address
+                    )
+                ).await()
+                emit(Resource.Success(true))
+            }
+            catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage as String))
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun updateUserPints(userUID: String, points: Int): Flow<Resource<Boolean>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                usersRef.document(userUID).update(
+                    mapOf(
+                        "points" to points
                     )
                 ).await()
                 emit(Resource.Success(true))

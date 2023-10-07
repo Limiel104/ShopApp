@@ -33,6 +33,7 @@ import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserFavouritesUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
+import com.example.shopapp.domain.use_case.GetUserPointsUseCase
 import com.example.shopapp.domain.use_case.GetUserUseCase
 import com.example.shopapp.domain.use_case.LoginUseCase
 import com.example.shopapp.domain.use_case.LogoutUseCase
@@ -45,6 +46,7 @@ import com.example.shopapp.domain.use_case.SortOrdersUseCase
 import com.example.shopapp.domain.use_case.SortProductsUseCase
 import com.example.shopapp.domain.use_case.ToggleCheckBoxUseCase
 import com.example.shopapp.domain.use_case.UpdateProductInCartUseCase
+import com.example.shopapp.domain.use_case.UpdateUserPointsUseCase
 import com.example.shopapp.domain.use_case.UpdateUserUseCase
 import com.example.shopapp.domain.use_case.ValidateCityUseCase
 import com.example.shopapp.domain.use_case.ValidateConfirmPasswordUseCase
@@ -181,7 +183,9 @@ object TestAppModule {
             setOrdersUseCase = SetOrdersUseCase(),
             sortOrdersUseCase = SortOrdersUseCase(),
             getUserUseCase = GetUserUseCase(userStorageRepository),
-            updateUserUseCase = UpdateUserUseCase(userStorageRepository)
+            updateUserUseCase = UpdateUserUseCase(userStorageRepository),
+            getUserPointsUseCase = GetUserPointsUseCase(userStorageRepository),
+            updateUserPointsUseCase = UpdateUserPointsUseCase(userStorageRepository)
         )
     }
 }
