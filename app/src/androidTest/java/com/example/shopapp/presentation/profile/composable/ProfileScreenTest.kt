@@ -27,8 +27,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
-import com.example.shopapp.presentation.profil.composable.ProfileContent
-import com.example.shopapp.presentation.profil.composable.ProfileScreen
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.GO_BACK_BTN

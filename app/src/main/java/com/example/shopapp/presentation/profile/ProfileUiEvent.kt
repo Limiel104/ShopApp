@@ -1,6 +1,6 @@
-package com.example.shopapp.presentation.profil
+package com.example.shopapp.presentation.profile
 
 sealed class ProfileUiEvent {
     data class ShowErrorMessage(val message: String): ProfileUiEvent()
-    object Save: ProfileUiEvent()
+    object NavigateBack: ProfileUiEvent()
 }

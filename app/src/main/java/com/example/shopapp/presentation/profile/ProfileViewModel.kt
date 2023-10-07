@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil
+package com.example.shopapp.presentation.profile
 
 import android.util.Log
 import androidx.compose.runtime.State
@@ -96,6 +96,11 @@ class ProfileViewModel @Inject constructor(
                     Log.i(TAG, "Form validation error")
                 }
             }
+            is ProfileEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(ProfileUiEvent.NavigateBack)
+                }
+            }
         }
     }
 
@@ -179,7 +184,7 @@ class ProfileViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Updated user successfully")
-                        _eventFlow.emit(ProfileUiEvent.Save)
+                        _eventFlow.emit(ProfileUiEvent.NavigateBack)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

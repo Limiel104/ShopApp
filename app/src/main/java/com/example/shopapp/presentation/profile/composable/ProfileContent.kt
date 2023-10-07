@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil.composable
+package com.example.shopapp.presentation.profile.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

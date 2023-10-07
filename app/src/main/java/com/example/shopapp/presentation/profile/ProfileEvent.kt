@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil
+package com.example.shopapp.presentation.profile
 
 sealed class ProfileEvent {
     data class EnteredFirstName(val value: String): ProfileEvent()
@@ -7,4 +7,5 @@ sealed class ProfileEvent {
     data class EnteredCity(val value: String): ProfileEvent()
     data class EnteredZipCode(val value: String): ProfileEvent()
     object Save: ProfileEvent()
+    object OnGoBack: ProfileEvent()
 }

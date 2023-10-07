@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil
+package com.example.shopapp.presentation.profile
 
 data class ProfileState(
     val userUID: String = "",

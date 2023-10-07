@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil
+package com.example.shopapp.presentation.profile
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.shopapp.domain.model.Address

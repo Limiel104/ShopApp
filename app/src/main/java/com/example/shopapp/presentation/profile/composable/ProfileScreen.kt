@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.profil.composable
+package com.example.shopapp.presentation.profile.composable
 
 import android.util.Log
 import android.widget.Toast
@@ -9,9 +9,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.shopapp.presentation.profil.ProfileEvent
-import com.example.shopapp.presentation.profil.ProfileUiEvent
-import com.example.shopapp.presentation.profil.ProfileViewModel
+import com.example.shopapp.presentation.profile.ProfileEvent
+import com.example.shopapp.presentation.profile.ProfileUiEvent
+import com.example.shopapp.presentation.profile.ProfileViewModel
 import com.example.shopapp.util.Constants.PROFILE_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
 import kotlinx.coroutines.flow.collectLatest
@@ -42,7 +42,7 @@ fun ProfileScreen(
                 is ProfileUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
-                is ProfileUiEvent.Save -> {
+                is ProfileUiEvent.NavigateBack -> {
                     navController.popBackStack()
                 }
             }
@@ -68,7 +68,7 @@ fun ProfileScreen(
         onStreetChange = { viewModel.onEvent(ProfileEvent.EnteredStreet(it)) },
         onCityChange = { viewModel.onEvent(ProfileEvent.EnteredCity(it)) },
         onZipCodeChange = { viewModel.onEvent(ProfileEvent.EnteredZipCode(it)) },
-        onGoBack = {},
+        onGoBack = { viewModel.onEvent(ProfileEvent.OnGoBack) },
         onSave = { viewModel.onEvent(ProfileEvent.Save) }
     )
 }
