@@ -27,7 +27,7 @@ class AddUserUseCaseTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        this.addUserUseCase = AddUserUseCase(userStorageRepository)
+        addUserUseCase = AddUserUseCase(userStorageRepository)
 
         user = User(
             userUID = "userUID",
@@ -68,15 +68,28 @@ class AddUserUseCaseTest {
         runBlocking {
             coEvery {
                 userStorageRepository.addUser(user)
-            } returns flowOf(
-                Resource.Error("Error")
-            )
+            } returns flowOf(Resource.Error("Error"))
 
             val response = addUserUseCase(user).first()
 
             coVerify(exactly = 1) { addUserUseCase(user) }
-            assertThat(response.message).isEqualTo("Error")
             assertThat(response.data).isNull()
+            assertThat(response.message).isEqualTo("Error")
+        }
+    }
+
+    @Test
+    fun `add user is loading`() {
+        runBlocking {
+            coEvery {
+                userStorageRepository.addUser(user)
+            } returns flowOf(Resource.Loading(true))
+
+            val response = addUserUseCase(user).first()
+
+            coVerify(exactly = 1) { addUserUseCase(user) }
+            assertThat(response.data).isNull()
+            assertThat(response.message).isNull()
         }
     }
 }

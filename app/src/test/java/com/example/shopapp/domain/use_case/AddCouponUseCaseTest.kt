@@ -1,6 +1,7 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.domain.repository.CartRepository
+import com.example.shopapp.domain.model.Coupon
+import com.example.shopapp.domain.repository.CouponsRepository
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
@@ -15,16 +16,22 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class DeleteProductFromCartUseCaseTest {
+class AddCouponUseCaseTest {
 
     @MockK
-    private lateinit var cartRepository: CartRepository
-    private lateinit var deleteProductFromCartUseCase: DeleteProductFromCartUseCase
+    private lateinit var couponsRepository: CouponsRepository
+    private lateinit var addCouponUseCase: AddCouponUseCase
+    private lateinit var coupon: Coupon
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        deleteProductFromCartUseCase = DeleteProductFromCartUseCase(cartRepository)
+        addCouponUseCase = AddCouponUseCase(couponsRepository)
+
+        coupon = Coupon(
+            userUID = "userUID",
+            amount = 20
+        )
     }
 
     @After
@@ -33,15 +40,15 @@ class DeleteProductFromCartUseCaseTest {
     }
 
     @Test
-    fun `product was deleted from cart successfully`() {
+    fun `coupon was added successfully`() {
         runBlocking {
             val result = Resource.Success(true)
 
-            coEvery { cartRepository.deleteProductFromCart("cartItemId") } returns flowOf(result)
+            coEvery { couponsRepository.addCoupon(coupon) } returns flowOf(result)
 
-            val response = deleteProductFromCartUseCase("cartItemId").first()
+            val response = addCouponUseCase(coupon).first()
 
-            coVerify(exactly = 1) { deleteProductFromCartUseCase("cartItemId") }
+            coVerify(exactly = 1) { addCouponUseCase(coupon) }
             assertThat(response).isEqualTo(result)
             assertThat(response.data).isTrue()
             assertThat(response.message).isNull()
@@ -49,30 +56,30 @@ class DeleteProductFromCartUseCaseTest {
     }
 
     @Test
-    fun `product was not deleted from cart and error message was returned`() {
+    fun `coupon was not added and error was returned`() {
         runBlocking {
             coEvery {
-                cartRepository.deleteProductFromCart("cartItemId")
+                couponsRepository.addCoupon(coupon)
             } returns flowOf(Resource.Error("Error"))
 
-            val response = deleteProductFromCartUseCase("cartItemId").first()
+            val response = addCouponUseCase(coupon).first()
 
-            coVerify(exactly = 1) { deleteProductFromCartUseCase("cartItemId") }
+            coVerify(exactly = 1) { addCouponUseCase(coupon) }
             assertThat(response.data).isNull()
             assertThat(response.message).isEqualTo("Error")
         }
     }
 
     @Test
-    fun `delete product from cart is loading`() {
+    fun `add coupon is loading`() {
         runBlocking {
             coEvery {
-                cartRepository.deleteProductFromCart("cartItemId")
+                couponsRepository.addCoupon(coupon)
             } returns flowOf(Resource.Loading(true))
 
-            val response = deleteProductFromCartUseCase("cartItemId").first()
+            val response = addCouponUseCase(coupon).first()
 
-            coVerify(exactly = 1) { deleteProductFromCartUseCase("cartItemId") }
+            coVerify(exactly = 1) { addCouponUseCase(coupon) }
             assertThat(response.data).isNull()
             assertThat(response.message).isNull()
         }

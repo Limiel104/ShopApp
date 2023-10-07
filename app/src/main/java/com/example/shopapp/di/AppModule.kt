@@ -18,10 +18,12 @@ import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.repository.OrdersRepository
 import com.example.shopapp.domain.repository.ProductRepository
 import com.example.shopapp.domain.repository.UserStorageRepository
+import com.example.shopapp.domain.use_case.AddCouponUseCase
 import com.example.shopapp.domain.use_case.AddOrderUseCase
 import com.example.shopapp.domain.use_case.AddProductToCartUseCase
 import com.example.shopapp.domain.use_case.AddProductToFavouritesUseCase
 import com.example.shopapp.domain.use_case.AddUserUseCase
+import com.example.shopapp.domain.use_case.DeleteCouponUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromCartUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.FilterProductsByUserFavouritesUseCase
@@ -39,6 +41,7 @@ import com.example.shopapp.domain.use_case.SignupUseCase
 import com.example.shopapp.domain.use_case.FilterProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
+import com.example.shopapp.domain.use_case.GetUserCouponUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
 import com.example.shopapp.domain.use_case.GetUserPointsUseCase
 import com.example.shopapp.domain.use_case.GetUserUseCase
@@ -159,7 +162,8 @@ object AppModule {
         userStorageRepository: UserStorageRepository,
         favouritesRepository: FavouritesRepository,
         cartRepository: CartRepository,
-        ordersRepository: OrdersRepository
+        ordersRepository: OrdersRepository,
+        couponsRepository: CouponsRepository
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
@@ -200,7 +204,10 @@ object AppModule {
             getUserUseCase = GetUserUseCase(userStorageRepository),
             updateUserUseCase = UpdateUserUseCase(userStorageRepository),
             getUserPointsUseCase = GetUserPointsUseCase(userStorageRepository),
-            updateUserPointsUseCase = UpdateUserPointsUseCase(userStorageRepository)
+            updateUserPointsUseCase = UpdateUserPointsUseCase(userStorageRepository),
+            addCouponUseCase = AddCouponUseCase(couponsRepository),
+            getUserCouponUseCase = GetUserCouponUseCase(couponsRepository),
+            deleteCouponUseCase = DeleteCouponUseCase(couponsRepository)
         )
     }
 }
