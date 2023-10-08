@@ -74,8 +74,9 @@ class AccountScreenTest {
                         AccountContent(
                             scaffoldState = rememberScaffoldState(),
                             bottomBarHeight = bottomBarHeight.dp,
-                            userName = "John",
-                            userClubPoints = 234,
+                            name = "John",
+                            userPoints = 234,
+                            isCouponActivated = false,
                             onLogout = {},
                             onGoToCart = {},
                             onGoToOrders = {},

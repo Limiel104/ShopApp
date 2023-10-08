@@ -2,9 +2,11 @@ package com.example.shopapp.presentation.account.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.ACTIVATE_COUPON_BTN
 import com.example.shopapp.util.Constants.COUPON_ITEM_
@@ -26,13 +27,14 @@ import com.example.shopapp.util.Constants.COUPON_ITEM_
 @Composable
 fun CouponItem(
     discount: Int,
-    pointsToActivate: Int
+    pointsToActivate: Int,
+    isActive: Boolean
 ) {
     Card(
         modifier = Modifier
             .width(300.dp)
             .clip(RoundedCornerShape(25.dp))
-            .testTag(COUPON_ITEM_+discount)
+            .testTag(COUPON_ITEM_ + discount)
     ) {
         Column(
             modifier = Modifier
@@ -56,22 +58,43 @@ fun CouponItem(
                     .padding(bottom = 20.dp)
             )
 
-            ShopButtonItem(
-                text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
-                testTag = ACTIVATE_COUPON_BTN,
-                onClick = {}
-            )
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(ACTIVATE_COUPON_BTN),
+                enabled = isActive,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
+                    modifier = Modifier
+                        .padding(7.dp)
+                )
+            }
         }
     }
 }
 
 @Preview
 @Composable
-fun CouponItemPreview() {
+fun CouponItemIsActivePreview() {
     ShopAppTheme() {
         CouponItem(
             discount = 10,
-            pointsToActivate = 100
+            pointsToActivate = 100,
+            isActive = true
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CouponItemIsNotActivePreview() {
+    ShopAppTheme() {
+        CouponItem(
+            discount = 10,
+            pointsToActivate = 100,
+            isActive = false
         )
     }
 }

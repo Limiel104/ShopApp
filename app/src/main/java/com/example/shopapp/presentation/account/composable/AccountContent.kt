@@ -30,8 +30,9 @@ import com.example.shopapp.util.Constants.LOGOUT_BTN
 fun AccountContent(
     scaffoldState: ScaffoldState,
     bottomBarHeight: Dp,
-    userName: String,
-    userClubPoints: Int,
+    name: String,
+    userPoints: Int,
+    isCouponActivated: Boolean,
     onLogout: () -> Unit,
     onGoToCart: () -> Unit,
     onGoToOrders: () -> Unit,
@@ -42,7 +43,7 @@ fun AccountContent(
     Scaffold(
         topBar = {
             AccountTopBar(
-                userName = userName,
+                userName = name,
                 onClick = { onGoToCart() }
             ) },
         scaffoldState = scaffoldState,
@@ -58,7 +59,7 @@ fun AccountContent(
                 .fillMaxSize()
         ) {
             PointsCard(
-                userClubPoints = userClubPoints
+                userClubPoints = userPoints
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -69,7 +70,8 @@ fun AccountContent(
                 itemsIndexed(coupons) { _, coupon ->
                     CouponItem(
                         discount = coupon,
-                        pointsToActivate = coupon*10
+                        pointsToActivate = coupon*10,
+                        isActive = !isCouponActivated
                     )
 
                     Spacer(modifier = Modifier.width(20.dp))
@@ -105,13 +107,32 @@ fun AccountContent(
 
 @Preview
 @Composable
-fun AccountContentPreview() {
+fun AccountContentCoupopNotActivatedPreview() {
     ShopAppTheme {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
-            userName = "John",
-            userClubPoints = 234,
+            name = "John",
+            userPoints = 234,
+            isCouponActivated = false,
+            onLogout = {},
+            onGoToCart = {},
+            onGoToOrders = {},
+            onGoToProfile = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AccountContentCouponAlreadyActivatedPreview() {
+    ShopAppTheme {
+        AccountContent(
+            scaffoldState = rememberScaffoldState(),
+            bottomBarHeight = 56.dp,
+            name = "John",
+            userPoints = 234,
+            isCouponActivated = true,
             onLogout = {},
             onGoToCart = {},
             onGoToOrders = {},

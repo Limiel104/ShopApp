@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -97,7 +98,67 @@ class AccountViewModel @Inject constructor(
                             _accountState.value = accountState.value.copy(
                                 user = user[0]
                             )
+                            getUserCoupon(userUID)
                         }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getUserCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading coupon: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { coupon ->
+                            val isCouponAlreadyExpired = shopUseCases.isCouponExpiredUseCase(coupon.activationDate,Calendar.getInstance().time)
+                            if(!isCouponAlreadyExpired) {
+                                Log.i(TAG,"Coupon: $coupon")
+                                _accountState.value = _accountState.value.copy(
+                                    isCouponActivated = true,
+                                    coupon = coupon
+                                )
+                            }
+                            else {
+                                deleteCoupon(userUID)
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete coupon: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Expired coupon was deleted")
+                        _accountState.value = _accountState.value.copy(
+                            isCouponActivated = false
+                        )
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

@@ -20,7 +20,8 @@ class CouponsRepositoryImpl @Inject constructor(
                 couponsRef.document(coupon.userUID).set(
                     mapOf(
                         "userUID" to coupon.userUID,
-                        "amount" to coupon.amount
+                        "amount" to coupon.amount,
+                        "activationDate" to coupon.activationDate
                     )
                 ).await()
                 emit(Resource.Success(true))

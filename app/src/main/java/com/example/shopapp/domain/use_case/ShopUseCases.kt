@@ -42,5 +42,6 @@ data class ShopUseCases(
     val updateUserPointsUseCase: UpdateUserPointsUseCase,
     val addCouponUseCase: AddCouponUseCase,
     val getUserCouponUseCase: GetUserCouponUseCase,
-    val deleteCouponUseCase: DeleteCouponUseCase
+    val deleteCouponUseCase: DeleteCouponUseCase,
+    val isCouponExpiredUseCase: IsCouponExpiredUseCase
 )
