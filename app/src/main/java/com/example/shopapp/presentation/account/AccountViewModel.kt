@@ -122,7 +122,10 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         response.data?.let { coupon ->
-                            val isCouponAlreadyExpired = shopUseCases.isCouponExpiredUseCase(coupon.activationDate,Calendar.getInstance().time)
+                            val isCouponAlreadyExpired = shopUseCases.isCouponExpiredUseCase(
+                                coupon.activationDate,
+                                Calendar.getInstance().time
+                            )
                             if(!isCouponAlreadyExpired) {
                                 Log.i(TAG,"Coupon: $coupon")
                                 _accountState.value = _accountState.value.copy(

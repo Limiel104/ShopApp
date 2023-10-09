@@ -9,7 +9,6 @@ import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CART_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
@@ -17,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -158,7 +158,7 @@ class CartViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            shopUseCases.getProductsUseCase(Category.All.id).collect { response ->
+            shopUseCases.getProductsUseCase("all").collect { response ->
                 when(response) {
                     is Resource.Loading -> {
                         Log.i(TAG,"Loading products: ${response.isLoading}")
@@ -170,6 +170,7 @@ class CartViewModel @Inject constructor(
                         response.data?.let { products ->
                             if(products.isNotEmpty()) {
                                 getCartProducts(products)
+                                getUserCoupon(_cartState.value.userUID)
                                 calculateTotalAmount()
                             }
                         }
@@ -191,17 +192,87 @@ class CartViewModel @Inject constructor(
         )
     }
 
+    fun getUserCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading coupon: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { coupon ->
+                            val isCouponAlreadyExpired = shopUseCases.isCouponExpiredUseCase(
+                                coupon.activationDate,
+                                Calendar.getInstance().time
+                            )
+                            if(!isCouponAlreadyExpired) {
+                                Log.i(TAG,"Coupon: $coupon")
+                                _cartState.value = _cartState.value.copy(
+                                    isCouponActivated = true,
+                                    coupon = coupon
+                                )
+                            }
+                            else {
+                                deleteCoupon(userUID)
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete coupon: ${response.isLoading}")
+                        _cartState.value = cartState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Expired coupon was deleted")
+                        _cartState.value = _cartState.value.copy(
+                            isCouponActivated = false
+                        )
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
     fun calculateTotalAmount() {
         var totalAmount = 0.0
         val cartProducts = _cartState.value.cartProducts
+        val couponAmount = _cartState.value.coupon.amount
 
         for(cartProduct in cartProducts) {
             totalAmount += cartProduct.amount * cartProduct.price
         }
 
-        _cartState.value = cartState.value.copy(
-            totalAmount = totalAmount
-        )
+        if(_cartState.value.isCouponActivated && totalAmount > couponAmount) {
+            _cartState.value = cartState.value.copy(
+                totalAmount = totalAmount - couponAmount
+            )
+        }
+        else {
+            _cartState.value = cartState.value.copy(
+                totalAmount = totalAmount
+            )
+        }
     }
 
     fun getCartItemFromCartProductId(cartProductId: Int): CartItem {
