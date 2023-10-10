@@ -42,7 +42,6 @@ class AccountViewModelTest {
     private lateinit var currentDate: Date
     private lateinit var coupon: Coupon
     private lateinit var expiredCoupon: Coupon
-    private lateinit var emptyCoupon: Coupon
 
     @Before
     fun setUp() {
@@ -75,10 +74,6 @@ class AccountViewModelTest {
             userUID = "userUID",
             amount = 20,
             activationDate = date
-        )
-
-        emptyCoupon = Coupon(
-            activationDate = currentDate
         )
     }
 
