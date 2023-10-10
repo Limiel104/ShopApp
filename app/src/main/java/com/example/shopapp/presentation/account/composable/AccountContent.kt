@@ -33,6 +33,7 @@ fun AccountContent(
     name: String,
     userPoints: Int,
     isCouponActivated: Boolean,
+    onActivateCoupon: (Int) -> Unit,
     onLogout: () -> Unit,
     onGoToCart: () -> Unit,
     onGoToOrders: () -> Unit,
@@ -70,8 +71,9 @@ fun AccountContent(
                 itemsIndexed(coupons) { _, coupon ->
                     CouponItem(
                         discount = coupon,
-                        pointsToActivate = coupon*10,
-                        isActive = !isCouponActivated
+                        pointsToActivate = coupon*100,
+                        isActive = !isCouponActivated && ((userPoints+1) >= coupon*100),
+                        onClick = { onActivateCoupon(it) }
                     )
 
                     Spacer(modifier = Modifier.width(20.dp))
@@ -113,8 +115,9 @@ fun AccountContentCoupopNotActivatedPreview() {
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             name = "John",
-            userPoints = 234,
+            userPoints = 2234,
             isCouponActivated = false,
+            onActivateCoupon = {},
             onLogout = {},
             onGoToCart = {},
             onGoToOrders = {},
@@ -131,8 +134,9 @@ fun AccountContentCouponAlreadyActivatedPreview() {
             scaffoldState = rememberScaffoldState(),
             bottomBarHeight = 56.dp,
             name = "John",
-            userPoints = 234,
+            userPoints = 2234,
             isCouponActivated = true,
+            onActivateCoupon = {},
             onLogout = {},
             onGoToCart = {},
             onGoToOrders = {},

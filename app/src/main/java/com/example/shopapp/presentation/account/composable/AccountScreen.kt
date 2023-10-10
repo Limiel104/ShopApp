@@ -64,6 +64,7 @@ fun AccountScreen(
             name = firstName,
             userPoints = points,
             isCouponActivated = isCouponActivated,
+            onActivateCoupon = {viewModel.onEvent(AccountEvent.OnActivateCoupon(it))},
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onGoToCart = { viewModel.onEvent(AccountEvent.GoToCart) },
             onGoToOrders = { viewModel.onEvent(AccountEvent.GoToOrders) },

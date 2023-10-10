@@ -40,6 +40,7 @@ class CartViewModel @Inject constructor(
 
         if(_cartState.value.isUserLoggedIn) {
             getUserCartItems(_cartState.value.userUID)
+            getUserCoupon(_cartState.value.userUID)
         }
     }
 
@@ -170,7 +171,6 @@ class CartViewModel @Inject constructor(
                         response.data?.let { products ->
                             if(products.isNotEmpty()) {
                                 getCartProducts(products)
-                                getUserCoupon(_cartState.value.userUID)
                                 calculateTotalAmount()
                             }
                         }
@@ -263,14 +263,16 @@ class CartViewModel @Inject constructor(
             totalAmount += cartProduct.amount * cartProduct.price
         }
 
-        if(_cartState.value.isCouponActivated && totalAmount > couponAmount) {
+        if(_cartState.value.isCouponActivated && (totalAmount+1 >= couponAmount)) {
             _cartState.value = cartState.value.copy(
-                totalAmount = totalAmount - couponAmount
+                totalAmount = totalAmount - couponAmount,
+                isCouponUsedInCalculatingTotalAmount = true
             )
         }
         else {
             _cartState.value = cartState.value.copy(
-                totalAmount = totalAmount
+                totalAmount = totalAmount,
+                isCouponUsedInCalculatingTotalAmount = false
             )
         }
     }
@@ -384,6 +386,13 @@ class CartViewModel @Inject constructor(
                         )
                         for(cartItem in _cartState.value.cartItems) {
                             deleteCartItem(cartItem.cartItemId)
+                            val wasCouponUsedForThisOrder = _cartState.value.isCouponActivated && _cartState.value.isCouponUsedInCalculatingTotalAmount
+                            if(wasCouponUsedForThisOrder) {
+                                deleteCoupon(_cartState.value.userUID)
+                                _cartState.value = cartState.value.copy(
+                                    isCouponActivated = false
+                                )
+                            }
                         }
                         getUserPoints(_cartState.value.userUID)
                     }

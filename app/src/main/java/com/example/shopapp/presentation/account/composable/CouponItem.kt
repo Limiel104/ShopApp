@@ -28,7 +28,8 @@ import com.example.shopapp.util.Constants.COUPON_ITEM_
 fun CouponItem(
     discount: Int,
     pointsToActivate: Int,
-    isActive: Boolean
+    isActive: Boolean,
+    onClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -63,7 +64,7 @@ fun CouponItem(
                     .fillMaxWidth()
                     .testTag(ACTIVATE_COUPON_BTN),
                 enabled = isActive,
-                onClick = { /*TODO*/ }
+                onClick = { onClick(discount) }
             ) {
                 Text(
                     text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
@@ -82,7 +83,8 @@ fun CouponItemIsActivePreview() {
         CouponItem(
             discount = 10,
             pointsToActivate = 100,
-            isActive = true
+            isActive = true,
+            onClick = {}
         )
     }
 }
@@ -94,7 +96,8 @@ fun CouponItemIsNotActivePreview() {
         CouponItem(
             discount = 10,
             pointsToActivate = 100,
-            isActive = false
+            isActive = false,
+            onClick = {}
         )
     }
 }

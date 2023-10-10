@@ -19,5 +19,6 @@ data class CartState(
         userUID = "",
         amount = 0,
         activationDate = Date()
-    )
+    ),
+    val isCouponUsedInCalculatingTotalAmount: Boolean = false
 )
