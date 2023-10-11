@@ -276,6 +276,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -284,6 +287,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(isUserLoggedIn).isTrue()
     }
@@ -329,6 +333,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(emptyList()))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -339,6 +346,7 @@ class CartViewModelTest {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -349,6 +357,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -358,6 +369,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).isEmpty()
         assertThat(isLoading).isFalse()
@@ -368,6 +380,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Loading(true))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -377,6 +392,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).isEmpty()
         assertThat(isLoading).isTrue()
@@ -425,6 +441,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -435,6 +454,7 @@ class CartViewModelTest {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -448,6 +468,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Loading(true))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -458,6 +481,7 @@ class CartViewModelTest {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
             shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isTrue()

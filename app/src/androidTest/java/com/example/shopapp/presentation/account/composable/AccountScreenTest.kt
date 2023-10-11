@@ -77,6 +77,7 @@ class AccountScreenTest {
                             name = "John",
                             userPoints = 234,
                             isCouponActivated = false,
+                            onActivateCoupon = {},
                             onLogout = {},
                             onGoToCart = {},
                             onGoToOrders = {},
@@ -162,7 +163,7 @@ class AccountScreenTest {
             composeRule.onNodeWithTag(coupon).assertWidthIsEqualTo(300.dp)
             composeRule.onNodeWithTag(coupon).onChildAt(0).assertTextContains("$amount PLN Discount")
             composeRule.onNodeWithTag(coupon).onChildAt(1).assertTextContains("The coupon is valid for 14 days after activation.\nMinimum purchase amount is ${amount+1}")
-            composeRule.onNodeWithTag(coupon).onChildAt(2).assertTextContains("Activate for ${amount*10}")
+            composeRule.onNodeWithTag(coupon).onChildAt(2).assertTextContains("Activate for ${amount*100}")
         }
     }
 

@@ -58,7 +58,7 @@ class AccountViewModelTest {
                 city = "Warsaw",
                 zipCode = "12-345"
             ),
-            points = 0
+            points = 3240
         )
 
         date = Date(2023,7,11)
@@ -395,6 +395,178 @@ class AccountViewModelTest {
     }
 
     @Test
+    fun `activate coupon is successful`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.addCouponUseCase(coupon)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        } returns flowOf(Resource.Success(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.activateCoupon(coupon)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.addCouponUseCase(coupon)
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `activate coupon is not successful and returns error`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.addCouponUseCase(coupon)
+        } returns flowOf(Resource.Error("Error"))
+
+        accountViewModel = setViewModel()
+        accountViewModel.activateCoupon(coupon)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.addCouponUseCase(coupon)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `activate user coupon is loading`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.addCouponUseCase(coupon)
+        } returns flowOf(Resource.Loading(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.activateCoupon(coupon)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.addCouponUseCase(coupon)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `update user points is successful`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        } returns flowOf(Resource.Success(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.updateUserPoints("userUID",1240)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `update user points is not successful and returns error`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        } returns flowOf(Resource.Error("Error"))
+
+        accountViewModel = setViewModel()
+        accountViewModel.updateUserPoints("userUID",1240)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `update user points is loading`() {
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        } returns flowOf(Resource.Loading(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.updateUserPoints("userUID",1240)
+
+        val isUserLoggedIn = getCurrentAccountState().isUserLoggedIn
+        val isLoading = getCurrentAccountState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1240)
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
     fun `logout is successful`() {
         coEvery {
             shopUseCases.getUserUseCase("userUID")
@@ -442,5 +614,39 @@ class AccountViewModelTest {
             shopUseCases.isCouponExpiredUseCase(coupon.activationDate,any())
             shopUseCases.logoutUseCase()
         }
+    }
+
+    @Test
+    fun `event on activate coupon - coupon is activated correctly and points are calculated correctly`() {
+        val userPointsSlot = slot<Int>()
+
+        coEvery {
+            shopUseCases.getUserUseCase("userUID")
+        } returns flowOf(Resource.Success(listOf(user)))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(coupon.activationDate,any())
+        } returns false
+        coEvery {
+            shopUseCases.addCouponUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",capture(userPointsSlot))
+        } returns flowOf(Resource.Success(true))
+
+        accountViewModel = setViewModel()
+        accountViewModel.onEvent(AccountEvent.OnActivateCoupon(20))
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(coupon.activationDate,any())
+            shopUseCases.addCouponUseCase(any())
+            shopUseCases.updateUserPointsUseCase("userUID",userPointsSlot.captured)
+        }
+        assertThat(userPointsSlot.captured).isEqualTo(1240)
     }
 }
