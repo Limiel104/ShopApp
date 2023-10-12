@@ -28,6 +28,7 @@ fun AccountScreen(
     val firstName = viewModel.accountState.value.user.firstName
     val points = viewModel.accountState.value.user.points
     val isUserLoggedIn = viewModel.accountState.value.isUserLoggedIn
+    val isCouponActivated = viewModel.accountState.value.isCouponActivated
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -60,8 +61,10 @@ fun AccountScreen(
         AccountContent(
             scaffoldState = scaffoldState,
             bottomBarHeight = bottomBarHeight,
-            userName = firstName,
-            userClubPoints = points,
+            name = firstName,
+            userPoints = points,
+            isCouponActivated = isCouponActivated,
+            onActivateCoupon = {viewModel.onEvent(AccountEvent.OnActivateCoupon(it))},
             onLogout = { viewModel.onEvent(AccountEvent.OnLogout) },
             onGoToCart = { viewModel.onEvent(AccountEvent.GoToCart) },
             onGoToOrders = { viewModel.onEvent(AccountEvent.GoToOrders) },

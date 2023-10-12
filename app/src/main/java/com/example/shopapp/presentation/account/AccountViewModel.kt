@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.ACCOUNT_VM
 import com.example.shopapp.util.Constants.TAG
@@ -13,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +46,13 @@ class AccountViewModel @Inject constructor(
                 viewModelScope.launch {
                     _eventFlow.emit(AccountUiEvent.NavigateToSignup)
                 }
+            }
+            is AccountEvent.OnActivateCoupon -> {
+                val coupon = Coupon(userUID = _accountState.value.user.userUID,
+                    amount = event.value,
+                    activationDate = Date()
+                )
+                activateCoupon(coupon)
             }
             is AccountEvent.OnLogout -> {
                 viewModelScope.launch {
@@ -97,7 +107,118 @@ class AccountViewModel @Inject constructor(
                             _accountState.value = accountState.value.copy(
                                 user = user[0]
                             )
+                            getUserCoupon(userUID)
                         }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun getUserCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.getUserCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading coupon: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        response.data?.let { coupon ->
+                            val isCouponAlreadyExpired = shopUseCases.isCouponExpiredUseCase(
+                                coupon.activationDate,
+                                Calendar.getInstance().time
+                            )
+                            if(!isCouponAlreadyExpired) {
+                                Log.i(TAG,"Coupon: $coupon")
+                                _accountState.value = _accountState.value.copy(
+                                    isCouponActivated = true,
+                                    coupon = coupon
+                                )
+                            }
+                            else {
+                                deleteCoupon(userUID)
+                            }
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteCoupon(userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteCouponUseCase(userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete coupon: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Expired coupon was deleted")
+                        _accountState.value = _accountState.value.copy(
+                            isCouponActivated = false
+                        )
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun activateCoupon(coupon: Coupon) {
+        viewModelScope.launch {
+            shopUseCases.addCouponUseCase(coupon).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading add coupon: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        val pointsAfterCouponActivation = _accountState.value.user.points - (coupon.amount*100)
+                        updateUserPoints(
+                            _accountState.value.user.userUID,
+                            pointsAfterCouponActivation
+                        )
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateUserPoints(userUID: String, points: Int) {
+        viewModelScope.launch {
+            shopUseCases.updateUserPointsUseCase(userUID,points).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading update user points: ${response.isLoading}")
+                        _accountState.value = accountState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"User points were updated after coupon activation")
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

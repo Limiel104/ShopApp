@@ -2,10 +2,10 @@ package com.example.shopapp.presentation.cart
 
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.CartProduct
+import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
@@ -36,15 +36,21 @@ class CartViewModelTest {
     private lateinit var shopUseCases: ShopUseCases
     private lateinit var cartViewModel: CartViewModel
     private lateinit var cartItems: List<CartItem>
+    private lateinit var lowPriceCartItems: List<CartItem>
     private lateinit var cartItem: CartItem
     private lateinit var cartItemToUpdate: CartItem
     private lateinit var cartItemToUpdate2: CartItem
     private lateinit var products: List<Product>
     private lateinit var cartProducts: List<CartProduct>
+    private lateinit var lowPriceCartProducts: List<CartProduct>
     private lateinit var restoredCartItem: CartItem
     private lateinit var firebaseOrder: FirebaseOrder
     @MockK
     private lateinit var user: FirebaseUser
+    private lateinit var date: Date
+    private lateinit var currentDate: Date
+    private lateinit var coupon: Coupon
+    private lateinit var expiredCoupon: Coupon
 
     @Before
     fun setUp() {
@@ -86,6 +92,15 @@ class CartViewModelTest {
             amount = 1
         )
 
+        lowPriceCartItems = listOf(
+            CartItem(
+                cartItemId = "cartItemId5",
+                userUID = "userUID",
+                productId = 7,
+                amount = 1
+            )
+        )
+
         cartItemToUpdate = CartItem(
             cartItemId = "cartItemId2",
             userUID = "userUID",
@@ -106,7 +121,7 @@ class CartViewModelTest {
                 title = "Polo Shirt",
                 price = 55.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -115,7 +130,7 @@ class CartViewModelTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -124,7 +139,7 @@ class CartViewModelTest {
                 title = "Skirt",
                 price = 78.78,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -133,7 +148,7 @@ class CartViewModelTest {
                 title = "Jeans",
                 price = 235.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -142,7 +157,7 @@ class CartViewModelTest {
                 title = "Shirt",
                 price = 85.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -151,7 +166,16 @@ class CartViewModelTest {
                 title = "Blouse",
                 price = 99.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 7,
+                title = "Socks",
+                price = 10.00,
+                description = productDescription,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )
@@ -188,6 +212,16 @@ class CartViewModelTest {
             )
         ).shuffled()
 
+        lowPriceCartProducts = listOf(
+            CartProduct(
+                id = 7,
+                title = "Socks",
+                price = 10.00,
+                imageUrl = "imageUrl",
+                amount = 1
+            )
+        )
+
         restoredCartItem = CartItem(
             cartItemId = "cartItemId22",
             userUID = "userUID",
@@ -206,6 +240,21 @@ class CartViewModelTest {
                 Pair("4",3),
                 Pair("6",7)
             )
+        )
+
+        date = Date(2023,7,11)
+        currentDate = Date()
+
+        coupon = Coupon(
+            userUID = "userUID",
+            amount = 20,
+            activationDate = currentDate
+        )
+
+        expiredCoupon = Coupon(
+            userUID = "userUID",
+            amount = 20,
+            activationDate = date
         )
     }
 
@@ -227,6 +276,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -235,6 +287,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(isUserLoggedIn).isTrue()
     }
@@ -245,11 +298,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
 
         cartViewModel = setViewModel()
 
@@ -258,8 +317,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
         }
         assertThat(resultCartProducts).containsExactlyElementsIn(cartProducts)
     }
@@ -270,8 +331,11 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(emptyList()))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -281,7 +345,8 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -292,6 +357,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -301,6 +369,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).isEmpty()
         assertThat(isLoading).isFalse()
@@ -311,6 +380,9 @@ class CartViewModelTest {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Loading(true))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -320,6 +392,7 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).isEmpty()
         assertThat(isLoading).isTrue()
@@ -331,11 +404,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
 
         cartViewModel = setViewModel()
 
@@ -345,8 +424,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -358,8 +439,11 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Error("Error"))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -369,7 +453,8 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isFalse()
@@ -381,8 +466,11 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Loading(true))
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
 
         cartViewModel = setViewModel()
 
@@ -392,7 +480,8 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.getUserCouponUseCase("userUID")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
         assertThat(isLoading).isTrue()
@@ -404,11 +493,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
 
         cartViewModel = setViewModel()
 
@@ -416,23 +511,323 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
         }
         assertThat(resultCartItem).isEqualTo(cartItem)
     }
 
     @Test
-    fun `total amount of products in the cart is correctly calculated`() {
+    fun `get user coupon is successful - coupon already activated`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(coupon.activationDate,any())
+        } returns false
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultCoupon = getCurrentCartState().coupon
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(coupon.activationDate,any())
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultCoupon).isEqualTo(coupon)
+        assertThat(resultIsCouponActivated).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `get user coupon is successful - coupon not yet activated`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(null))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultIsCouponActivated).isFalse()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `get user coupon is not successful and returns error`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Error("Error"))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `get user coupon is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `delete coupon is successful - activated coupon is expired`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(expiredCoupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+        } returns true
+        coEvery {
+            shopUseCases.deleteCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+            shopUseCases.deleteCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultIsCouponActivated).isFalse()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `coupon date is passed correctly`() {
+        val dateSlot = slot<Date>()
+
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(capture(dateSlot),any())
+        } returns false
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(dateSlot.captured,any())
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultIsCouponActivated).isTrue()
+        assertThat(isLoading).isFalse()
+        assertThat(dateSlot.captured).isEqualTo(coupon.activationDate)
+    }
+
+    @Test
+    fun `delete coupon is not successful and returns error`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(expiredCoupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+        } returns true
+        coEvery {
+            shopUseCases.deleteCouponUseCase("userUID")
+        } returns flowOf(Resource.Error("Error"))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+            shopUseCases.deleteCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultIsCouponActivated).isFalse()
+        assertThat(isLoading).isFalse()
+    }
+
+    @Test
+    fun `delete coupon is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(expiredCoupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+        } returns true
+        coEvery {
+            shopUseCases.deleteCouponUseCase("userUID")
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+        val isUserLoggedIn = getCurrentCartState().isUserLoggedIn
+        val resultIsCouponActivated = getCurrentCartState().isCouponActivated
+        val isLoading = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(expiredCoupon.activationDate,any())
+            shopUseCases.deleteCouponUseCase("userUID")
+        }
+        assertThat(isUserLoggedIn).isTrue()
+        assertThat(resultIsCouponActivated).isFalse()
+        assertThat(isLoading).isTrue()
+    }
+
+    @Test
+    fun `total amount in the cart is correctly calculated`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(Coupon()))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns true
+        coEvery {
+            shopUseCases.deleteCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(true))
 
         cartViewModel = setViewModel()
 
@@ -442,10 +837,81 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+            shopUseCases.deleteCouponUseCase("userUID")
         }
         assertThat(totalAmount).isEqualTo("1598,66")
+    }
+
+    @Test
+    fun `total amount is correctly calculated when coupon is activated and total amount is above required`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.calculateTotalAmount()
+        val totalAmount = String.format("%.2f",getCurrentCartState().totalAmount)
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        }
+        assertThat(totalAmount).isEqualTo("1578,66")
+    }
+
+    @Test
+    fun `total amount is correctly calculated when coupon is activated and total amount is below required`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(lowPriceCartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(lowPriceCartItems,products)
+        } returns lowPriceCartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(Coupon()))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.calculateTotalAmount()
+        val totalAmount = String.format("%.2f",getCurrentCartState().totalAmount)
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(lowPriceCartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        }
+        assertThat(totalAmount).isEqualTo("10,00")
     }
 
     @Test
@@ -454,11 +920,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         } returns flowOf(Resource.Success(true))
@@ -474,8 +946,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -489,11 +963,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         } returns flowOf(Resource.Loading(true))
@@ -509,8 +989,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -524,11 +1006,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         } returns flowOf(Resource.Success(true))
@@ -544,8 +1032,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -559,11 +1049,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         } returns flowOf(Resource.Loading(true))
@@ -579,8 +1075,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -594,11 +1092,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         } returns flowOf(Resource.Success(true))
@@ -611,8 +1115,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         }
         assertThat(loadingState).isFalse()
@@ -624,11 +1130,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         } returns flowOf(Resource.Loading(true))
@@ -641,29 +1153,148 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.addProductToCartUseCase("userUID",3,1)
         }
         assertThat(loadingState).isTrue()
     }
 
     @Test
-    fun `place order was successful`() {
+    fun `get user points is loading`() {
         coEvery {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
         coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+        coEvery {
             shopUseCases.addOrderUseCase(firebaseOrder)
         } returns flowOf(Resource.Success(true))
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `update user points is loading`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        } returns flowOf(Resource.Loading(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        }
+        assertThat(loadingState).isTrue()
+    }
+
+    @Test
+    fun `amount of user points after placing order is calculated correctly`() {
+        val userUIDSlot = slot<String>()
+        val userPointsSlot = slot<Int>()
+
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase(capture(userUIDSlot),capture(userPointsSlot))
         } returns flowOf(Resource.Success(true))
 
         cartViewModel = setViewModel()
@@ -674,13 +1305,72 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.addOrderUseCase(firebaseOrder)
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase(userUIDSlot.captured,userPointsSlot.captured)
+        }
+        assertThat(loadingState).isFalse()
+        assertThat(userUIDSlot.captured).isEqualTo("userUID")
+        assertThat(userPointsSlot.captured).isEqualTo(1698)
+    }
+
+    @Test
+    fun `place order was successful`() {
+        coEvery {
+            shopUseCases.getUserCartItemsUseCase("userUID")
+        } returns flowOf(Resource.Success(cartItems))
+        coEvery {
+            shopUseCases.getProductsUseCase("all")
+        } returns flowOf(Resource.Success(products))
+        every {
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+        } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+        coEvery {
+            shopUseCases.addOrderUseCase(firebaseOrder)
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
+        } returns flowOf(Resource.Success(true))
+
+        cartViewModel = setViewModel()
+
+        cartViewModel.addOrder(firebaseOrder)
+        val loadingState = getCurrentCartState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserCartItemsUseCase("userUID")
+            shopUseCases.getProductsUseCase("all")
+            shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+            shopUseCases.addOrderUseCase(firebaseOrder)
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         }
         assertThat(loadingState).isFalse()
     }
@@ -691,11 +1381,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         } returns flowOf(Resource.Success(true))
@@ -711,8 +1407,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate)
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -726,11 +1424,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate2)
         } returns flowOf(Resource.Success(true))
@@ -746,8 +1450,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.updateProductInCartUseCase(cartItemToUpdate2)
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -761,11 +1467,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         } returns flowOf(Resource.Success(true))
@@ -781,8 +1493,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.deleteProductFromCartUseCase("cartItemId2")
         }
         assertThat(cartItemsState).containsExactlyElementsIn(cartItems)
@@ -801,11 +1515,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(capture(cartItemIdSlot))
         } returns flowOf(Resource.Success(true))
@@ -827,8 +1547,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.addProductToCartUseCase(any(),any(),any())
         }
@@ -845,16 +1567,28 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
         coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
+        coEvery {
             shopUseCases.addOrderUseCase(any())
         } returns flowOf(Resource.Success(true))
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
+        } returns flowOf(Resource.Success(true))
+        coEvery {
+            shopUseCases.getUserPointsUseCase("userUID")
+        } returns flowOf(Resource.Success(100))
+        coEvery {
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         } returns flowOf(Resource.Success(true))
 
         cartViewModel = setViewModel()
@@ -866,13 +1600,17 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
             shopUseCases.addOrderUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
             shopUseCases.deleteProductFromCartUseCase(any())
+            shopUseCases.getUserPointsUseCase("userUID")
+            shopUseCases.updateUserPointsUseCase("userUID",1698)
         }
         assertThat(initialState.isDialogActivated).isFalse()
         assertThat(resultState.isDialogActivated).isTrue()
@@ -884,11 +1622,17 @@ class CartViewModelTest {
             shopUseCases.getUserCartItemsUseCase("userUID")
         } returns flowOf(Resource.Success(cartItems))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(products))
         every {
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
         } returns cartProducts
+        coEvery {
+            shopUseCases.getUserCouponUseCase("userUID")
+        } returns flowOf(Resource.Success(coupon))
+        every {
+            shopUseCases.isCouponExpiredUseCase(any(),any())
+        } returns false
         coEvery {
             shopUseCases.deleteProductFromCartUseCase(any())
         } returns flowOf(Resource.Success(true))
@@ -900,8 +1644,10 @@ class CartViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserCartItemsUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.setUserCartProductsUseCase(cartItems,products)
+            shopUseCases.getUserCouponUseCase("userUID")
+            shopUseCases.isCouponExpiredUseCase(any(),any())
         }
     }
 }
