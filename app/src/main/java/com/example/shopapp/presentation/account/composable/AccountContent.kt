@@ -1,11 +1,8 @@
 package com.example.shopapp.presentation.account.composable
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -25,7 +22,6 @@ import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_BTN
 import com.example.shopapp.util.Constants.LOGOUT_BTN
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AccountContent(
     scaffoldState: ScaffoldState,
@@ -50,14 +46,14 @@ fun AccountContent(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(ACCOUNT_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 10.dp)
+                .padding(top = 10.dp)
         ) {
             PointsCard(
                 userClubPoints = userPoints

@@ -2,13 +2,11 @@ package com.example.shopapp.presentation.signup.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -96,14 +94,13 @@ fun SignupContent(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(SIGNUP_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
+                .padding(10.dp)
                 .verticalScroll(scrollState)
                 .testTag(SIGNUP_COLUMN),
             horizontalAlignment = Alignment.Start

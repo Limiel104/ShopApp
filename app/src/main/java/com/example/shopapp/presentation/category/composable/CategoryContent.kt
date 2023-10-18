@@ -2,13 +2,11 @@ package com.example.shopapp.presentation.category.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -62,15 +60,13 @@ fun CategoryContent(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(CATEGORY_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp)
+                .padding(paddingValues)
+                .padding(10.dp)
         ) {
             AnimatedVisibility(
                 visible = isSortAndFilterSectionVisible,

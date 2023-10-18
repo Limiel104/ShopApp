@@ -1,12 +1,10 @@
 package com.example.shopapp.presentation.common.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -39,15 +37,13 @@ fun UserNotLoggedInContent(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(USER_NOT_LOGGED_IN_CONTENT)
-    ) { innerPadding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(paddingValues)
+                .padding(10.dp)
         ) {
             Column(
                 modifier = Modifier

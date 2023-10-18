@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.cart.composable
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +42,6 @@ import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDER_BTN
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CartContent(
     scaffoldState: ScaffoldState,
@@ -67,16 +65,14 @@ fun CartContent(
         scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(CART_CONTENT)
-    ) {
+    ) { paddingValues ->
         if (cartProducts.isNotEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 10.dp)
+                    .padding(paddingValues)
+                    .padding(10.dp)
             ) {
                 LazyColumn(
                     modifier = Modifier

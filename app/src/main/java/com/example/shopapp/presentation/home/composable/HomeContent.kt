@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.home.composable
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.HOME_CONTENT
 import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
@@ -40,13 +38,13 @@ fun HomeContent(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(HOME_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
+                .padding(10.dp)
         ) {
             LazyColumn(
                 modifier = Modifier
