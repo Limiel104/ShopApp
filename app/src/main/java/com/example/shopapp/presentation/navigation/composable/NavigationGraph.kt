@@ -1,7 +1,6 @@
 package com.example.shopapp.presentation.navigation.composable
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,8 +21,7 @@ import com.example.shopapp.util.Screen
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController,
-    bottomBarHeight: Dp
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -32,26 +30,17 @@ fun NavigationGraph(
         composable(
             route = Screen.HomeScreen.route
         ) {
-            HomeScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            HomeScreen(navController = navController)
         }
         composable(
             route = Screen.FavouriteScreen.route
         ) {
-            FavouriteScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            FavouriteScreen(navController = navController)
         }
         composable(
             route = Screen.CategoryListScreen.route
         ) {
-            CategoryListScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            CategoryListScreen(navController = navController)
         }
         composable(
             route = Screen.CategoryScreen.route + "categoryId={categoryId}",
@@ -63,18 +52,12 @@ fun NavigationGraph(
                 }
             )
         ) {
-            CategoryScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            CategoryScreen(navController = navController)
         }
         composable(
             route = Screen.AccountScreen.route
         ) {
-            AccountScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            AccountScreen(navController = navController)
         }
         composable(
             route = Screen.ProductDetailsScreen.route + "productId" + "={productId}",
@@ -91,33 +74,22 @@ fun NavigationGraph(
         composable(
             route = Screen.LoginScreen.route
         ) {
-            LoginScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            LoginScreen(navController = navController)
         }
         composable(
             route = Screen.SignupScreen.route
         ) {
-            SignupScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            SignupScreen(navController = navController)
         }
         composable(
             route = Screen.CartScreen.route
         ) {
-            CartScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            CartScreen(navController = navController)
         }
         composable(
             route = Screen.OrdersScreen.route
         ) {
-            OrdersScreen(
-                bottomBarHeight = bottomBarHeight
-            )
+            OrdersScreen()
         }
         composable(
             route = Screen.ProfileScreen.route + "userUID" + "={userUID}",
@@ -129,10 +101,7 @@ fun NavigationGraph(
                 }
             )
         ) {
-            ProfileScreen(
-                navController = navController,
-                bottomBarHeight = bottomBarHeight
-            )
+            ProfileScreen(navController = navController)
         }
     }
 }

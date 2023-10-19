@@ -6,7 +6,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun FavouriteScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: FavouritesViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -56,7 +54,6 @@ fun FavouriteScreen(
     if(isUserLoggedIn) {
         FavouriteContent(
             scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
             productList = productList,
             isLoading = isLoading,
             onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) },
@@ -67,7 +64,6 @@ fun FavouriteScreen(
     else {
         UserNotLoggedInContent(
             scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
             onLogin = { viewModel.onEvent(FavouritesEvent.OnLogin) },
             onSignup = { viewModel.onEvent(FavouritesEvent.OnSignup) }
         )

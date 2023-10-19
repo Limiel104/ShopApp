@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
@@ -29,14 +28,12 @@ import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrdersContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     orders: List<Order>,
     isLoading: Boolean,
     orderOrder: OrderOrder,
@@ -174,7 +171,6 @@ fun getOrders(): List<Order> {
 fun OrdersContentPreview() {
     OrdersContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -190,7 +186,6 @@ fun OrdersContentPreview() {
 fun OrdersContentPreviewSortSectionVisible() {
     OrdersContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -206,7 +201,6 @@ fun OrdersContentPreviewSortSectionVisible() {
 fun OrdersContentCPIPreview() {
     OrdersContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight.dp,
         orders = getOrders(),
         isLoading = true,
         orderOrder = OrderOrder.DateDescending(),

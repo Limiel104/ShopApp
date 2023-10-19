@@ -6,7 +6,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shopapp.presentation.orders.OrdersEvent
 import com.example.shopapp.presentation.orders.OrdersUiEvent
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun OrdersScreen(
-    bottomBarHeight: Dp,
     viewModel: OrdersViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -40,7 +38,6 @@ fun OrdersScreen(
 
     OrdersContent(
         scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
         orders = orders,
         isLoading = isLoading,
         orderOrder = orderOrder,

@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
@@ -57,7 +56,6 @@ import com.example.shopapp.util.Constants.zipCodeEmptyError
 fun SignupContent(
     scaffoldState: ScaffoldState,
     scrollState: ScrollState,
-    bottomBarHeight: Dp,
     email: String,
     emailError: String?,
     password: String,
@@ -297,7 +295,6 @@ fun SignupContentPreview() {
         SignupContent(
             scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = null,
             password = "abcdef2+A",
@@ -336,7 +333,6 @@ fun SignupContentErrorPreview() {
         SignupContent(
             scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = emailEmptyError,
             password = "abcdef2+A",
@@ -375,7 +371,6 @@ fun SignupContentCPIPreview() {
         SignupContent(
             scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = null,
             password = "abcdef2+A",

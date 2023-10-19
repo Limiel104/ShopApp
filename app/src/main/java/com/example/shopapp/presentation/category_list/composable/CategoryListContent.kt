@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CATEGORY_LIST_CONTENT
@@ -25,7 +23,6 @@ import com.example.shopapp.util.getCategory
 @Composable
 fun CategoryListContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     categoryList: List<Category>,
     onCategorySelected: (String) -> Unit,
     onGoToCart: () -> Unit
@@ -68,7 +65,6 @@ fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryList = getCategory(),
             onCategorySelected = {},
             onGoToCart = {}

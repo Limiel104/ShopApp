@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
@@ -30,7 +29,6 @@ import com.example.shopapp.util.Constants.productDescription
 @Composable
 fun CategoryContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     categoryName: String,
     productList: List<Product>,
     isSortAndFilterSectionVisible: Boolean,
@@ -179,7 +177,6 @@ fun CategoryContentPreview() {
     ShopAppTheme {
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -208,7 +205,6 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
     ShopAppTheme {
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -237,7 +233,6 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
     ShopAppTheme {
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -271,7 +266,6 @@ fun CategoryContentDialogPreview() {
     ShopAppTheme {
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -300,7 +294,6 @@ fun CategoryContentCPIPreview() {
     ShopAppTheme {
         CategoryContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,

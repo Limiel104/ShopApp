@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
@@ -45,7 +44,6 @@ import com.example.shopapp.util.Constants.ORDER_BTN
 @Composable
 fun CartContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     cartProducts: List<CartProduct>,
     totalAmount: Double,
     isLoading: Boolean,
@@ -246,7 +244,6 @@ private fun returnCartProducts(): List<CartProduct> {
 fun CartContentPreview() {
     CartContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         totalAmount = 155.45,
         cartProducts = returnCartProducts(),
         isLoading = false,
@@ -266,7 +263,6 @@ fun CartContentPreview() {
 fun CartContentPreviewListIsEmpty() {
     CartContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         cartProducts = emptyList(),
         totalAmount = 155.45,
         isLoading = false,
@@ -286,7 +282,6 @@ fun CartContentPreviewListIsEmpty() {
 fun CartContentPreviewDialogActivated() {
     CartContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = false,
@@ -306,7 +301,6 @@ fun CartContentPreviewDialogActivated() {
 fun CartContentPreviewLoading() {
     CartContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = true,

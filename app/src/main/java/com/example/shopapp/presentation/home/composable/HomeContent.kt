@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Offer
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -24,7 +23,6 @@ import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
 @Composable
 fun HomeContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     offerList: List<Offer>,
     onOfferSelected: (String) -> Unit,
     onGoToCart: () -> Unit
@@ -91,7 +89,6 @@ fun HomeContentPreview() {
 
         HomeContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             offerList = offerList,
             onOfferSelected = {},
             onGoToCart = {}

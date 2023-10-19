@@ -7,7 +7,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.cart.CartEvent
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CartScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -72,7 +70,6 @@ fun CartScreen(
     if(isUserLoggedIn) {
         CartContent(
             scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
             totalAmount = totalAmount,
             cartProducts = cartProducts,
             isLoading = isLoading,
@@ -88,7 +85,6 @@ fun CartScreen(
     else {
         UserNotLoggedInContent(
             scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
             onLogin = { viewModel.onEvent(CartEvent.OnLogin) },
             onSignup = { viewModel.onEvent(CartEvent.OnSignup) }
         )

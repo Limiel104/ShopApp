@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
@@ -37,7 +36,6 @@ import com.example.shopapp.util.Constants.passwordEmptyError
 
 @Composable
 fun LoginContent(
-    bottomBarHeight: Dp,
     email: String,
     emailError: String?,
     password: String,
@@ -53,7 +51,6 @@ fun LoginContent(
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 20.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(LOGIN_CONTENT),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
@@ -172,7 +169,6 @@ fun LoginContent(
 fun LoginContentPreview() {
     ShopAppTheme() {
         LoginContent(
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = null,
             password = "abcdef2+A",
@@ -191,7 +187,6 @@ fun LoginContentPreview() {
 fun LoginContentErrorPreview() {
     ShopAppTheme() {
         LoginContent(
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = emailEmptyError,
             password = "abcdef2+A",
@@ -210,7 +205,6 @@ fun LoginContentErrorPreview() {
 fun LoginContentCPIPreview() {
     ShopAppTheme() {
         LoginContent(
-            bottomBarHeight = 56.dp,
             email = "email@wp.com",
             emailError = null,
             password = "abcdef2+A",

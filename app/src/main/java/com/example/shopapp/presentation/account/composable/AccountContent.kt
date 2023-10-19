@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -25,7 +24,6 @@ import com.example.shopapp.util.Constants.LOGOUT_BTN
 @Composable
 fun AccountContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     name: String,
     userPoints: Int,
     isCouponActivated: Boolean,
@@ -109,7 +107,6 @@ fun AccountContentCoupopNotActivatedPreview() {
     ShopAppTheme {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             name = "John",
             userPoints = 2234,
             isCouponActivated = false,
@@ -128,7 +125,6 @@ fun AccountContentCouponAlreadyActivatedPreview() {
     ShopAppTheme {
         AccountContent(
             scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             name = "John",
             userPoints = 2234,
             isCouponActivated = true,

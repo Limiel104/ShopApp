@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
@@ -38,7 +37,6 @@ import com.example.shopapp.util.Constants.PROFILE_STREET_TF
 import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_ERROR
 import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_TF
 import com.example.shopapp.util.Constants.SAVE_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.cityEmptyError
 import com.example.shopapp.util.Constants.fieldEmptyError
 import com.example.shopapp.util.Constants.streetEmptyError
@@ -48,7 +46,6 @@ import com.example.shopapp.util.Constants.zipCodeEmptyError
 @Composable
 fun ProfileContent(
     scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     firstName: String,
     firstNameError: String?,
     lastName: String,
@@ -228,7 +225,6 @@ fun ProfileContent(
 fun ProfileContentPreview() {
     ProfileContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight.dp,
         firstName = "John",
         firstNameError = null,
         lastName = "Smith",
@@ -255,7 +251,6 @@ fun ProfileContentPreview() {
 fun ProfileContentPreviewErrors() {
     ProfileContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight.dp,
         firstName = "",
         firstNameError = fieldEmptyError,
         lastName = "",
@@ -282,7 +277,6 @@ fun ProfileContentPreviewErrors() {
 fun ProfileContentCPIPreview() {
     ProfileContent(
         scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight.dp,
         firstName = "John",
         firstNameError = null,
         lastName = "Smith",
