@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +24,11 @@ import com.example.shopapp.util.Constants.USER_NOT_LOGGED_IN_CONTENT
 
 @Composable
 fun UserNotLoggedInContent(
-    scaffoldState: ScaffoldState,
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
 
     Scaffold(
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(USER_NOT_LOGGED_IN_CONTENT)
@@ -90,7 +86,6 @@ fun UserNotLoggedInContent(
 fun UserNotLoggedInContentPreview() {
     ShopAppTheme {
         UserNotLoggedInContent(
-            scaffoldState = rememberScaffoldState(),
             onLogin = {},
             onSignup = {}
         )

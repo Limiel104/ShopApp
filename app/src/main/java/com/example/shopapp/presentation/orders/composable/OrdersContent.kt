@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +31,6 @@ import java.util.Date
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrdersContent(
-    scaffoldState: ScaffoldState,
     orders: List<Order>,
     isLoading: Boolean,
     orderOrder: OrderOrder,
@@ -47,7 +44,6 @@ fun OrdersContent(
             OrdersTopBar(
                 onSortSelected = { onSortSelected() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(ORDERS_CONTENT)
@@ -170,7 +166,6 @@ fun getOrders(): List<Order> {
 @Composable
 fun OrdersContentPreview() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -185,7 +180,6 @@ fun OrdersContentPreview() {
 @Composable
 fun OrdersContentPreviewSortSectionVisible() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -200,7 +194,6 @@ fun OrdersContentPreviewSortSectionVisible() {
 @Composable
 fun OrdersContentCPIPreview() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
         orders = getOrders(),
         isLoading = true,
         orderOrder = OrderOrder.DateDescending(),

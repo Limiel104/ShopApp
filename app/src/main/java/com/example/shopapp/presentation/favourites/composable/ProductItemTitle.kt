@@ -1,11 +1,10 @@
 package com.example.shopapp.presentation.favourites.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -25,7 +24,6 @@ fun ProductItemTitle(
     Column(
         modifier = Modifier
             .width(180.dp)
-            .background(MaterialTheme.colors.background)
             .padding(5.dp)
             .testTag("$PRODUCT_ITEM_TITLE $name")
     ) {
@@ -48,10 +46,12 @@ fun ProductItemTitle(
 @Preview
 @Composable
 fun ProductItemTitlePreview() {
-    ShopAppTheme {
-        ProductItemTitle(
-            name = "Shirt",
-            price = "195,59 PLN"
-        )
+    Surface() {
+        ShopAppTheme {
+            ProductItemTitle(
+                name = "Shirt",
+                price = "195,59 PLN"
+            )
+        }
     }
 }

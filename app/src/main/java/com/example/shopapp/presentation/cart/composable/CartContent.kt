@@ -10,21 +10,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.rememberDismissState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,10 +41,10 @@ import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDER_BTN
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartContent(
-    scaffoldState: ScaffoldState,
+    snackbarHostState: SnackbarHostState,
     cartProducts: List<CartProduct>,
     totalAmount: Double,
     isLoading: Boolean,
@@ -60,7 +61,10 @@ fun CartContent(
             CartTopBar(
                 onClick = { onGoBack() }
             ) },
-        scaffoldState = scaffoldState,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            ) },
         modifier = Modifier
             .fillMaxSize()
             .testTag(CART_CONTENT)
@@ -84,7 +88,7 @@ fun CartContent(
                         key = { _, item -> item.hashCode() }
                     ) { _, cartProduct ->
                         val dismissState = rememberDismissState(
-                            confirmStateChange = {
+                            confirmValueChange = {
                                 if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
                                     onDelete(cartProduct.id)
                                     true
@@ -97,8 +101,8 @@ fun CartContent(
                             directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
                             background = {
                                 val color = when(dismissState.dismissDirection) {
-                                    DismissDirection.StartToEnd -> MaterialTheme.colors.onSecondary
-                                    DismissDirection.EndToStart -> MaterialTheme.colors.onSecondary
+                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.onSecondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.onSecondary
                                     null -> Color.Transparent
                                 }
 
@@ -118,7 +122,7 @@ fun CartContent(
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = stringResource(id = R.string.delete_cart_product),
-                                        tint = MaterialTheme.colors.onPrimary
+                                        tint = MaterialTheme.colorScheme.onPrimary
                                     )
                                 }
                             },
@@ -238,12 +242,13 @@ private fun returnCartProducts(): List<CartProduct> {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
+        snackbarHostState = snackbarHostState,
         totalAmount = 155.45,
         cartProducts = returnCartProducts(),
         isLoading = false,
@@ -257,12 +262,13 @@ fun CartContentPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewListIsEmpty() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
+        snackbarHostState = snackbarHostState,
         cartProducts = emptyList(),
         totalAmount = 155.45,
         isLoading = false,
@@ -276,12 +282,13 @@ fun CartContentPreviewListIsEmpty() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewDialogActivated() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
+        snackbarHostState = snackbarHostState,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = false,
@@ -295,12 +302,13 @@ fun CartContentPreviewDialogActivated() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewLoading() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
+        snackbarHostState = snackbarHostState,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = true,

@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +26,6 @@ import com.example.shopapp.util.Constants.productDescription
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryContent(
-    scaffoldState: ScaffoldState,
     categoryName: String,
     productList: List<Product>,
     isSortAndFilterSectionVisible: Boolean,
@@ -55,7 +52,6 @@ fun CategoryContent(
                 onSortAndFilterSelected = { onSortAndFilterSelected() },
                 onCartSelected = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(CATEGORY_CONTENT)
@@ -176,7 +172,6 @@ private fun getProductList(): List<Product> {
 fun CategoryContentPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -204,7 +199,6 @@ fun CategoryContentPreview() {
 fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -232,7 +226,6 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
 fun CategoryContentToggleTruePreviewCategoryIsAll() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -265,7 +258,6 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
 fun CategoryContentDialogPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -293,7 +285,6 @@ fun CategoryContentDialogPreview() {
 fun CategoryContentCPIPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,

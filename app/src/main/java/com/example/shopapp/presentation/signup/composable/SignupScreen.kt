@@ -3,7 +3,6 @@ package com.example.shopapp.presentation.signup.composable
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +21,6 @@ fun SignupScreen(
     navController: NavController,
     viewModel: SignupViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val scrollState = rememberScrollState()
     val email = viewModel.signupState.value.email
     val emailError = viewModel.signupState.value.emailError
@@ -61,7 +59,6 @@ fun SignupScreen(
     }
 
     SignupContent(
-        scaffoldState = scaffoldState,
         scrollState  = scrollState,
         email = email,
         emailError = emailError,

@@ -2,8 +2,9 @@ package com.example.shopapp.presentation.home.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,6 @@ fun OfferItem(
             .fillMaxWidth()
             .height(150.dp)
             .clickable { onClick() },
-        backgroundColor = Color.Gray
     ) {
         Column(
             modifier = Modifier
@@ -49,10 +49,12 @@ fun OfferItem(
 @Preview
 @Composable
 fun OfferItemPreview() {
-    ShopAppTheme {
-        OfferItem(
-            text = "All clothes for women now 10% cheaper",
-            onClick = {}
-        )
+    Surface() {
+        ShopAppTheme {
+            OfferItem(
+                text = "All clothes for women now 10% cheaper",
+                onClick = {}
+            )
+        }
     }
 }

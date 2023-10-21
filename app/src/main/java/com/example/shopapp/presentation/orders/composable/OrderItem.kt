@@ -1,7 +1,6 @@
 package com.example.shopapp.presentation.orders.composable
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,13 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,10 +36,7 @@ fun OrderItem(
     order: Order,
     onOrderSelected: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-    ) {
+    Column() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -72,7 +68,7 @@ fun OrderItem(
         if(order.isExpanded) {
             LazyColumn(
                 modifier = Modifier
-                    .height((order.products.size*100).dp)
+                    .height((order.products.size * 100).dp)
                     .padding(start = 10.dp)
             ) {
                 itemsIndexed(order.products) { _, product ->
@@ -89,51 +85,55 @@ fun OrderItem(
 @Preview
 @Composable
 fun OrderItemPreviewNotExpanded() {
-    OrderItem(
-        order = Order(
-            orderId = "orderId1",
-            date = Date(),
-            totalAmount = 123.43,
-            products = emptyList(),
-            isExpanded = false
-        ),
-        onOrderSelected = {}
-    )
+    Surface() {
+        OrderItem(
+            order = Order(
+                orderId = "orderId1",
+                date = Date(),
+                totalAmount = 123.43,
+                products = emptyList(),
+                isExpanded = false
+            ),
+            onOrderSelected = {}
+        )
+    }
 }
 
 @Preview
 @Composable
 fun OrderItemPreviewExpanded() {
-    OrderItem(
-        order = Order(
-            orderId = "orderId2",
-            date = Date(),
-            totalAmount = 54.00,
-            products = listOf(
-                CartProduct(
-                    id = 2,
-                    title = "title 2",
-                    price = 53.34,
-                    imageUrl = "",
-                    amount = 2
+    Surface() {
+        OrderItem(
+            order = Order(
+                orderId = "orderId2",
+                date = Date(),
+                totalAmount = 54.00,
+                products = listOf(
+                    CartProduct(
+                        id = 2,
+                        title = "title 2",
+                        price = 53.34,
+                        imageUrl = "",
+                        amount = 2
+                    ),
+                    CartProduct(
+                        id = 3,
+                        title = "title 3",
+                        price = 56.00,
+                        imageUrl = "",
+                        amount = 1
+                    ),
+                    CartProduct(
+                        id = 4,
+                        title = "title 4",
+                        price = 23.00,
+                        imageUrl = "",
+                        amount = 1
+                    )
                 ),
-                CartProduct(
-                    id = 3,
-                    title = "title 3",
-                    price = 56.00,
-                    imageUrl = "",
-                    amount = 1
-                ),
-                CartProduct(
-                    id = 4,
-                    title = "title 4",
-                    price = 23.00,
-                    imageUrl = "",
-                    amount = 1
-                )
+                isExpanded = true
             ),
-            isExpanded = true
-        ),
-        onOrderSelected = {}
-    )
+            onOrderSelected = {}
+        )
+    }
 }

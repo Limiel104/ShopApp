@@ -1,15 +1,11 @@
 package com.example.shopapp.presentation.home.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -22,7 +18,6 @@ import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
 
 @Composable
 fun HomeContent(
-    scaffoldState: ScaffoldState,
     offerList: List<Offer>,
     onOfferSelected: (String) -> Unit,
     onGoToCart: () -> Unit
@@ -32,10 +27,8 @@ fun HomeContent(
             HomeTopBar(
                 onClick = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
             .testTag(HOME_CONTENT)
     ) { paddingValues ->
         Column(
@@ -88,7 +81,6 @@ fun HomeContentPreview() {
         )
 
         HomeContent(
-            scaffoldState = rememberScaffoldState(),
             offerList = offerList,
             onOfferSelected = {},
             onGoToCart = {}

@@ -2,10 +2,8 @@ package com.example.shopapp.presentation.product_details.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -19,18 +17,13 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
     navController: NavController,
     viewModel: ProductDetailsViewModel = hiltViewModel()
 ) {
-    val bottomSheetState = rememberBottomSheetState(
-        initialValue = BottomSheetValue.Collapsed,
-    )
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = bottomSheetState
-    )
+    val scaffoldState = rememberBottomSheetScaffoldState()
     val product = Product(
         id = viewModel.productDetailsState.value.productId,
         title = viewModel.productDetailsState.value.title,

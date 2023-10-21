@@ -1,11 +1,12 @@
 package com.example.shopapp.presentation.cart.composable
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -15,6 +16,7 @@ import com.example.shopapp.R
 import com.example.shopapp.util.Constants.CART_TOP_BAR
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartTopBar(
     onClick: () -> Unit

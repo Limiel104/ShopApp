@@ -3,10 +3,9 @@ package com.example.shopapp.presentation.common.composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,8 +32,7 @@ fun ImageItem(
                 Modifier.fillMaxWidth()
             else
                 Modifier.size(width!!.dp, height!!.dp),
-        backgroundColor = Color.LightGray,
-        elevation = 0.dp
+//        elevation = 0.dp
     ) {
         AsyncImage(
             model = ImageRequest

@@ -1,12 +1,11 @@
 package com.example.shopapp.presentation.login.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +48,6 @@ fun LoginContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
             .padding(horizontal = 20.dp)
             .testTag(LOGIN_CONTENT),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,7 +62,7 @@ fun LoginContent(
         ) {
             Text(
                 text = stringResource(id = R.string.login),
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -142,7 +140,7 @@ fun LoginContent(
 
                 Text(
                     text = stringResource(id = R.string.signup),
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
                         .clickable { onSignup() }

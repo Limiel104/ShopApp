@@ -1,7 +1,6 @@
 package com.example.shopapp.presentation.home.composable
 
 import android.util.Log
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +18,6 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val offerList = viewModel.homeState.value.offerList
 
     LaunchedEffect(key1 = true) {
@@ -37,7 +35,6 @@ fun HomeScreen(
     }
 
     HomeContent(
-        scaffoldState = scaffoldState,
         offerList = offerList,
         onOfferSelected = { viewModel.onEvent(HomeEvent.OnOfferSelected(it)) },
         onGoToCart = { viewModel.onEvent(HomeEvent.GoToCart) }

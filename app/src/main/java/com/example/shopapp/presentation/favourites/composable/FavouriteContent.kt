@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +28,6 @@ import com.example.shopapp.util.Constants.productDescription
 
 @Composable
 fun FavouriteContent(
-    scaffoldState: ScaffoldState,
     productList: List<Product>,
     isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
@@ -42,7 +39,6 @@ fun FavouriteContent(
             FavouriteTopBar(
                 onClick = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(FAVOURITES_CONTENT)
@@ -131,7 +127,6 @@ fun FavouriteContentPreview() {
         )
 
         FavouriteContent(
-            scaffoldState = rememberScaffoldState(),
             productList = productList,
             isLoading = false,
             onProductSelected = {},
@@ -145,7 +140,6 @@ fun FavouriteContentPreview() {
 @Composable
 fun FavouriteContentEmptyListPreview() {
     FavouriteContent(
-        scaffoldState = rememberScaffoldState(),
         productList = emptyList(),
         isLoading = false,
         onProductSelected = {},

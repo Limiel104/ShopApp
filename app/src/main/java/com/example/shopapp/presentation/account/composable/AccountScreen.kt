@@ -2,7 +2,6 @@ package com.example.shopapp.presentation.account.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +21,6 @@ fun AccountScreen(
     navController: NavController,
     viewModel: AccountViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val firstName = viewModel.accountState.value.user.firstName
     val points = viewModel.accountState.value.user.points
     val isUserLoggedIn = viewModel.accountState.value.isUserLoggedIn
@@ -57,7 +55,6 @@ fun AccountScreen(
 
     if(isUserLoggedIn) {
         AccountContent(
-            scaffoldState = scaffoldState,
             name = firstName,
             userPoints = points,
             isCouponActivated = isCouponActivated,
@@ -70,7 +67,6 @@ fun AccountScreen(
     }
     else {
         UserNotLoggedInContent(
-            scaffoldState = scaffoldState,
             onLogin = { viewModel.onEvent(AccountEvent.OnLogin) },
             onSignup = { viewModel.onEvent(AccountEvent.OnSignup) }
         )

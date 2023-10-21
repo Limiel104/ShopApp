@@ -1,11 +1,10 @@
 package com.example.shopapp.presentation.common.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -34,7 +33,6 @@ fun ShopTextFieldItem(
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
             .fillMaxWidth()
             .testTag(testTag)
     )
@@ -43,29 +41,33 @@ fun ShopTextFieldItem(
 @Composable
 @Preview
 fun ShopTextFieldItemPreview() {
-    ShopAppTheme {
-        ShopTextFieldItem(
-            text = "",
-            label = "text",
-            placeholder = "placeholder",
-            testTag = "tag",
-            isError = false,
-            onValueChange = {}
-        )
+    Surface() {
+        ShopAppTheme {
+            ShopTextFieldItem(
+                text = "",
+                label = "text",
+                placeholder = "placeholder",
+                testTag = "tag",
+                isError = false,
+                onValueChange = {}
+            )
+        }
     }
 }
 
 @Composable
 @Preview
 fun ShopTextFieldItemWithErrorPreview() {
-    ShopAppTheme {
-        ShopTextFieldItem(
-            text = "",
-            label = "text",
-            placeholder = "placeholder",
-            testTag = "tag",
-            isError = true,
-            onValueChange = {}
-        )
+    Surface() {
+        ShopAppTheme {
+            ShopTextFieldItem(
+                text = "",
+                label = "text",
+                placeholder = "placeholder",
+                testTag = "tag",
+                isError = true,
+                onValueChange = {}
+            )
+        }
     }
 }

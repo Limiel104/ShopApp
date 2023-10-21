@@ -4,7 +4,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +23,7 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
 import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsContent(
     scaffoldState: BottomSheetScaffoldState,
@@ -34,16 +39,17 @@ fun ProductDetailsContent(
                 product = product,
                 isProductInFavourites = true
             ) },
-        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetContainerColor = MaterialTheme.colorScheme.background,
         sheetPeekHeight = bottomSheetPeekHeight.dp,
         modifier = Modifier.testTag(PRODUCT_DETAILS_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(horizontal = 15.dp)
                 .padding(top = 15.dp)
-                .padding(bottom = bottomSheetPeekHeight.dp)
+//                .padding(bottom = bottomSheetPeekHeight.dp)
         ) {
             ProductDetailsImageItem(
                 imageUrl = product.imageUrl,
@@ -65,17 +71,12 @@ fun ProductDetailsContent(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun ProductDetailsContentPreview() {
     ShopAppTheme() {
-        val bottomSheetState = rememberBottomSheetState(
-            initialValue = BottomSheetValue.Collapsed,
-        )
-        val scaffoldState = rememberBottomSheetScaffoldState(
-            bottomSheetState = bottomSheetState
-        )
+        val scaffoldState = rememberBottomSheetScaffoldState()
 
         val product = Product(
             id = 1,

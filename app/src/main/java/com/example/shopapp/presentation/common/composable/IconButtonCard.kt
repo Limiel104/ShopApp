@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.Composable
@@ -29,7 +29,6 @@ fun IconButtonCard(
 ) {
     Card(
         shape = RoundedCornerShape(35.dp),
-        backgroundColor = Color.White,
         modifier = Modifier
             .padding(outsidePaddingValue.dp)
             .size(36.dp)

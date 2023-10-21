@@ -3,9 +3,7 @@ package com.example.shopapp.presentation.account.composable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -23,7 +21,6 @@ import com.example.shopapp.util.Constants.LOGOUT_BTN
 
 @Composable
 fun AccountContent(
-    scaffoldState: ScaffoldState,
     name: String,
     userPoints: Int,
     isCouponActivated: Boolean,
@@ -41,7 +38,6 @@ fun AccountContent(
                 userName = name,
                 onClick = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(ACCOUNT_CONTENT)
@@ -103,10 +99,9 @@ fun AccountContent(
 
 @Preview
 @Composable
-fun AccountContentCoupopNotActivatedPreview() {
+fun AccountContentCouponNotActivatedPreview() {
     ShopAppTheme {
         AccountContent(
-            scaffoldState = rememberScaffoldState(),
             name = "John",
             userPoints = 2234,
             isCouponActivated = false,
@@ -124,7 +119,6 @@ fun AccountContentCoupopNotActivatedPreview() {
 fun AccountContentCouponAlreadyActivatedPreview() {
     ShopAppTheme {
         AccountContent(
-            scaffoldState = rememberScaffoldState(),
             name = "John",
             userPoints = 2234,
             isCouponActivated = true,

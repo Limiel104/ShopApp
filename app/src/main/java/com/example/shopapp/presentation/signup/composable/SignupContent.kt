@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +52,6 @@ import com.example.shopapp.util.Constants.zipCodeEmptyError
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SignupContent(
-    scaffoldState: ScaffoldState,
     scrollState: ScrollState,
     email: String,
     emailError: String?,
@@ -89,7 +86,6 @@ fun SignupContent(
             SignupTopBar(
                 onClick = { onGoBack() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxWidth()
             .testTag(SIGNUP_CONTENT)
@@ -293,7 +289,6 @@ fun SignupContent(
 fun SignupContentPreview() {
     ShopAppTheme() {
         SignupContent(
-            scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
             email = "email@wp.com",
             emailError = null,
@@ -331,7 +326,6 @@ fun SignupContentPreview() {
 fun SignupContentErrorPreview() {
     ShopAppTheme() {
         SignupContent(
-            scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
             email = "email@wp.com",
             emailError = emailEmptyError,
@@ -369,7 +363,6 @@ fun SignupContentErrorPreview() {
 fun SignupContentCPIPreview() {
     ShopAppTheme() {
         SignupContent(
-            scaffoldState = rememberScaffoldState(),
             scrollState = rememberScrollState(),
             email = "email@wp.com",
             emailError = null,

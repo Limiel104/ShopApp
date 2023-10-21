@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -22,7 +20,6 @@ import com.example.shopapp.util.getCategory
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryListContent(
-    scaffoldState: ScaffoldState,
     categoryList: List<Category>,
     onCategorySelected: (String) -> Unit,
     onGoToCart: () -> Unit
@@ -32,7 +29,6 @@ fun CategoryListContent(
             CategoryListTopBar(
                 onClick = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
             .testTag(CATEGORY_LIST_CONTENT)
@@ -64,7 +60,6 @@ fun CategoryListContent(
 fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
-            scaffoldState = rememberScaffoldState(),
             categoryList = getCategory(),
             onCategorySelected = {},
             onGoToCart = {}

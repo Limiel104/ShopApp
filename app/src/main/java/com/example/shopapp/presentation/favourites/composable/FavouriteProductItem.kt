@@ -1,11 +1,10 @@
 package com.example.shopapp.presentation.favourites.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,6 @@ fun FavouriteProductItem(
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
             .padding(bottom = 5.dp)
             .clickable { onClick() }
             .testTag(product.title),
@@ -86,11 +84,13 @@ fun FavouriteProductItemPreview() {
         isInFavourites = true
     )
 
-    ShopAppTheme {
-        FavouriteProductItem(
-            product = product,
-            onClick = {},
-            onDelete = {}
-        )
+    Surface() {
+        ShopAppTheme {
+            FavouriteProductItem(
+                product = product,
+                onClick = {},
+                onDelete = {}
+            )
+        }
     }
 }

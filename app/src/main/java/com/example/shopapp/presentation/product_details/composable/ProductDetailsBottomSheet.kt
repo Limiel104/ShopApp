@@ -1,13 +1,12 @@
 package com.example.shopapp.presentation.product_details.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +36,6 @@ fun ProductDetailsBottomSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
             .padding(15.dp)
             .testTag(PRODUCT_DETAILS_BOTTOM_SHEET)
     ) {
@@ -113,41 +111,45 @@ fun ProductDetailsBottomSheet(
 @Preview
 @Composable
 fun ProductDetailsBottomSheetPreview() {
-    ShopAppTheme {
-        val product = Product(
-            id = 1,
-            title = "Shirt",
-            price = 195.59,
-            description = productDescription,
-            category = "men's clothing",
-            imageUrl = "",
-            isInFavourites = true
-        )
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "",
+                isInFavourites = true
+            )
 
-        ProductDetailsBottomSheet(
-            product = product,
-            isProductInFavourites = true
-        )
+            ProductDetailsBottomSheet(
+                product = product,
+                isProductInFavourites = true
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun ProductDetailsBottomSheetFalsePreview() {
-    ShopAppTheme {
-        val product = Product(
-            id = 1,
-            title = "Shirt",
-            price = 195.59,
-            description = productDescription,
-            category = "men's clothing",
-            imageUrl = "",
-            isInFavourites = false
-        )
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "",
+                isInFavourites = false
+            )
 
-        ProductDetailsBottomSheet(
-            product = product,
-            isProductInFavourites = false
-        )
+            ProductDetailsBottomSheet(
+                product = product,
+                isProductInFavourites = false
+            )
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.example.shopapp.presentation.favourites.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -22,7 +21,6 @@ fun FavouriteScreen(
     navController: NavController,
     viewModel: FavouritesViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val productList = viewModel.favouritesState.value.productList
     val isUserLoggedIn = viewModel.favouritesState.value.isUserLoggedIn
     val isLoading = viewModel.favouritesState.value.isLoading
@@ -53,7 +51,6 @@ fun FavouriteScreen(
 
     if(isUserLoggedIn) {
         FavouriteContent(
-            scaffoldState = scaffoldState,
             productList = productList,
             isLoading = isLoading,
             onProductSelected = { viewModel.onEvent(FavouritesEvent.OnProductSelected(it)) },
@@ -63,7 +60,6 @@ fun FavouriteScreen(
     }
     else {
         UserNotLoggedInContent(
-            scaffoldState = scaffoldState,
             onLogin = { viewModel.onEvent(FavouritesEvent.OnLogin) },
             onSignup = { viewModel.onEvent(FavouritesEvent.OnSignup) }
         )

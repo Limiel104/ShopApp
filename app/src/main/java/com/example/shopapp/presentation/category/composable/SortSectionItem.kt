@@ -1,15 +1,15 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +30,6 @@ fun SortSectionItem(
 ) {
     Row(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
             .toggleable(
                 value = selected,
                 onValueChange = { onClick() }
@@ -45,8 +44,8 @@ fun SortSectionItem(
                 .size(25.dp)
                 .testTag(text),
             colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colors.secondary,
-                unselectedColor = MaterialTheme.colors.onSecondary
+                selectedColor = MaterialTheme.colorScheme.secondary,
+                unselectedColor = MaterialTheme.colorScheme.onSecondary
             ),
         )
 
@@ -62,23 +61,27 @@ fun SortSectionItem(
 @Preview
 @Composable
 fun SortSectionItemPreview() {
-    ShopAppTheme() {
-        SortSectionItem(
-            text = stringResource(id = R.string.price_ascending),
-            selected = true,
-            onClick = {}
-        )
+    Surface() {
+        ShopAppTheme() {
+            SortSectionItem(
+                text = stringResource(id = R.string.price_ascending),
+                selected = true,
+                onClick = {}
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun SortSectionItemNotSelectedPreview() {
-    ShopAppTheme() {
-        SortSectionItem(
-            text = stringResource(id = R.string.price_descending),
-            selected = false,
-            onClick = {}
-        )
+    Surface() {
+        ShopAppTheme() {
+            SortSectionItem(
+                text = stringResource(id = R.string.price_descending),
+                selected = false,
+                onClick = {}
+            )
+        }
     }
 }

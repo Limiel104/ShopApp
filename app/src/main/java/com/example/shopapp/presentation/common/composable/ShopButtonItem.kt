@@ -3,10 +3,10 @@ package com.example.shopapp.presentation.common.composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -26,12 +26,12 @@ fun ShopButtonItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(testTag),
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
             onClick = { onClick() }
         ) {
             Text(
                 text = text,
-                color = MaterialTheme.colors.onSecondary,
+                color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier
                     .padding(7.dp)
             )
@@ -42,12 +42,12 @@ fun ShopButtonItem(
             modifier = Modifier
                 .width(size.dp)
                 .testTag(testTag),
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
             onClick = { onClick() }
         ) {
             Text(
                 text = text,
-                color = MaterialTheme.colors.onSecondary,
+                color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier
                     .padding(7.dp)
             )

@@ -2,7 +2,6 @@ package com.example.shopapp.presentation.orders.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun OrdersScreen(
     viewModel: OrdersViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val orders = viewModel.ordersState.value.orders
     val isLoading = viewModel.ordersState.value.isLoading
     val orderOrder = viewModel.ordersState.value.orderOrder
@@ -37,7 +35,6 @@ fun OrdersScreen(
     }
 
     OrdersContent(
-        scaffoldState = scaffoldState,
         orders = orders,
         isLoading = isLoading,
         orderOrder = orderOrder,
