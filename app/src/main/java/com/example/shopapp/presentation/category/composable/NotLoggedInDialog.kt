@@ -1,67 +1,51 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.example.shopapp.R
-import com.example.shopapp.presentation.common.composable.NavigationButton
 import com.example.shopapp.util.Constants.NOT_LOGGED_IN_DIALOG
 
 @Composable
 fun NotLoggedInDialog(
     onDismiss: () -> Unit
 ) {
-    Dialog(
-        onDismissRequest = {}
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(NOT_LOGGED_IN_DIALOG)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
+    AlertDialog(
+        title = {
+            Text(text = stringResource(id = R.string.dialog_title))
+        },
+        text = {
+            Text(text = stringResource(id = R.string.dialog_text))
+        },
+        onDismissRequest = {
+            onDismiss()
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismiss()
+                }
             ) {
-                Text(
-                    text = stringResource(id = R.string.dialog_title),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = stringResource(id = R.string.dialog_text),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Light
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                NavigationButton(
-                    text = stringResource(id = R.string.dismiss),
-                    onClick = { onDismiss() }
-                )
+                Text(text = stringResource(id = R.string.dismiss))
             }
-        }
-    }
+        },
+        modifier = Modifier.testTag(NOT_LOGGED_IN_DIALOG)
+    )
 }
 
 @Preview
 @Composable
 fun NotLoggedInDialogPreview() {
-    NotLoggedInDialog(
-        onDismiss = {}
-    )
+    Surface() {
+        NotLoggedInDialog(
+            onDismiss = {}
+        )
+    }
 }

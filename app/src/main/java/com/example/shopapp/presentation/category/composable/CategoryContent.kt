@@ -60,7 +60,7 @@ fun CategoryContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp)
+                .padding(horizontal = 10.dp)
         ) {
             AnimatedVisibility(
                 visible = isSortAndFilterSectionVisible,

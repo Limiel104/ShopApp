@@ -61,7 +61,7 @@ fun ProductItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .weight(5F)
+                        .weight(1F)
                 )
 
                 Icon(
@@ -69,7 +69,6 @@ fun ProductItem(
                     tint = if(product.isInFavourites) Color.Red else Color.Gray,
                     contentDescription = FAVOURITES_BTN,
                     modifier = Modifier
-                        .weight(1F)
                         .clickable {
                             if (!isButtonLocked) {
                                 onFavourite()

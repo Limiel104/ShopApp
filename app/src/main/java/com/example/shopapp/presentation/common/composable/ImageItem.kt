@@ -1,11 +1,15 @@
 package com.example.shopapp.presentation.common.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -26,13 +30,15 @@ fun ImageItem(
     height: Int? = null,
     onClick: () -> Unit
 ) {
-    Card(
+    Box(
         modifier =
-            if (width  == null && height == null)
+        if (width  == null && height == null)
                 Modifier.fillMaxWidth()
             else
-                Modifier.size(width!!.dp, height!!.dp),
-//        elevation = 0.dp
+                Modifier.size(width!!.dp, height!!.dp)
+                    .background(Color.White)
+                    .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
         AsyncImage(
             model = ImageRequest
@@ -44,9 +50,7 @@ fun ImageItem(
             contentDescription = IMAGE,
             fallback = painterResource(R.drawable.ic_no_image),
             error = painterResource(R.drawable.ic_no_image),
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .clickable { onClick() }
+            contentScale = ContentScale.Fit
         )
     }
 }
@@ -54,23 +58,27 @@ fun ImageItem(
 @Preview
 @Composable
 fun ImageItemPreview() {
-    ShopAppTheme() {
-        ImageItem(
-            imageUrl = "",
-            width = productItemImageWidth,
-            height = productItemImageHeight,
-            onClick = {}
-        )
+    Surface() {
+        ShopAppTheme() {
+            ImageItem(
+                imageUrl = "",
+                width = productItemImageWidth,
+                height = productItemImageHeight,
+                onClick = {}
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun ImageItemNullPreview() {
-    ShopAppTheme() {
-        ImageItem(
-            imageUrl = "",
-            onClick = {}
-        )
+    Surface() {
+        ShopAppTheme() {
+            ImageItem(
+                imageUrl = "",
+                onClick = {}
+            )
+        }
     }
 }

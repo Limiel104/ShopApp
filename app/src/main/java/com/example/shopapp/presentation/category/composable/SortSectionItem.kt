@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +31,8 @@ fun SortSectionItem(
             .toggleable(
                 value = selected,
                 onValueChange = { onClick() }
-            ),
+            )
+            .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -42,18 +41,14 @@ fun SortSectionItem(
             onClick = onClick,
             modifier = Modifier
                 .size(25.dp)
-                .testTag(text),
-            colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colorScheme.secondary,
-                unselectedColor = MaterialTheme.colorScheme.onSecondary
-            ),
+                .testTag(text)
         )
 
         Text(
             text = text,
             fontSize = 12.sp,
             fontWeight = FontWeight.Light,
-            modifier = Modifier.padding(start = 3.dp)
+            modifier = Modifier.padding(start = 8.dp)
         )
     }
 }

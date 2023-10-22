@@ -23,11 +23,11 @@ fun CategoryFilterItem(
 ) {
     Row(
         modifier = Modifier
-            .padding(end = 15.dp)
             .toggleable(
                 value = isChecked,
                 onValueChange = { onCheckedChange(text) }
-            ),
+            )
+            .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

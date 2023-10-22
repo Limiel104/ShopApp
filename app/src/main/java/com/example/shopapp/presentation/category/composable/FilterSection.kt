@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,7 +31,6 @@ fun FilterSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp)
             .testTag(CATEGORY_FILTER_SECTION),
     ) {
         Divider()
@@ -66,8 +64,6 @@ fun FilterSection(
                 categoryFilterMap = categoryFilterMap,
                 onCheckedChange = { onCheckedChange(it) }
             )
-
-            Spacer(modifier = Modifier.height(10.dp))
 
             Divider()
         }
