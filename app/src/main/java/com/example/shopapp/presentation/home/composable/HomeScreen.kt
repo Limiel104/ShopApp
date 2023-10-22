@@ -18,7 +18,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val offerList = viewModel.homeState.value.offerList
+    val bannerList = viewModel.homeState.value.bannerList
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -35,8 +35,8 @@ fun HomeScreen(
     }
 
     HomeContent(
-        offerList = offerList,
-        onOfferSelected = { viewModel.onEvent(HomeEvent.OnOfferSelected(it)) },
+        bannerList = bannerList,
+        onOfferSelected = { viewModel.onEvent(HomeEvent.OnBannerSelected(it)) },
         onGoToCart = { viewModel.onEvent(HomeEvent.GoToCart) }
     )
 }

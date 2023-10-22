@@ -1,7 +1,9 @@
 package com.example.shopapp.presentation.home.composable
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -11,14 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.domain.model.Offer
+import com.example.shopapp.R
+import com.example.shopapp.domain.model.Banner
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.HOME_CONTENT
 import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
 
 @Composable
 fun HomeContent(
-    offerList: List<Offer>,
+    bannerList: List<Banner>,
     onOfferSelected: (String) -> Unit,
     onGoToCart: () -> Unit
 ) {
@@ -35,18 +38,21 @@ fun HomeContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp)
         ) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag(HOME_LAZY_COLUMN),
             ) {
-                itemsIndexed(offerList) { _, offer ->
-                    OfferItem(
-                        text = offer.description,
-                        onClick = { onOfferSelected(offer.categoryId) }
+                itemsIndexed(bannerList) { index, banner ->
+                    BannerItem(
+                        resourceId = banner.resourceId,
+                        onClick = { onOfferSelected(banner.categoryId) }
                     )
+
+                    if(index != bannerList.size-1){
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             }
         }
@@ -57,31 +63,27 @@ fun HomeContent(
 @Composable
 fun HomeContentPreview() {
     ShopAppTheme {
-        val offerList = listOf(
-            Offer(
+        val bannerLists = listOf(
+            Banner(
                 categoryId = "women's clothing",
-                discountPercent = 10,
-                description = "All clothes for women now 10% cheaper"
+                resourceId = R.drawable.womans_clothing_banner
             ),
-            Offer(
+            Banner(
                 categoryId = "men's clothing",
-                discountPercent = 15,
-                description = "All clothes for men now 15% cheaper"
+                resourceId = R.drawable.mens_clothing_banner
             ),
-            Offer(
+            Banner(
                 categoryId = "jewelery",
-                discountPercent = 50,
-                description = "Buy two pieces of jewelery for the price of one"
+                resourceId = R.drawable.jewelery_banner
             ),
-            Offer(
-                categoryId = "",
-                discountPercent = 13,
-                description = "13% off for purchase above 200\$"
+            Banner(
+                categoryId = "electronics",
+                resourceId = R.drawable.electronics_banner
             )
         )
 
         HomeContent(
-            offerList = offerList,
+            bannerList = bannerLists,
             onOfferSelected = {},
             onGoToCart = {}
         )
