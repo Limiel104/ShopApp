@@ -50,6 +50,7 @@ object Constants {
     const val FAVOURITES_TOP_BAR: String = "Favourites top bar"
     const val FAVOURITES_LAZY_VERTICAL_GRID: String = "Favourite lazy vertical grid"
     const val FAVOURITES_CPI: String = "Favourites circular progress indicator"
+    const val PRODUCT_DETAILS_TOP_BAR: String = "Product details top bar"
     const val PRODUCT_ITEM_TITLE: String = "Product item title"
     const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
@@ -123,8 +124,6 @@ object Constants {
     const val snackbarActionLabel: String = "Undo"
 
     //TEST VALUES
-    const val badgeCount: Int = 10
-    const val badgeCountZero: Int = 0
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
     const val bottomBarHeight: Int = 56
 

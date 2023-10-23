@@ -1,8 +1,10 @@
 package com.example.shopapp.presentation.product_details.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
@@ -13,14 +15,21 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.IMAGE
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
-import com.example.shopapp.util.Constants.bottomSheetPeekHeight
 import com.example.shopapp.util.Constants.productDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,28 +43,46 @@ fun ProductDetailsContent(
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
+        topBar = {
+            ProductDetailsTopBar(
+                onNavigateBack = { onNavigateBack() },
+                onNavigateToCart = { /*TODO*/ }
+            ) },
         sheetContent = {
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = true
+                isProductInFavourites = true,
+                onAddToCart = { onAddToCart() }
             ) },
         sheetContainerColor = MaterialTheme.colorScheme.background,
-        sheetPeekHeight = bottomSheetPeekHeight.dp,
         modifier = Modifier.testTag(PRODUCT_DETAILS_CONTENT)
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 15.dp)
                 .padding(top = 15.dp)
-//                .padding(bottom = bottomSheetPeekHeight.dp)
         ) {
-            ProductDetailsImageItem(
-                imageUrl = product.imageUrl,
-                onNavigateBack = { onNavigateBack() },
-                onAddToCart = { onAddToCart() }
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1F)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(product.imageUrl)
+                        .crossfade(true)
+                        .placeholder(R.drawable.ic_no_image)
+                        .build(),
+                    contentDescription = IMAGE,
+                    fallback = painterResource(R.drawable.ic_no_image),
+                    error = painterResource(R.drawable.ic_no_image),
+                    contentScale = ContentScale.Fit
+                )
+            }
         }
     }
 

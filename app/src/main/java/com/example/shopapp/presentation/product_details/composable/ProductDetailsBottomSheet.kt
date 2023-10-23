@@ -1,11 +1,13 @@
 package com.example.shopapp.presentation.product_details.composable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.presentation.common.composable.IconButtonCard
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.FAVOURITES_BTN
@@ -31,29 +31,15 @@ import com.example.shopapp.util.Constants.productDescription
 @Composable
 fun ProductDetailsBottomSheet(
     product: Product,
-    isProductInFavourites: Boolean
+    isProductInFavourites: Boolean,
+    onAddToCart: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
+            .padding(horizontal = 15.dp)
             .testTag(PRODUCT_DETAILS_BOTTOM_SHEET)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Divider(
-                modifier = Modifier
-                    .width(50.dp),
-                thickness = 4.dp,
-                color = Color.Gray
-            )
-        }
-
         Text(
             text = product.title,
             fontWeight = FontWeight.Light,
@@ -75,12 +61,15 @@ fun ProductDetailsBottomSheet(
                 fontSize = 24.sp
             )
 
-            IconButtonCard(
-                icon = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                description = FAVOURITES_BTN,
-                color = if(isProductInFavourites) Color.Red else Color.Gray,
-                onClick = {}
-            )
+            IconButton(
+                onClick = { /*TODO*/ }
+            ) {
+                Icon(
+                    imageVector = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = FAVOURITES_BTN,
+                    tint = if(isProductInFavourites) Color.Red else Color.Gray
+                )
+            }
         }
 
         Text(
@@ -100,11 +89,20 @@ fun ProductDetailsBottomSheet(
                 .padding(bottom = 15.dp)
         )
 
-        ShopButtonItem(
-            text = stringResource(id = R.string.add_to_cart),
-            testTag = PRODUCT_DETAILS_ADD_TO_CART_BTN,
-            onClick = {}
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .testTag(PRODUCT_DETAILS_ADD_TO_CART_BTN),
+                onClick = { onAddToCart() }
+            ) {
+                Text(text = stringResource(id = R.string.add_to_cart))
+            }
+        }
     }
 }
 
@@ -125,7 +123,8 @@ fun ProductDetailsBottomSheetPreview() {
 
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = true
+                isProductInFavourites = true,
+                onAddToCart = {}
             )
         }
     }
@@ -148,7 +147,8 @@ fun ProductDetailsBottomSheetFalsePreview() {
 
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = false
+                isProductInFavourites = false,
+                onAddToCart = {}
             )
         }
     }
