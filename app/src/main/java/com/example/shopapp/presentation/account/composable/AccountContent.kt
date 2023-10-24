@@ -7,17 +7,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.R
 import com.example.shopapp.util.Constants.ACCOUNT_CONTENT
 import com.example.shopapp.util.Constants.ACCOUNT_LAZY_ROW
-import com.example.shopapp.util.Constants.MY_PROFILE_BTN
-import com.example.shopapp.util.Constants.ORDERS_BTN
-import com.example.shopapp.util.Constants.LOGOUT_BTN
 
 @Composable
 fun AccountContent(
@@ -47,13 +41,12 @@ fun AccountContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 10.dp)
-                .padding(top = 10.dp)
+                .padding(top = 10.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             PointsCard(
                 userClubPoints = userPoints
             )
-
-            Spacer(modifier = Modifier.height(30.dp))
 
             LazyRow(
                 modifier = Modifier.testTag(ACCOUNT_LAZY_ROW)
@@ -70,28 +63,10 @@ fun AccountContent(
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
-
-            ShopButtonItem(
-                text = stringResource(id = R.string.my_profile),
-                testTag = MY_PROFILE_BTN,
-                onClick = { onGoToProfile() }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ShopButtonItem(
-                text = stringResource(id = R.string.orders),
-                testTag = ORDERS_BTN,
-                onClick = { onGoToOrders() }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ShopButtonItem(
-                text = stringResource(id = R.string.logout),
-                testTag = LOGOUT_BTN,
-                onClick = { onLogout() }
+            OptionsSection(
+                onGoToProfile = { onGoToProfile() },
+                onGoToOrders = { onGoToOrders() },
+                onLogout = { onLogout() }
             )
         }
     }

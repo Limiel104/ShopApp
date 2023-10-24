@@ -1,7 +1,8 @@
 package com.example.shopapp.presentation.account.composable
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -12,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +39,6 @@ fun CouponItem(
     ) {
         Column(
             modifier = Modifier
-                .background(Color.Cyan)
                 .padding(15.dp)
         ) {
             Text(
@@ -56,21 +55,26 @@ fun CouponItem(
                 fontWeight = FontWeight.Light,
                 fontSize = 10.sp,
                 modifier = Modifier
-                    .padding(bottom = 20.dp)
+                    .padding(bottom = 15.dp)
             )
 
-            Button(
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(ACTIVATE_COUPON_BTN),
-                enabled = isActive,
-                onClick = { onClick(discount) }
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
+                Button(
                     modifier = Modifier
-                        .padding(7.dp)
-                )
+                        .testTag(ACTIVATE_COUPON_BTN),
+                    enabled = isActive,
+                    onClick = { onClick(discount) }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.activation_points_amount) + " $pointsToActivate",
+                        modifier = Modifier
+                            .padding(7.dp)
+                    )
+                }
             }
         }
     }
