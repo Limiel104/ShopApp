@@ -47,7 +47,7 @@ fun FavouriteContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp)
+                .padding(horizontal = 10.dp)
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),

@@ -51,37 +51,39 @@ fun ProductItem(
                 .width(180.dp)
                 .padding(5.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                Text(
-                    text = product.title,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 12.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .weight(1F)
-                )
+            Row() {
+                Column(
+                    modifier = Modifier.weight(1F)
+                ) {
+                    Text(
+                        text = product.title,
+                        fontWeight = FontWeight.Light,
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
 
-                Icon(
-                    imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                    tint = if(product.isInFavourites) Color.Red else Color.Gray,
-                    contentDescription = FAVOURITES_BTN,
-                    modifier = Modifier
-                        .clickable {
-                            if (!isButtonLocked) {
-                                onFavourite()
+                    Text(
+                        text = product.priceToString(),
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+
+                Column() {
+                    Icon(
+                        imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        tint = if(product.isInFavourites) Color.Red else Color.Gray,
+                        contentDescription = FAVOURITES_BTN,
+                        modifier = Modifier
+                            .clickable {
+                                if (!isButtonLocked) {
+                                    onFavourite()
+                                }
                             }
-                        }
-                )
-            }
-
-            Row {
-                Text(
-                    text = product.priceToString(),
-                    fontWeight = FontWeight.Bold,
-                )
+                    )
+                }
             }
         }
     }

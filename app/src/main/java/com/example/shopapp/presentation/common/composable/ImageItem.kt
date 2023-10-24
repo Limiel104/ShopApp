@@ -3,7 +3,6 @@ package com.example.shopapp.presentation.common.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -26,18 +25,15 @@ import com.example.shopapp.util.Constants.productItemImageWidth
 @Composable
 fun ImageItem(
     imageUrl: String,
-    width: Int? = null,
-    height: Int? = null,
+    width: Int,
+    height: Int,
     onClick: () -> Unit
 ) {
     Box(
-        modifier =
-        if (width  == null && height == null)
-                Modifier.fillMaxWidth()
-            else
-                Modifier.size(width!!.dp, height!!.dp)
-                    .background(Color.White)
-                    .clickable { onClick() },
+        modifier = Modifier
+            .size(width.dp, height.dp)
+            .background(Color.White)
+            .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -64,19 +60,6 @@ fun ImageItemPreview() {
                 imageUrl = "",
                 width = productItemImageWidth,
                 height = productItemImageHeight,
-                onClick = {}
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun ImageItemNullPreview() {
-    Surface() {
-        ShopAppTheme() {
-            ImageItem(
-                imageUrl = "",
                 onClick = {}
             )
         }
