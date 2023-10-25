@@ -31,7 +31,6 @@ fun PointsCard(
     ) {
         Column(
             modifier = Modifier
-                //.background(Color.Green)
                 .padding(15.dp),
             ) {
             Text(

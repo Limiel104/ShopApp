@@ -35,11 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
-import com.example.shopapp.util.Constants.ORDER_BTN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,20 +71,19 @@ fun CartContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(10.dp)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(bottom = 10.dp)
                         .testTag(CART_LAZY_COLUMN)
                 ) {
                     itemsIndexed(
                         items = cartProducts,
                         key = { _, item -> item.hashCode() }
-                    ) { _, cartProduct ->
+                    ) { index, cartProduct ->
                         val dismissState = rememberDismissState(
                             confirmValueChange = {
                                 if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
@@ -101,8 +98,8 @@ fun CartContent(
                             directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
                             background = {
                                 val color = when(dismissState.dismissDirection) {
-                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.onSecondary
-                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.onSecondary
+                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.secondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.secondary
                                     null -> Color.Transparent
                                 }
 
@@ -112,17 +109,23 @@ fun CartContent(
                                     null -> Alignment.Center
                                 }
 
+                                val tint = when(dismissState.dismissDirection) {
+                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.onSecondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.onSecondary
+                                    null -> Color.Transparent
+                                }
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(color)
-                                        .padding(8.dp),
+                                        .padding(vertical = 30.dp),
                                     contentAlignment = alignment
                                 ){
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = stringResource(id = R.string.delete_cart_product),
-                                        tint = MaterialTheme.colorScheme.onPrimary
+                                        tint = tint
                                     )
                                 }
                             },
@@ -135,20 +138,17 @@ fun CartContent(
                                 )
                             }
                         )
+
+                        if(index != cartProducts.size-1){
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
                     }
                 }
 
-                TotalAmountItem(
-                    totalAmount = totalAmount
+                TotalAmountSection(
+                    totalAmount = totalAmount,
+                    onOrderPlaced = { onOrderPlaced() }
                 )
-
-                ShopButtonItem(
-                    text = stringResource(id = R.string.order),
-                    testTag = ORDER_BTN,
-                    onClick = { onOrderPlaced() }
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
         else {

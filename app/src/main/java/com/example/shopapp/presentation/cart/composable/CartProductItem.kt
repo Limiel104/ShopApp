@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation.cart.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HorizontalRule
 import androidx.compose.material.icons.sharp.Add
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +42,8 @@ fun CartProductItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Max)
-            .padding(bottom = 15.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 10.dp)
             .testTag(cartProduct.title)
     ) {
         ImageItem(
