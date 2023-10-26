@@ -2,9 +2,11 @@ package com.example.shopapp.presentation.common.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,23 +61,27 @@ fun UserNotLoggedInContent(
                 )
             }
 
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                verticalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ShopButtonItem(
-                    text = stringResource(id = R.string.login),
-                    testTag = LOGIN_BTN,
+                Button(
+                    modifier = Modifier
+                        .testTag(LOGIN_BTN),
                     onClick = { onLogin() }
-                )
+                ) {
+                    Text(text = stringResource(id = R.string.login))
+                }
 
-                ShopButtonItem(
-                    text = stringResource(id = R.string.signup),
-                    testTag = SIGNUP_BTN,
+                Button(
+                    modifier = Modifier
+                        .testTag(SIGNUP_BTN),
                     onClick = { onSignup() }
-                )
+                ) {
+                    Text(text = stringResource(id = R.string.signup))
+                }
             }
         }
     }

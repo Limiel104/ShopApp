@@ -127,7 +127,7 @@ fun ProfileContent(
                 isError = cityError != null,
                 singleLine = true,
                 modifier = Modifier.testTag(PROFILE_CITY_TF)
-                )
+            )
 
             OutlinedTextField(
                 value = zipCode,
