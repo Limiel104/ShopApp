@@ -1,33 +1,29 @@
 package com.example.shopapp.presentation.login.composable
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
-import com.example.shopapp.presentation.common.composable.ErrorTextFieldItem
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
-import com.example.shopapp.presentation.common.composable.ShopTextFieldItem
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.LOGIN_BTN
+import com.example.shopapp.util.Constants.LOGIN_COLUMN
 import com.example.shopapp.util.Constants.LOGIN_CONTENT
 import com.example.shopapp.util.Constants.LOGIN_CPI
-import com.example.shopapp.util.Constants.LOGIN_EMAIL_ERROR
 import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
-import com.example.shopapp.util.Constants.LOGIN_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
 import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
 import com.example.shopapp.util.Constants.emailEmptyError
@@ -45,107 +41,100 @@ fun LoginContent(
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
-    Column(
+    Scaffold(
+        topBar = {
+            LoginTopBar(
+                onClick = { /*TODO*/ }
+            )
+        },
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp)
-            .testTag(LOGIN_CONTENT),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
+            .testTag(LOGIN_CONTENT)
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1F),
-            verticalArrangement = Arrangement.Center,
+                .padding(paddingValues)
+                .testTag(LOGIN_COLUMN),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.login),
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1F)
-        ) {
-            ShopTextFieldItem(
-                text = email,
-                label = stringResource(id = R.string.email),
-                placeholder = stringResource(id = R.string.email),
-                testTag = LOGIN_EMAIL_TF,
-                isError = emailError != null,
-                onValueChange = { onEmailChange(it) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
-                )
-            )
-
-            if(emailError != null) {
-                ErrorTextFieldItem(
-                    errorMessage = emailError,
-                    testTag = LOGIN_EMAIL_ERROR
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            ShopTextFieldItem(
-                text = password,
-                label = stringResource(id = R.string.password),
-                placeholder = stringResource(id = R.string.password),
-                testTag = LOGIN_PASSWORD_TF,
-                isError = passwordError != null,
-                onValueChange = { onPasswordChange(it) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
-                ),
-                visualTransformation = PasswordVisualTransformation()
-            )
-
-            if(passwordError != null) {
-                ErrorTextFieldItem(
-                    errorMessage = passwordError,
-                    testTag = LOGIN_PASSWORD_ERROR
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1F),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ShopButtonItem(
-                text = stringResource(id = R.string.login),
-                testTag = LOGIN_BTN,
-                onClick = { onLogin() }
-            )
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                    .weight(1F),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                Text(
-                    text = stringResource(id = R.string.no_account_text)
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { onEmailChange(it) },
+                    label = { Text(text = stringResource(id = R.string.email)) },
+                    placeholder = { Text(text = stringResource(id = R.string.email)) },
+                    supportingText = {
+                        if (emailError != null) {
+                            Text(text = emailError)
+                        } },
+                    isError = emailError != null,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email
+                    ),
+                    singleLine = true,
+                    modifier = Modifier.testTag(LOGIN_EMAIL_TF)
                 )
 
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
-                Text(
-                    text = stringResource(id = R.string.signup),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { onPasswordChange(it) },
+                    label = { Text(text = stringResource(id = R.string.password)) },
+                    placeholder = { Text(text = stringResource(id = R.string.password)) },
+                    supportingText = {
+                        if (passwordError != null) {
+                            Text(text = passwordError)
+                        } },
+                    isError = passwordError != null,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
+                    ),
+                    singleLine = true,
+                    modifier = Modifier.testTag(LOGIN_PASSWORD_TF)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1F),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
                     modifier = Modifier
-                        .clickable { onSignup() }
-                        .testTag(LOGIN_SIGNUP_BTN)
-                )
+                        .padding(bottom = 10.dp)
+                        .testTag(LOGIN_BTN),
+                    onClick = { onLogin() }
+                ) {
+                    Text(text = stringResource(id = R.string.login))
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = stringResource(id = R.string.no_account_text))
+
+                    Spacer(modifier = Modifier.width(5.dp))
+
+                    TextButton(
+                        onClick = { onSignup() }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.signup),
+                            modifier = Modifier.testTag(LOGIN_SIGNUP_BTN)
+                        )
+                    }
+                }
             }
         }
     }
