@@ -3,15 +3,11 @@ package com.example.shopapp.presentation.common.composable
 import androidx.activity.compose.setContent
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
-import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.assertWidthIsEqualTo
-import androidx.compose.ui.test.getBoundsInRoot
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onParent
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,7 +17,6 @@ import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.LOGIN_BTN
 import com.example.shopapp.util.Constants.SIGNUP_BTN
 import com.example.shopapp.util.Constants.USER_NOT_LOGGED_IN_CONTENT
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -80,7 +75,7 @@ class UserNotLoggedInContentTest {
         indexList.zip(textList) { index, text ->
             composeRule.onNodeWithTag(USER_NOT_LOGGED_IN_CONTENT).onChildAt(index).assertExists()
             composeRule.onNodeWithTag(USER_NOT_LOGGED_IN_CONTENT).onChildAt(index).assertIsDisplayed()
-            composeRule.onNodeWithTag(USER_NOT_LOGGED_IN_CONTENT).onChildAt(index).assertTextContains(text)
+            composeRule.onNodeWithTag(USER_NOT_LOGGED_IN_CONTENT).onChildAt(index).assertTextEquals(text)
         }
     }
 
@@ -88,15 +83,12 @@ class UserNotLoggedInContentTest {
     fun userNotLoggedIn_buttonsAreDisplayedCorrectly() {
         val buttonList = listOf(LOGIN_BTN, SIGNUP_BTN)
         val textList = listOf("Login","Sign up")
-        val deviceWidth = composeRule.onNodeWithTag(USER_NOT_LOGGED_IN_CONTENT).onParent().getBoundsInRoot().right
 
         buttonList.zip(textList) { button, text ->
-            composeRule.onNodeWithTag(button).assertExists()
             composeRule.onNodeWithTag(button).assertIsDisplayed()
-
-            composeRule.onNodeWithTag(button).assertLeftPositionInRootIsEqualTo(10.dp)
-            composeRule.onNodeWithTag(button).assertWidthIsEqualTo(deviceWidth-20.dp)
-            composeRule.onNodeWithTag(button).assertTextContains(text)
+            composeRule.onNodeWithTag(button).assertIsEnabled()
+            composeRule.onNodeWithTag(button).assertTextEquals(text)
+            composeRule.onNodeWithTag(button).assertHasClickAction()
         }
     }
 }

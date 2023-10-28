@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -39,7 +38,6 @@ fun UserNotLoggedInContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp)
         ) {
             Column(
                 modifier = Modifier

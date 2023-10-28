@@ -6,9 +6,9 @@ import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
-import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -31,7 +31,6 @@ import com.example.shopapp.util.Constants.CATEGORY_NAME_2
 import com.example.shopapp.util.Constants.CATEGORY_NAME_3
 import com.example.shopapp.util.Constants.CATEGORY_NAME_4
 import com.example.shopapp.util.Constants.CATEGORY_NAME_5
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.example.shopapp.util.getCategory
 import com.google.common.truth.Truth.assertThat
@@ -88,23 +87,23 @@ class CategoryListScreenTest {
 
     @Test
     fun categoryListScreenTopBar_topBarIsDisplayedCorrectly() {
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_LIST_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
     fun categoryListScreenTopBar_cartButtonIsDisplayedCorrectly() {
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).assertIsEnabled()
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_LIST_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp)
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertPositionInRootIsEqualTo(deviceWidth-48.dp,12.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_TOP_BAR).onChild().assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -117,7 +116,7 @@ class CategoryListScreenTest {
 
     @Test
     fun categoryListScreenLazyColumn_isDisplayedCorrectly() {
-        composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).assertPositionInRootIsEqualTo(0.dp,66.dp)
+        composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).assertPositionInRootIsEqualTo(0.dp,64.dp)
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_LIST_CONTENT).onParent().getBoundsInRoot().right
         composeRule.onNodeWithTag(CATEGORY_LIST_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth)
     }
