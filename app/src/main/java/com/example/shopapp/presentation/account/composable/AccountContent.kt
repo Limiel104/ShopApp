@@ -55,7 +55,7 @@ fun AccountContent(
                     CouponItem(
                         discount = coupon,
                         pointsToActivate = coupon*100,
-                        isActive = !isCouponActivated && ((userPoints+1) >= coupon*100),
+                        isActive = !isCouponActivated && (userPoints >= coupon*100),
                         onClick = { onActivateCoupon(it) }
                     )
 

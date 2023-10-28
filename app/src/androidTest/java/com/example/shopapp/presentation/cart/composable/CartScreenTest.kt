@@ -1,11 +1,13 @@
 package com.example.shopapp.presentation.cart.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
@@ -15,6 +17,7 @@ import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.unit.dp
@@ -30,14 +33,12 @@ import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
 import com.example.shopapp.util.Constants.CART_TOP_BAR
-import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_ROW
+import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_COLUMN
+import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_SECTION
 import com.example.shopapp.util.Constants.GO_BACK_BTN
-import com.example.shopapp.util.Constants.HOME_BTN
 import com.example.shopapp.util.Constants.MINUS_BTN
-import com.example.shopapp.util.Constants.ORDER_BTN
 import com.example.shopapp.util.Constants.ORDER_PLACED_DIALOG
 import com.example.shopapp.util.Constants.PLUS_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -52,6 +53,7 @@ import org.junit.Test
 class CartScreenTest {
 
     private lateinit var cartProductList: List<CartProduct>
+    private lateinit var cartProductShortList: List<CartProduct>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -114,6 +116,30 @@ class CartScreenTest {
                 amount = 3
             )
         )
+
+        cartProductShortList = listOf(
+            CartProduct(
+                id = 1,
+                title = "title 1",
+                price = 123.45,
+                imageUrl = "",
+                amount = 1
+            ),
+            CartProduct(
+                id = 2,
+                title = "title 2",
+                price = 53.34,
+                imageUrl = "",
+                amount = 2
+            ),
+            CartProduct(
+                id = 3,
+                title = "title 3",
+                price = 56.00,
+                imageUrl = "",
+                amount = 1
+            )
+        )
     }
 
     private fun setScreenState(
@@ -124,6 +150,8 @@ class CartScreenTest {
     ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
+            val snackbarHostState = remember { SnackbarHostState() }
+
             ShopAppTheme() {
                 NavHost(
                     navController = navController,
@@ -133,8 +161,7 @@ class CartScreenTest {
                         route = Screen.CartScreen.route,
                     ) {
                         CartContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
+                            snackbarHostState = snackbarHostState,
                             cartProducts = cartProducts,
                             totalAmount = totalAmount,
                             isLoading = isLoading,
@@ -170,10 +197,10 @@ class CartScreenTest {
             cartProducts = cartProductList
         )
 
-        composeRule.onNodeWithTag(CART_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(CART_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).assertTopPositionInRootIsEqualTo(0.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(CART_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CART_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -187,9 +214,9 @@ class CartScreenTest {
         composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
         composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertHasClickAction()
 
-        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(10.dp,15.dp)
-        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(CART_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -205,15 +232,15 @@ class CartScreenTest {
     }
 
     @Test
-    fun cartScreenLazyColumn_hasCorrectNumberOfVisibleItems() {
+    fun cartScreenLazyColumn_hasCorrectNumberOfItems_boxesAreCountedSeparately() {
         setScreenState(
-            cartProducts = cartProductList
+            cartProducts = cartProductShortList
         )
 
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertIsDisplayed()
-        val numberOfChildrenVisible = composeRule.onNodeWithTag(CART_LAZY_COLUMN).fetchSemanticsNode().children.size
-        assertThat(numberOfChildrenVisible).isEqualTo(10)
+        val numberOfChildren = composeRule.onNodeWithTag(CART_LAZY_COLUMN).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(6)
     }
 
     @Test
@@ -225,8 +252,8 @@ class CartScreenTest {
 
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertIsDisplayed()
-        composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertPositionInRootIsEqualTo(20.dp,66.dp)
-        composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertPositionInRootIsEqualTo(0.dp,64.dp)
+        composeRule.onNodeWithTag(CART_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -240,7 +267,7 @@ class CartScreenTest {
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(3).assertContentDescriptionContains(PLUS_BTN)
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(4).assertTextEquals(cartProductList[0].amount.toString())
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(5).assertContentDescriptionContains(MINUS_BTN)
-        composeRule.onNodeWithTag(cartProductList[0].title).assertPositionInRootIsEqualTo(20.dp,66.dp)
+        composeRule.onNodeWithTag(cartProductList[0].title).assertPositionInRootIsEqualTo(10.dp,64.dp)
 
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(0).assertHeightIsEqualTo(80.dp)
         composeRule.onNodeWithTag(cartProductList[0].title).onChildAt(0).assertWidthIsEqualTo(60.dp)
@@ -278,42 +305,66 @@ class CartScreenTest {
             isDialogActivated = true
         )
 
-        val numberOfChildren = composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).fetchSemanticsNode().children.size
+        val numberOfChildren = composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().fetchSemanticsNode().children.size
         assertThat(numberOfChildren).isEqualTo(3)
 
-        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChildAt(0).assertTextEquals("Order was placed")
-        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChildAt(1).assertTextEquals("Thank You!")
-        composeRule.onNodeWithTag(HOME_BTN).assertExists()
-        composeRule.onNodeWithTag(HOME_BTN).assertIsDisplayed()
-        composeRule.onNodeWithTag(HOME_BTN).assertTextEquals("Home")
-        composeRule.onNodeWithTag(HOME_BTN).assertHasClickAction()
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(0).assertTextEquals("Order was placed")
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(1).assertTextEquals("Thank You!")
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(2).assertIsDisplayed()
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(2).assertIsEnabled()
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(2).assertTextEquals("Go Back")
+        composeRule.onNodeWithTag(ORDER_PLACED_DIALOG).onChild().onChildAt(2).assertHasClickAction()
     }
 
     @Test
-    fun cartScreenTotalAmountRow_isDisplayedCorrectly() {
+    fun cartScreenTotalAmountSection_hasCorrectNumberOfItems() {
+        setScreenState(
+            cartProducts = cartProductList
+        )
+
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).assertExists()
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).assertIsDisplayed()
+        val numberOfChildrenInSection = composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).fetchSemanticsNode().children.size
+        assertThat(numberOfChildrenInSection).isEqualTo(2)
+    }
+
+    @Test
+    fun cartScreenTotalAmountSection_isDisplayedCorrectly() {
         setScreenState(
             cartProducts = cartProductList,
             totalAmount = 150.0
         )
 
-        val numberOfChildren = composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(2)
-
-        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(0).assertTextEquals("Total amount")
-        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_ROW).onChildAt(1).assertTextEquals("150,00 PLN")
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(0).assertContentDescriptionContains(CART_TOTAL_AMOUNT_COLUMN)
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(1).assertIsDisplayed()
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(1).assertIsEnabled()
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(1).assertTextEquals("Order")
+        composeRule.onNodeWithTag(CART_TOTAL_AMOUNT_SECTION).onChildAt(1).assertHasClickAction()
     }
 
     @Test
-    fun cartScreenOrderButton_isDisplayedCorrectly() {
+    fun cartScreenTotalAmountSectionColumn_hasCorrectNumberOfItems() {
         setScreenState(
-            cartProducts = cartProductList
+            cartProducts = cartProductList,
+            totalAmount = 150.0
         )
 
-        composeRule.onNodeWithTag(ORDER_BTN).assertExists()
-        composeRule.onNodeWithTag(ORDER_BTN).assertIsDisplayed()
-        composeRule.onNodeWithTag(ORDER_BTN).assertTextEquals("Order")
-        composeRule.onNodeWithTag(ORDER_BTN).assertHasClickAction()
-        composeRule.onNodeWithTag(ORDER_BTN).assertLeftPositionInRootIsEqualTo(20.dp)
+        val numberOfChildrenInSection = composeRule.onNodeWithContentDescription(CART_TOTAL_AMOUNT_COLUMN).fetchSemanticsNode().children.size
+        assertThat(numberOfChildrenInSection).isEqualTo(2)
+    }
+
+    @Test
+    fun cartScreenTotalAmountSectionColumn_isDisplayedCorrectly() {
+        setScreenState(
+            cartProducts = cartProductList,
+            totalAmount = 150.0
+        )
+
+        composeRule.onNodeWithContentDescription(CART_TOTAL_AMOUNT_COLUMN).onChildAt(0).assertTextEquals("Total amount:")
+        composeRule.onNodeWithContentDescription(CART_TOTAL_AMOUNT_COLUMN).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
+
+        composeRule.onNodeWithContentDescription(CART_TOTAL_AMOUNT_COLUMN).onChildAt(1).assertTextEquals("150,00 PLN")
+        composeRule.onNodeWithContentDescription(CART_TOTAL_AMOUNT_COLUMN).onChildAt(1).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 }

@@ -194,7 +194,9 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenLazyRow_couponsAreNotEnabledTooLittlePoints_couponIsNotActivated() {
-        setScreenState()
+        setScreenState(
+            userPoints = 999
+        )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
         val amountList  = listOf(10,20,50)
 
@@ -205,9 +207,9 @@ class AccountScreenTest {
     }
 
     @Test
-    fun accountScreenLazyRow_allCouponsAreEnabledEnoughPoints_couponIsNotActivated() {
+    fun accountScreenLazyRow_allCouponsAreEnabled5000Points_couponIsNotActivated() {
         setScreenState(
-            userPoints = 6000,
+            userPoints = 5000,
             isCouponActivated = false
         )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
@@ -220,9 +222,9 @@ class AccountScreenTest {
     }
 
     @Test
-    fun accountScreenLazyRow_someCouponsAreEnabledEnoughPoints_couponIsNotActivated() {
+    fun accountScreenLazyRow_twoCouponsAreEnabled4999Points_couponIsNotActivated() {
         setScreenState(
-            userPoints = 2300,
+            userPoints = 4999,
             isCouponActivated = false
         )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20)
@@ -238,8 +240,45 @@ class AccountScreenTest {
     }
 
     @Test
+    fun accountScreenLazyRow_oneCouponIsEnabled1000Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 1000,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(20,50)
+
+        composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_10))
+        composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + 10).assertIsEnabled()
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_oneCouponIsEnabled1999Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 1999,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(20,50)
+
+        composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_10))
+        composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + 10).assertIsEnabled()
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
     fun accountScreenLazyRow_allCouponsAreNotEnabled_TooLittlePoints_couponIsActivated() {
         setScreenState(
+            userPoints = 999,
             isCouponActivated = true
         )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
@@ -254,7 +293,7 @@ class AccountScreenTest {
     @Test
     fun accountScreenLazyRow_allCouponsAreNotEnabled_EnoughPointsForAll_couponIsActivated() {
         setScreenState(
-            userPoints = 6000,
+            userPoints = 5000,
             isCouponActivated = true
         )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
@@ -269,7 +308,7 @@ class AccountScreenTest {
     @Test
     fun accountScreenLazyRow_allCouponsAreNotEnabled_EnoughPointsForTwo_couponIsActivated() {
         setScreenState(
-            userPoints = 2300,
+            userPoints = 2000,
             isCouponActivated = true
         )
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)

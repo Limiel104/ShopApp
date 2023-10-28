@@ -15,12 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_ROW
+import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_COLUMN
+import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_SECTION
 import com.example.shopapp.util.Constants.ORDER_BTN
 
 @Composable
@@ -32,13 +35,14 @@ fun TotalAmountSection(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 10.dp)
+            .testTag(CART_TOTAL_AMOUNT_SECTION),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = Modifier
-                .testTag(CART_TOTAL_AMOUNT_ROW),
+                .semantics { contentDescription = CART_TOTAL_AMOUNT_COLUMN },
             verticalArrangement = Arrangement.Center
         ) {
             Text(
