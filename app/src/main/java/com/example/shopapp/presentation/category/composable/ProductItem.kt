@@ -46,44 +46,42 @@ fun ProductItem(
             onClick = { onImageClick() }
         )
 
-        Column(
+        Row(
             modifier = Modifier
                 .width(180.dp)
                 .padding(5.dp)
         ) {
-            Row() {
-                Column(
-                    modifier = Modifier.weight(1F)
+            Column(
+                modifier = Modifier.weight(1F)
                 ) {
-                    Text(
-                        text = product.title,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 12.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
+                Text(
+                    text = product.title,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 12.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
 
-                    Text(
-                        text = product.priceToString(),
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
+                Text(
+                    text = product.priceToString(),
+                    fontWeight = FontWeight.Bold,
+                )
+            }
 
-                Column() {
-                    Icon(
-                        imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                        tint = if(product.isInFavourites) Color.Red else Color.Gray,
-                        contentDescription = FAVOURITES_BTN,
-                        modifier = Modifier
-                            .clickable {
-                                if (!isButtonLocked) {
-                                    onFavourite()
-                                }
+            Column() {
+                Icon(
+                    imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                    tint = if(product.isInFavourites) Color.Red else Color.Gray,
+                    contentDescription = FAVOURITES_BTN,
+                    modifier = Modifier
+                        .clickable {
+                            if (!isButtonLocked) {
+                                onFavourite()
                             }
-                    )
-                }
+                        }
+                )
             }
         }
     }

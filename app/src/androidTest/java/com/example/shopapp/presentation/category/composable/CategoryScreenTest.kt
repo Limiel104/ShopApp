@@ -6,13 +6,13 @@ import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -45,10 +45,9 @@ import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
 import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
 import com.example.shopapp.util.Constants.CATEGORY_SORT_SECTION
 import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
-import com.example.shopapp.util.Constants.DISMISS_BTN
+import com.example.shopapp.util.Constants.IMAGE
 import com.example.shopapp.util.Constants.NOT_LOGGED_IN_DIALOG
 import com.example.shopapp.util.Constants.SORT_AND_FILTER_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -64,6 +63,7 @@ import org.junit.Test
 class CategoryScreenTest {
 
     private lateinit var productList: List<Product>
+    private lateinit var productListShort: List<Product>
     private lateinit var categoryFilterMap: Map<String,Boolean>
 
     @get:Rule(order = 0)
@@ -121,6 +121,36 @@ class CategoryScreenTest {
                 category = "jewelery",
                 imageUrl = "imageUrl",
                 isInFavourites = true
+            )
+        )
+
+        productListShort = listOf(
+            Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            ),
+            Product(
+                id = 2,
+                title = "Trousers",
+                price = 195.59,
+                description = productDescription,
+                category = "women's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            ),
+            Product(
+                id = 3,
+                title = "Hoodie",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = false
             )
         )
 
@@ -241,10 +271,10 @@ class CategoryScreenTest {
             categoryFilterMap = categoryFilterMap
         )
 
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -257,7 +287,7 @@ class CategoryScreenTest {
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertTextEquals("all")
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp,)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(16.dp,)
     }
 
     @Test
@@ -273,9 +303,9 @@ class CategoryScreenTest {
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-82.dp,15.dp)
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-96.dp,12.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -291,9 +321,9 @@ class CategoryScreenTest {
         composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(CATEGORY_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp)
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertPositionInRootIsEqualTo(deviceWidth-48.dp,12.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(CATEGORY_TOP_BAR).onChildAt(2).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -422,11 +452,11 @@ class CategoryScreenTest {
 
         composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(0).assertTextEquals("Name A-Z")
         composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(0).assertHasClickAction()
-        composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
 
         composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(1).assertTextEquals("Name Z-A")
         composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(1).assertHasClickAction()
-        composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(1).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(1).assertLeftPositionInRootIsEqualTo(10.dp)
 
 
         composeRule.onNodeWithTag(CATEGORY_SORT_SECTION).onChildAt(2).assertTextEquals("Price Low to High")
@@ -467,7 +497,7 @@ class CategoryScreenTest {
 
         composeRule.onNodeWithTag(CATEGORY_FILTER_SECTION).assertIsDisplayed()
         composeRule.onNodeWithTag(CATEGORY_FILTER_SECTION).onChildAt(0).assertTextEquals("Price")
-        composeRule.onNodeWithTag(CATEGORY_FILTER_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(CATEGORY_FILTER_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
 
         composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER).assertIsDisplayed()
         val items = composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER).fetchSemanticsNode().children.size
@@ -475,7 +505,7 @@ class CategoryScreenTest {
 
         composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER).onChildAt(0).assertTextEquals("3.00 - 5.00")
         composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER_ITEM).assertIsDisplayed()
-        composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER_ITEM).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(CATEGORY_PRICE_SLIDER_ITEM).assertLeftPositionInRootIsEqualTo(10.dp)
     }
 
     @Test
@@ -551,16 +581,16 @@ class CategoryScreenTest {
     }
 
     @Test
-    fun categoryScreenLazyVerticalGrid_hasCorrectNumberOfVisibleItems() {
+    fun categoryScreenLazyVerticalGrid_hasCorrectNumberOfItems() {
         setScreenState(
-            productList = productList,
+            productList = productListShort,
             categoryFilterMap = categoryFilterMap
         )
 
         composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertExists()
         composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertIsDisplayed()
-        val numberOfChildrenVisible = composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).fetchSemanticsNode().children.size
-        assertThat(numberOfChildrenVisible).isEqualTo(4)
+        val numberOfChildren = composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(3)
     }
 
     @Test
@@ -573,8 +603,8 @@ class CategoryScreenTest {
 
         composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertExists()
         composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertIsDisplayed()
-        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertPositionInRootIsEqualTo(20.dp,66.dp)
-        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertPositionInRootIsEqualTo(10.dp,64.dp)
+        composeRule.onNodeWithTag(CATEGORY_LAZY_VERTICAL_GRID).assertWidthIsEqualTo(deviceWidth-20.dp)
     }
 
     @Test
@@ -584,9 +614,13 @@ class CategoryScreenTest {
             categoryFilterMap = categoryFilterMap
         )
 
+        composeRule.onNodeWithTag(productList[0].title).onChildAt(0).assertContentDescriptionContains(IMAGE)
         composeRule.onNodeWithTag(productList[0].title).onChildAt(1).assertTextEquals(productList[0].title)
-        composeRule.onNodeWithTag(productList[0].title).onChildAt(3).assertTextEquals(productList[0].priceToString())
-        composeRule.onNodeWithTag(productList[0].title).assertPositionInRootIsEqualTo(20.dp,66.dp)
+        composeRule.onNodeWithTag(productList[0].title).onChildAt(2).assertTextEquals(productList[0].priceToString())
+
+        composeRule.onNodeWithTag(productList[0].title).assertPositionInRootIsEqualTo(10.dp,64.dp)
+        composeRule.onNodeWithTag(productList[0].title).onChildAt(1).assertPositionInRootIsEqualTo(15.dp,269.dp)
+        composeRule.onNodeWithTag(productList[0].title).onChildAt(2).assertLeftPositionInRootIsEqualTo(15.dp)
     }
 
     @Test
@@ -620,14 +654,14 @@ class CategoryScreenTest {
             categoryFilterMap = categoryFilterMap,
         )
 
-        val numberOfChildren = composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).fetchSemanticsNode().children.size
+        val numberOfChildren = composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().fetchSemanticsNode().children.size
         assertThat(numberOfChildren).isEqualTo(3)
 
-        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChildAt(0).assertTextEquals("Not logged in")
-        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChildAt(1).assertTextEquals("You need to be logged in to add product to favourites")
-        composeRule.onNodeWithTag(DISMISS_BTN).assertExists()
-        composeRule.onNodeWithTag(DISMISS_BTN).assertIsDisplayed()
-        composeRule.onNodeWithTag(DISMISS_BTN).assertTextEquals("Dismiss")
-        composeRule.onNodeWithTag(DISMISS_BTN).assertHasClickAction()
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(0).assertTextEquals("Not logged in")
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(1).assertTextEquals("You need to be logged in to add product to favourites")
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(2).assertIsDisplayed()
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(2).assertIsEnabled()
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(2).assertTextEquals("Dismiss")
+        composeRule.onNodeWithTag(NOT_LOGGED_IN_DIALOG).onChild().onChildAt(2).assertHasClickAction()
     }
 }
