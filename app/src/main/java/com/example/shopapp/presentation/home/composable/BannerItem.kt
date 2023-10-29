@@ -8,12 +8,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.HOME_BANNER
 import com.example.shopapp.util.Constants.IMAGE
 
 @Composable
@@ -23,7 +25,8 @@ fun BannerItem(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag("$HOME_BANNER $resourceId"),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
