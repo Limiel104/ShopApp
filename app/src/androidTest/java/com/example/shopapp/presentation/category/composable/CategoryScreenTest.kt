@@ -1,7 +1,6 @@
 package com.example.shopapp.presentation.category.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
@@ -193,8 +192,6 @@ class CategoryScreenTest {
                         )
                     ) {
                         CategoryContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             categoryName = categoryId,
                             productList = productList,
                             isSortAndFilterSectionVisible = isSortAndFilterSectionVisible,
@@ -241,10 +238,7 @@ class CategoryScreenTest {
                             }
                         )
                     ) {
-                        CategoryScreen(
-                            navController = navController,
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
+                        CategoryScreen(navController = navController)
                     }
                 }
             }

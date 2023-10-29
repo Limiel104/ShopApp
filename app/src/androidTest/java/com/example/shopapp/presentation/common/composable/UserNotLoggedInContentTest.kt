@@ -1,7 +1,7 @@
 package com.example.shopapp.presentation.common.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertTextEquals
@@ -50,8 +50,6 @@ class UserNotLoggedInContentTest {
                         route = Screen.AccountScreen.route
                     ) {
                         UserNotLoggedInContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             onLogin = {},
                             onSignup = {}
                         )

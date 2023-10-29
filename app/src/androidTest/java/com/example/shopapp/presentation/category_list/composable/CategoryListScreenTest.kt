@@ -1,7 +1,6 @@
 package com.example.shopapp.presentation.category_list.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
@@ -65,8 +64,6 @@ class CategoryListScreenTest {
                         route = Screen.CategoryListScreen.route,
                     ) {
                         CategoryListContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             categoryList = getCategory(),
                             onCategorySelected = {},
                             onGoToCart = {}
