@@ -42,7 +42,8 @@ fun OrdersContent(
     Scaffold(
         topBar = {
             OrdersTopBar(
-                onSortSelected = { onSortSelected() }
+                onSortSelected = { onSortSelected() },
+                onNavigateBack = { /*TODO*/ }
             ) },
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +53,7 @@ fun OrdersContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(10.dp)
+                .padding(horizontal = 10.dp)
         ) {
             AnimatedVisibility(
                 visible = isSortSectionVisible,

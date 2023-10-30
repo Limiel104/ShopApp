@@ -5,6 +5,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -14,16 +15,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrdersTopBar(
-    onSortSelected: () -> Unit
+    onSortSelected: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.your_orders)) },
+        navigationIcon = {
+            IconButton(
+                onClick = { onNavigateBack() }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = GO_BACK_BTN
+                )
+            }
+        },
         actions = {
             IconButton(onClick = { onSortSelected() }
             ) {
@@ -42,7 +55,8 @@ fun OrdersTopBar(
 fun OrdersTopBarPreview() {
     ShopAppTheme {
         OrdersTopBar(
-            onSortSelected = {}
+            onSortSelected = {},
+            onNavigateBack = {}
         )
     }
 }
