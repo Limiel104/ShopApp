@@ -27,14 +27,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
+import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.LOGIN_BTN
 import com.example.shopapp.util.Constants.LOGIN_COLUMN
 import com.example.shopapp.util.Constants.LOGIN_CONTENT
 import com.example.shopapp.util.Constants.LOGIN_CPI
 import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
-import com.example.shopapp.util.Constants.bottomBarHeight
+import com.example.shopapp.util.Constants.LOGIN_TOP_BAR
 import com.example.shopapp.util.Constants.emailEmptyError
 import com.example.shopapp.util.Constants.passwordEmptyError
 import com.example.shopapp.util.Screen
@@ -79,7 +79,6 @@ class LoginScreenTest {
                         route = Screen.LoginScreen.route
                     ) {
                         LoginContent(
-                            bottomBarHeight = bottomBarHeight.dp,
                             email = email,
                             emailError = emailError,
                             password = password,
@@ -107,10 +106,7 @@ class LoginScreenTest {
                     composable(
                         route = Screen.LoginScreen.route
                     ) {
-                        LoginScreen(
-                            navController = navController,
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
+                        LoginScreen(navController = navController)
                     }
                 }
             }
@@ -143,9 +139,7 @@ class LoginScreenTest {
 
         composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertContentDescriptionContains(
-            Constants.GO_BACK_BTN
-        )
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
         composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertHasClickAction()
 
         composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
@@ -246,7 +240,7 @@ class LoginScreenTest {
 
         val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
         val errorLabel = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
-        val errorValue =passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        val errorValue = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
         assertThat(errorLabel).isEqualTo("Password")
         assertThat(errorValue).isEqualTo(passwordEmptyError)
     }
@@ -256,8 +250,8 @@ class LoginScreenTest {
         val password = "Qwerty1+"
         setScreen()
 
-        val emailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
-        val initialErrorState = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialEmailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val initialErrorState = initialEmailNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).performTextInput(password)
 
@@ -279,8 +273,8 @@ class LoginScreenTest {
         val email = "email@email.com"
         setScreen()
 
-        val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
-        val initialErrorState = passwordNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val initialErrorState = initialPasswordNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag(LOGIN_EMAIL_TF).performTextInput(email)
 

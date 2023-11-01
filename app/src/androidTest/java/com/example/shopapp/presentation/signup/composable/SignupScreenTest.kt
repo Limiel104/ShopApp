@@ -2,13 +2,13 @@ package com.example.shopapp.presentation.signup.composable
 
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
@@ -21,6 +21,7 @@ import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -31,34 +32,25 @@ import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.SIGNUP_BTN
-import com.example.shopapp.util.Constants.SIGNUP_CITY_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_CITY_TF
 import com.example.shopapp.util.Constants.SIGNUP_COLUMN
-import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_TF
 import com.example.shopapp.util.Constants.SIGNUP_CONTENT
 import com.example.shopapp.util.Constants.SIGNUP_CPI
-import com.example.shopapp.util.Constants.SIGNUP_EMAIL_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
-import com.example.shopapp.util.Constants.SIGNUP_FIRSTNAME_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_FIRSTNAME_TF
-import com.example.shopapp.util.Constants.SIGNUP_LASTNAME_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_LASTNAME_TF
-import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
-import com.example.shopapp.util.Constants.SIGNUP_STREET_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_STREET_TF
 import com.example.shopapp.util.Constants.SIGNUP_TOP_BAR
-import com.example.shopapp.util.Constants.SIGNUP_ZIP_CODE_ERROR
 import com.example.shopapp.util.Constants.SIGNUP_ZIP_CODE_TF
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.cityEmptyError
 import com.example.shopapp.util.Constants.confirmPasswordError
 import com.example.shopapp.util.Constants.emailEmptyError
 import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
 import com.example.shopapp.util.Constants.fieldContainsDigitsError
-import com.example.shopapp.util.Constants.fieldEmptyError
 import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
+import com.example.shopapp.util.Constants.fieldEmptyError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneCapitalLetterError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneDigitError
 import com.example.shopapp.util.Constants.passwordContainsAtLeastOneSpecialCharError
@@ -82,6 +74,10 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 class SignupScreenTest {
 
+    private lateinit var nodeList: List<String>
+    private lateinit var errors: List<String>
+    private lateinit var labels: List<String>
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -91,6 +87,30 @@ class SignupScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+
+        nodeList = listOf(
+            SIGNUP_EMAIL_TF,
+            SIGNUP_PASSWORD_TF,
+            SIGNUP_CONFIRM_PASSWORD_TF,
+            SIGNUP_FIRSTNAME_TF,
+            SIGNUP_LASTNAME_TF,
+            SIGNUP_STREET_TF,
+            SIGNUP_CITY_TF,
+            SIGNUP_ZIP_CODE_TF
+        )
+
+        errors = listOf(
+            emailEmptyError,
+            passwordEmptyError,
+            "",
+            fieldEmptyError,
+            fieldEmptyError,
+            streetEmptyError,
+            cityEmptyError,
+            zipCodeEmptyError
+        )
+
+        labels = listOf("Email","Password","Confirm Password", "First Name", "Last Name", "Street", "City","Zip Code")
     }
 
     private fun setScreenState(
@@ -123,9 +143,7 @@ class SignupScreenTest {
                         route = Screen.SignupScreen.route
                     ) {
                         SignupContent(
-                            scaffoldState = rememberScaffoldState(),
                             scrollState = rememberScrollState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             email = email,
                             emailError = emailError,
                             password = password,
@@ -171,10 +189,7 @@ class SignupScreenTest {
                     composable(
                         route = Screen.SignupScreen.route
                     ) {
-                        SignupScreen(
-                            navController = navController,
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
+                        SignupScreen(navController = navController)
                     }
                 }
             }
@@ -195,10 +210,10 @@ class SignupScreenTest {
     fun signupScreenTopBar_topBarIsDisplayedCorrectly() {
         setScreenState()
 
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -210,9 +225,9 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
         composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertHasClickAction()
 
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(10.dp,15.dp)
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(SIGNUP_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -226,7 +241,7 @@ class SignupScreenTest {
     }
 
     @Test
-    fun signupScreen_hasCorrectNumberOfItemsWhenErrorsAreNotDisplayed() {
+    fun signupScreenColumn_hasCorrectNumberOfItemsWhenErrorsAreNotDisplayed() {
         setScreenState()
 
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertExists()
@@ -236,7 +251,7 @@ class SignupScreenTest {
     }
 
     @Test
-    fun signupScreen_hasCorrectNumberOfItemsWhenErrorsAreDisplayed() {
+    fun signupScreenColumn_hasCorrectNumberOfItemsWhenErrorsAreDisplayed() {
         setScreenState(
             emailError = emailEmptyError,
             passwordError = passwordEmptyError,
@@ -251,18 +266,18 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertExists()
         composeRule.onNodeWithTag(SIGNUP_COLUMN).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(SIGNUP_COLUMN).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(17)
+        assertThat(numberOfChildren).isEqualTo(9)
     }
 
     @Test
-    fun signupScreen_isDisplayedCorrectly() {
+    fun signupScreenColumn_isDisplayedCorrectly() {
         setScreenState()
         val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
-        val deviceHeight = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().bottom
 
-        composeRule.onNodeWithTag(SIGNUP_CONTENT).assertPositionInRootIsEqualTo(10.dp,0.dp)
-        composeRule.onNodeWithTag(SIGNUP_CONTENT).assertHeightIsEqualTo(deviceHeight-bottomBarHeight.dp)
-        composeRule.onNodeWithTag(SIGNUP_CONTENT).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(SIGNUP_COLUMN).assertExists()
+        composeRule.onNodeWithTag(SIGNUP_COLUMN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_COLUMN).assertPositionInRootIsEqualTo(0.dp,64.dp)
+        composeRule.onNodeWithTag(SIGNUP_COLUMN).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -271,15 +286,12 @@ class SignupScreenTest {
         setScreenState(
             email = email
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
         val emailNode = composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).fetchSemanticsNode()
         val textInput = emailNode.config.getOrNull(SemanticsProperties.EditableText).toString()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).assertTopPositionInRootIsEqualTo(64.dp)
         assertThat(textInput).isEqualTo(email)
     }
 
@@ -289,15 +301,10 @@ class SignupScreenTest {
         setScreenState(
             password = password
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(password)
     }
 
@@ -307,15 +314,10 @@ class SignupScreenTest {
         setScreenState(
             confirmPassword = confirmPassword
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(confirmPassword)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(confirmPassword)
     }
 
@@ -325,15 +327,10 @@ class SignupScreenTest {
         setScreenState(
             firstName = firstName
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(firstName)
     }
 
@@ -343,15 +340,10 @@ class SignupScreenTest {
         setScreenState(
             lastName = lastName
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(lastName)
     }
 
@@ -361,15 +353,10 @@ class SignupScreenTest {
         setScreenState(
             street = street
         )
-        val deviceWidth = composeRule.onNodeWithTag(SIGNUP_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(street)
     }
 
@@ -382,9 +369,6 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(city)
     }
 
@@ -398,8 +382,6 @@ class SignupScreenTest {
         composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
         val passwordNode = composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(zipCode)
     }
 
@@ -409,10 +391,11 @@ class SignupScreenTest {
             emailError = emailEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertTextEquals(emailEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val emailNode = composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).fetchSemanticsNode()
+        val errorLabel = emailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = emailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Email")
+        assertThat(errorValue).isEqualTo(emailEmptyError)
     }
 
     @Test
@@ -421,10 +404,11 @@ class SignupScreenTest {
             passwordError = passwordEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(passwordEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val passwordNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(errorValue).isEqualTo(passwordEmptyError)
     }
 
     @Test
@@ -433,10 +417,11 @@ class SignupScreenTest {
             confirmPasswordError = confirmPasswordError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertTextEquals(confirmPasswordError)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val confirmPasswordNode = composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = confirmPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = confirmPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Confirm Password")
+        assertThat(errorValue).isEqualTo(confirmPasswordError)
     }
 
     @Test
@@ -445,10 +430,11 @@ class SignupScreenTest {
             firstNameError = fieldEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(fieldEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val firstNameNode = composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = firstNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = firstNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(errorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
@@ -457,10 +443,11 @@ class SignupScreenTest {
             lastNameError = fieldEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(fieldEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val lastNameNode = composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = lastNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = lastNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(errorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
@@ -469,10 +456,11 @@ class SignupScreenTest {
             streetError = streetEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(streetEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val streetNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
+        val errorLabel = streetNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = streetNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(errorValue).isEqualTo(streetEmptyError)
     }
 
     @Test
@@ -481,10 +469,11 @@ class SignupScreenTest {
             cityError = cityEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(cityEmptyError)
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val cityNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
+        val errorLabel = cityNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = cityNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(errorValue).isEqualTo(cityEmptyError)
     }
 
     @Test
@@ -493,1165 +482,1259 @@ class SignupScreenTest {
             zipCodeError = zipCodeEmptyError
         )
 
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(zipCodeEmptyError)
+        val zipCodeNode = composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = zipCodeNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = zipCodeNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(errorValue).isEqualTo(zipCodeEmptyError)
     }
 
     @Test
     fun signupScreenEmailErrorTextField_performClickOnButtonWileEmailTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =
+                composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                    SemanticsProperties.Error
+                )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertTextEquals(emailEmptyError)
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        for(node in nodeList) {
+            if(node != SIGNUP_EMAIL_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Email")
+        assertThat(resultErrorValue).isEqualTo(emailEmptyError)
     }
 
     @Test
     fun signupScreenPasswordErrorTextField_performClickOnButtonWilePasswordTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "",
+            "",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(passwordEmptyError)
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        for(node in nodeList) {
+            if(node != SIGNUP_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(passwordEmptyError)
     }
 
     @Test
     fun signupScreenConfirmPasswordErrorTextField_performClickOnButtonWileConfirmPasswordTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertTextEquals(confirmPasswordError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_CONFIRM_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Confirm Password")
+        assertThat(resultErrorValue).isEqualTo(confirmPasswordError)
     }
 
     @Test
     fun signupScreenFirstNameErrorTextField_performClickOnButtonWileFirstNameTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(fieldEmptyError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if (node != SIGNUP_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
     fun signupScreenLastNameErrorTextField_performClickOnButtonWileLastNameTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(fieldEmptyError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
     fun signupScreenStreetErrorTextField_performClickOnButtonWileStreetTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(streetEmptyError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(streetEmptyError)
     }
 
     @Test
     fun signupScreenCityErrorTextField_performClickOnButtonWileCityTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(cityEmptyError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(cityEmptyError)
     }
 
     @Test
     fun signupScreenZipCodeErrorTextField_performClickOnButtonWileZipCodeTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            ""
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(zipCodeEmptyError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(2).toString()
+
+        for(node in nodeList) {
+            if (node != SIGNUP_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(zipCodeEmptyError)
     }
 
     @Test
     fun signupScreenPasswordTextField_performClickOnButtonWilePasswordIsTooShort_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwe"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwe",
+            "Qwe",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(shortPasswordError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(shortPasswordError)
     }
 
     @Test
     fun signupScreenPasswordTextField_performClickOnButtonWilePasswordDoesNotHaveOneDigit_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty++"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty++",
+            "Qwerty++",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(passwordContainsAtLeastOneDigitError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(passwordContainsAtLeastOneDigitError)
     }
 
     @Test
     fun signupScreenPasswordTextField_performClickOnButtonWilePasswordDoesNotHaveOneCapitalLetter_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "qwerty1+",
+            "qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(passwordContainsAtLeastOneCapitalLetterError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(passwordContainsAtLeastOneCapitalLetterError)
     }
 
     @Test
     fun signupScreenPasswordTextField_performClickOnButtonWilePasswordDoesNotHaveOneSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty11"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty11",
+            "Qwerty11",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertTextEquals(passwordContainsAtLeastOneSpecialCharError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_PASSWORD_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(passwordContainsAtLeastOneSpecialCharError)
     }
 
     @Test
     fun signupScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveDigit_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "J0hn"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "J0hn",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
         fun signupScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John%"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John%",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun signupScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveDigit_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith1"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith1",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
     fun signupScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith#"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith#",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun signupScreenStreetTextField_performClickOnButtonWileStreetHasNoLetters_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "61"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "61",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(fieldContainsAtLeastOneLetterError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsAtLeastOneLetterError)
     }
 
     @Test
     fun signupScreenStreetTextField_performClickOnButtonWileStreetDoesNotHaveOneDigit_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(streetContainsAtLeastOneDigitError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(streetContainsAtLeastOneDigitError)
     }
 
     @Test
     fun signupScreenStreetTextField_performClickOnButtonWileStreetDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1%"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1%",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun signupScreenCityTextField_performClickOnButtonWileCityHasNoLetters_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "34"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "34",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(fieldContainsAtLeastOneLetterError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsAtLeastOneLetterError)
     }
 
     @Test
     fun signupScreenCityTextField_performClickOnButtonWileCityDoesHaveDigit_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw5"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw5",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
     fun signupScreenCityTextField_performClickOnButtonWileCityDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw$"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw$",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun signupScreenZipCodeTextField_performClickOnButtonWileZipCodeHasBadFormat_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(zipCodeBadFormat)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(zipCodeBadFormat)
     }
 
     @Test
     fun signupScreenZipCodeTextField_performClickOnButtonWileZipCodeDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "{2-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "{2-345"
+        )
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertTextEquals(fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != SIGNUP_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun signupScreenErrorTextFields_performClickOnButtonWileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
-
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
-        composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
-
-        val errors = listOf(
-            SIGNUP_EMAIL_ERROR,
-            SIGNUP_PASSWORD_ERROR,
-            SIGNUP_FIRSTNAME_ERROR,
-            SIGNUP_LASTNAME_ERROR,
-            SIGNUP_STREET_ERROR,
-            SIGNUP_CITY_ERROR,
-            SIGNUP_ZIP_CODE_ERROR
-        )
-
-        val constants = listOf(
-            emailEmptyError,
-            passwordEmptyError,
-            fieldEmptyError,
-            fieldEmptyError,
-            streetEmptyError,
-            cityEmptyError,
-            zipCodeEmptyError
-        )
-
-        errors.zip(constants) { error, constant ->
-            composeRule.onNodeWithTag(error).assertExists()
-            composeRule.onNodeWithTag(error).assertTextEquals(constant)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
         }
 
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
+        composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
+
+        for(i in 0 until(nodeList.size-1)) {
+            if(nodeList[i] != SIGNUP_CONFIRM_PASSWORD_TF) {
+                val resultNode = composeRule.onNodeWithTag(nodeList[i]).fetchSemanticsNode()
+                val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+                val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+                assertThat(errorLabel).isEqualTo(labels[i])
+                assertThat(resultErrorValue).isEqualTo(errors[i])
+            }
+        }
+
+        val resultNodeErrorState =
+            composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+        assertThat(resultNodeErrorState).isNull()
     }
 
     @Test
     fun signupScreenErrorTextFields_noErrorsAfterClickingOnTheButton() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val confirmPassword = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(confirmPassword)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
 
-        composeRule.onNodeWithTag(SIGNUP_BTN).assertExists()
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
         composeRule.onNodeWithTag(SIGNUP_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SIGNUP_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_ERROR).assertDoesNotExist()
+        for(node in nodeList) {
+            val resultNodeErrorState =
+                composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                    SemanticsProperties.Error
+                )
+            assertThat(resultNodeErrorState).isNull()
+        }
     }
 
     @Test
@@ -1676,28 +1759,27 @@ class SignupScreenTest {
 
     @Test
     fun signupScreenCircularProgressIndicator_isShowingUpWhenAllIsCorrect() {
-        val email = "email@email.com"
-        val password = "Qwerty1+"
-        val confirmPassword = "Qwerty1+"
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
+
+        val inputValues = listOf(
+            "email@email.com",
+            "Qwerty1+",
+            "Qwerty1+",
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
         composeRule.onNodeWithTag(SIGNUP_CPI).assertDoesNotExist()
 
-        composeRule.onNodeWithTag(SIGNUP_EMAIL_TF).performTextInput(email)
-        composeRule.onNodeWithTag(SIGNUP_PASSWORD_TF).performTextInput(password)
-        composeRule.onNodeWithTag(SIGNUP_CONFIRM_PASSWORD_TF).performTextInput(confirmPassword)
-        composeRule.onNodeWithTag(SIGNUP_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(SIGNUP_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(SIGNUP_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(SIGNUP_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(SIGNUP_ZIP_CODE_TF).performTextInput(zipCode)
-        composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
 
+        composeRule.onNodeWithTag(SIGNUP_BTN).performScrollTo()
+        composeRule.onNodeWithTag(SIGNUP_BTN).performClick()
         composeRule.onNodeWithTag(SIGNUP_CPI).assertExists()
     }
 }
