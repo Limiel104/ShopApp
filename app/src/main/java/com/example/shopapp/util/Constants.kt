@@ -15,6 +15,7 @@ object Constants {
     const val LOGIN_SIGNUP_BTN: String = "Go to sign up screen button"
     const val LOGIN_CPI: String = "Login circular progress indicator"
     const val PRODUCT_DETAILS_CONTENT: String = "Product details content"
+    const val PRODUCT_DETAILS_COLUMN: String = "Product details column"
     const val PRODUCT_DETAILS_ADD_TO_CART_BTN: String = "Add to cart"
     const val HOME_CONTENT: String = "Home content"
     const val HOME_TOP_BAR: String = "Home top bar"
@@ -52,28 +53,20 @@ object Constants {
     const val FAVOURITES_CPI: String = "Favourites circular progress indicator"
     const val PRODUCT_DETAILS_TOP_BAR: String = "Product details top bar"
     const val PRODUCT_ITEM_TITLE: String = "Product item title"
-    const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
+    const val PRODUCT_DETAILS_IMAGE_BOX: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
     const val PRODUCT_DETAILS_CPI: String = "Product details circular progress indicator"
     const val SIGNUP_CONTENT: String = "Signup content"
     const val SIGNUP_TOP_BAR: String = "Signup top bar"
     const val SIGNUP_COLUMN: String = "Signup column"
     const val SIGNUP_EMAIL_TF: String = "Signup email"
-    const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
     const val SIGNUP_PASSWORD_TF: String = "Signup password"
-    const val SIGNUP_PASSWORD_ERROR: String = "Signup password error"
     const val SIGNUP_CONFIRM_PASSWORD_TF: String = "Signup confirm password"
-    const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
     const val SIGNUP_FIRSTNAME_TF: String = "Signup first name"
-    const val SIGNUP_FIRSTNAME_ERROR: String = "Signup first name error"
     const val SIGNUP_LASTNAME_TF: String = "Signup last name"
-    const val SIGNUP_LASTNAME_ERROR: String = "Signup last name error"
     const val SIGNUP_STREET_TF: String = "Signup street"
-    const val SIGNUP_STREET_ERROR: String = "Signup street error"
     const val SIGNUP_CITY_TF: String = "Signup city"
-    const val SIGNUP_CITY_ERROR: String = "Signup city error"
     const val SIGNUP_ZIP_CODE_TF: String = "Signup zip code"
-    const val SIGNUP_ZIP_CODE_ERROR: String = "Signup zip code error"
     const val SIGNUP_BTN: String = "Signup button"
     const val SIGNUP_CPI: String = "Signup circular progress indicator"
     const val USER_NOT_LOGGED_IN_CONTENT: String = "User not logged in content"
@@ -134,7 +127,6 @@ object Constants {
     const val cartProductItemImageHeight: Int = 80
 
     //VALUES
-    const val bottomSheetPeekHeight: Int = 100
     const val passwordMinLength: Int = 8
     const val zipCodeLength: Int = 6
 

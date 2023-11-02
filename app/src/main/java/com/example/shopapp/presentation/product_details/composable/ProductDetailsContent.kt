@@ -21,15 +21,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.IMAGE
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_COLUMN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_BOX
 import com.example.shopapp.util.Constants.productDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,13 +62,14 @@ fun ProductDetailsContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(top = 15.dp)
+                .testTag(PRODUCT_DETAILS_COLUMN)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1F)
-                    .background(Color.White),
+                    .background(Color.White)
+                    .testTag(PRODUCT_DETAILS_IMAGE_BOX),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
