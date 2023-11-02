@@ -95,11 +95,6 @@ object Constants {
     const val PROFILE_STREET_TF: String = "Profile street tf"
     const val PROFILE_CITY_TF: String = "Profile city tf"
     const val PROFILE_ZIP_CODE_TF: String = "Profile zip code tf"
-    const val PROFILE_FIRSTNAME_ERROR: String = "Profile first name tf error"
-    const val PROFILE_LASTNAME_ERROR: String = "Profile last name tf error"
-    const val PROFILE_STREET_ERROR: String = "Profile street tf error"
-    const val PROFILE_CITY_ERROR: String = "Profile city tf error"
-    const val PROFILE_ZIP_CODE_ERROR: String = "Profile zip code tf error"
     const val PROFILE_CPI: String = "Profile circular progress indicator"
     const val SAVE_BTN: String = "Save button"
 
@@ -118,7 +113,6 @@ object Constants {
 
     //TEST VALUES
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
-    const val bottomBarHeight: Int = 56
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
