@@ -2,11 +2,9 @@ package com.example.shopapp.presentation.orders.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.shopapp.presentation.orders.OrdersEvent
 import com.example.shopapp.presentation.orders.OrdersUiEvent
@@ -17,10 +15,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun OrdersScreen(
-    bottomBarHeight: Dp,
     viewModel: OrdersViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val orders = viewModel.ordersState.value.orders
     val isLoading = viewModel.ordersState.value.isLoading
     val orderOrder = viewModel.ordersState.value.orderOrder
@@ -39,8 +35,6 @@ fun OrdersScreen(
     }
 
     OrdersContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
         orders = orders,
         isLoading = isLoading,
         orderOrder = orderOrder,

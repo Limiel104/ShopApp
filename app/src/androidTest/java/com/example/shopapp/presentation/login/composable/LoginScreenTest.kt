@@ -3,8 +3,11 @@ package com.example.shopapp.presentation.login.composable
 import androidx.activity.compose.setContent
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
+import androidx.compose.ui.test.assertContentDescriptionContains
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
@@ -12,6 +15,7 @@ import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChild
+import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
@@ -23,14 +27,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.LOGIN_BTN
+import com.example.shopapp.util.Constants.LOGIN_COLUMN
 import com.example.shopapp.util.Constants.LOGIN_CONTENT
 import com.example.shopapp.util.Constants.LOGIN_CPI
-import com.example.shopapp.util.Constants.LOGIN_EMAIL_ERROR
 import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
-import com.example.shopapp.util.Constants.LOGIN_PASSWORD_ERROR
 import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
-import com.example.shopapp.util.Constants.bottomBarHeight
+import com.example.shopapp.util.Constants.LOGIN_TOP_BAR
 import com.example.shopapp.util.Constants.emailEmptyError
 import com.example.shopapp.util.Constants.passwordEmptyError
 import com.example.shopapp.util.Screen
@@ -75,7 +79,6 @@ class LoginScreenTest {
                         route = Screen.LoginScreen.route
                     ) {
                         LoginContent(
-                            bottomBarHeight = bottomBarHeight.dp,
                             email = email,
                             emailError = emailError,
                             password = password,
@@ -103,10 +106,7 @@ class LoginScreenTest {
                     composable(
                         route = Screen.LoginScreen.route
                     ) {
-                        LoginScreen(
-                            navController = navController,
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
+                        LoginScreen(navController = navController)
                     }
                 }
             }
@@ -114,39 +114,83 @@ class LoginScreenTest {
     }
 
     @Test
-    fun loginScreen_hasCorrectNumberOfItemsWhenErrorsAreNotDisplayed() {
+    fun loginScreenTopBar_hasCorrectNumberOfItems() {
         setScreenState()
 
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertExists()
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertIsDisplayed()
-        val numberOfChildren = composeRule.onNodeWithTag(LOGIN_CONTENT).fetchSemanticsNode().children.size
-
-        assertThat(numberOfChildren).isEqualTo(6)
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(LOGIN_TOP_BAR).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(2)
     }
 
     @Test
-    fun loginScreen_hasCorrectNumberOfItemsWhenErrorsAreDisplayed() {
+    fun loginScreenTopBar_topBarIsDisplayedCorrectly() {
+        setScreenState()
+
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertHeightIsEqualTo(64.dp)
+        val deviceWidth = composeRule.onNodeWithTag(LOGIN_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
+    }
+
+    @Test
+    fun loginScreenTopBar_goBackButtonIsDisplayedCorrectly() {
+        setScreenState()
+
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertHasClickAction()
+
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
+    }
+
+    @Test
+    fun loginScreenTopBar_titleIsDisplayedCorrectly() {
+        setScreenState()
+
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(1).assertTextEquals("Login")
+        composeRule.onNodeWithTag(LOGIN_TOP_BAR).onChildAt(1).assertLeftPositionInRootIsEqualTo(56.dp,)
+    }
+
+    @Test
+    fun loginScreenColumn_hasCorrectNumberOfItemsWhenErrorsAreNotDisplayed() {
+        setScreenState()
+
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertExists()
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(LOGIN_COLUMN).fetchSemanticsNode().children.size
+
+        assertThat(numberOfChildren).isEqualTo(5)
+    }
+
+    @Test
+    fun loginScreenColumn_hasCorrectNumberOfItemsWhenErrorsAreDisplayed() {
         setScreenState(
             emailError = emailEmptyError,
             passwordError = passwordEmptyError
         )
 
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertExists()
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertIsDisplayed()
-        val numberOfChildren = composeRule.onNodeWithTag(LOGIN_CONTENT).fetchSemanticsNode().children.size
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertExists()
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(LOGIN_COLUMN).fetchSemanticsNode().children.size
 
-        assertThat(numberOfChildren).isEqualTo(8)
+        assertThat(numberOfChildren).isEqualTo(5)
     }
 
     @Test
-    fun loginScreen_isDisplayedCorrectly() {
+    fun loginScreenColumn_isDisplayedCorrectly() {
         setScreenState()
         val deviceWidth = composeRule.onNodeWithTag(LOGIN_CONTENT).onParent().getBoundsInRoot().right
-        val deviceHeight = composeRule.onNodeWithTag(LOGIN_CONTENT).onParent().getBoundsInRoot().bottom
 
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertPositionInRootIsEqualTo(20.dp,0.dp)
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertHeightIsEqualTo(deviceHeight-bottomBarHeight.dp)
-        composeRule.onNodeWithTag(LOGIN_CONTENT).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertExists()
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertPositionInRootIsEqualTo(0.dp,64.dp)
+        composeRule.onNodeWithTag(LOGIN_COLUMN).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -155,15 +199,10 @@ class LoginScreenTest {
         setScreenState(
             email = email
         )
-        val deviceWidth = composeRule.onNodeWithTag(LOGIN_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(LOGIN_EMAIL_TF).performTextInput(email)
         val emailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
         val textInput = emailNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(LOGIN_EMAIL_TF).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(LOGIN_EMAIL_TF).assertWidthIsEqualTo(deviceWidth-40.dp)
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(email)
     }
 
@@ -173,15 +212,10 @@ class LoginScreenTest {
         setScreenState(
             password = password
         )
-        val deviceWidth = composeRule.onNodeWithTag(LOGIN_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).performTextInput(password)
         val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).assertWidthIsEqualTo(deviceWidth-40.dp)
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo("••••••••")
     }
 
@@ -191,10 +225,11 @@ class LoginScreenTest {
             emailError = emailEmptyError
         )
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertTextEquals(emailEmptyError)
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertLeftPositionInRootIsEqualTo(20.dp)
+        val emailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val errorLabel = emailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = emailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Email")
+        assertThat(errorValue).isEqualTo(emailEmptyError)
     }
 
     @Test
@@ -203,10 +238,11 @@ class LoginScreenTest {
             passwordError = passwordEmptyError
         )
 
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertTextEquals(passwordEmptyError)
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertLeftPositionInRootIsEqualTo(20.dp)
+        val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = passwordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(errorValue).isEqualTo(passwordEmptyError)
     }
 
     @Test
@@ -214,20 +250,22 @@ class LoginScreenTest {
         val password = "Qwerty1+"
         setScreen()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        val initialEmailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val initialErrorState = initialEmailNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).performTextInput(password)
 
-        composeRule.onNodeWithTag(LOGIN_BTN).assertExists()
         composeRule.onNodeWithTag(LOGIN_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(LOGIN_BTN).performClick()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertTextEquals(emailEmptyError)
+        val resultEmailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val errorLabel = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        assertThat(initialErrorState).isNull()
+        assertThat(errorLabel).isEqualTo("Email")
+        assertThat(resultErrorValue).isEqualTo(emailEmptyError)
     }
 
     @Test
@@ -235,40 +273,52 @@ class LoginScreenTest {
         val email = "email@email.com"
         setScreen()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        val initialPasswordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val initialErrorState = initialPasswordNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag(LOGIN_EMAIL_TF).performTextInput(email)
 
-        composeRule.onNodeWithTag(LOGIN_BTN).assertExists()
         composeRule.onNodeWithTag(LOGIN_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(LOGIN_BTN).performClick()
 
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertTextEquals(passwordEmptyError)
+        val resultPasswordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val errorLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
+        assertThat(initialErrorState).isNull()
+        assertThat(errorLabel).isEqualTo("Password")
+        assertThat(resultErrorValue).isEqualTo(passwordEmptyError)
     }
 
     @Test
     fun loginScreenErrorTextFields_performClickOnButtonWileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
         setScreen()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        val emailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val initialEmailErrorState = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorState = passwordNode.config.getOrNull(SemanticsProperties.Error)
 
-        composeRule.onNodeWithTag(LOGIN_BTN).assertExists()
         composeRule.onNodeWithTag(LOGIN_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(LOGIN_BTN).performClick()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertTextEquals(emailEmptyError)
+        val resultEmailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val errorEmailLabel = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultEmailErrorValue = resultEmailNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
 
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertExists()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertTextEquals(passwordEmptyError)
+        val resultPasswordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val errorPasswordLabel = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultPasswordErrorValue = resultPasswordNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+
+        assertThat(initialEmailErrorState).isNull()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(errorEmailLabel).isEqualTo("Email")
+        assertThat(errorPasswordLabel).isEqualTo("Password")
+        assertThat(resultEmailErrorValue).isEqualTo(emailEmptyError)
+        assertThat(resultPasswordErrorValue).isEqualTo(passwordEmptyError)
     }
 
     @Test
@@ -277,18 +327,27 @@ class LoginScreenTest {
         val password = "Qwerty1+"
         setScreen()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        val emailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val passwordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val initialEmailErrorState = emailNode.config.getOrNull(SemanticsProperties.Error)
+        val initialPasswordErrorState = passwordNode.config.getOrNull(SemanticsProperties.Error)
 
         composeRule.onNodeWithTag(LOGIN_EMAIL_TF).performTextInput(email)
         composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).performTextInput(password)
 
-        composeRule.onNodeWithTag(LOGIN_BTN).assertExists()
         composeRule.onNodeWithTag(LOGIN_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGIN_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(LOGIN_BTN).performClick()
 
-        composeRule.onNodeWithTag(LOGIN_EMAIL_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(LOGIN_PASSWORD_ERROR).assertDoesNotExist()
+        val resultEmailNode = composeRule.onNodeWithTag(LOGIN_EMAIL_TF).fetchSemanticsNode()
+        val resultPasswordNode = composeRule.onNodeWithTag(LOGIN_PASSWORD_TF).fetchSemanticsNode()
+        val resultEmailErrorState = resultEmailNode.config.getOrNull(SemanticsProperties.Error)
+        val resultPasswordErrorState = resultPasswordNode.config.getOrNull(SemanticsProperties.Error)
+
+        assertThat(initialEmailErrorState).isNull()
+        assertThat(initialPasswordErrorState).isNull()
+        assertThat(resultEmailErrorState).isNull()
+        assertThat(resultPasswordErrorState).isNull()
     }
 
     @Test

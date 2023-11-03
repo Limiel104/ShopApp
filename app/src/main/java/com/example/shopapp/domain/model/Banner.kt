@@ -1,7 +1,6 @@
 package com.example.shopapp.domain.model
 
-data class Offer(
+data class Banner(
     val categoryId: String = "all",
-    val discountPercent: Int,
-    val description: String
+    val resourceId: Int
 )

@@ -2,11 +2,9 @@ package com.example.shopapp.presentation.profile.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.profile.ProfileEvent
@@ -19,7 +17,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val firstName = viewModel.profileState.value.firstName
@@ -50,8 +47,6 @@ fun ProfileScreen(
     }
 
     ProfileContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight,
         firstName = firstName,
         firstNameError = firstNameError,
         lastName = lastName,

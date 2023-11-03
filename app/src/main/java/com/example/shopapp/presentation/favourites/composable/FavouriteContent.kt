@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.favourites.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,19 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
@@ -33,8 +28,6 @@ import com.example.shopapp.util.Constants.productDescription
 
 @Composable
 fun FavouriteContent(
-    scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     productList: List<Product>,
     isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
@@ -46,18 +39,14 @@ fun FavouriteContent(
             FavouriteTopBar(
                 onClick = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(FAVOURITES_CONTENT)
-    ) { innerPadding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(paddingValues)
                 .padding(horizontal = 10.dp)
         ) {
             LazyVerticalGrid(
@@ -138,8 +127,6 @@ fun FavouriteContentPreview() {
         )
 
         FavouriteContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             productList = productList,
             isLoading = false,
             onProductSelected = {},
@@ -153,8 +140,6 @@ fun FavouriteContentPreview() {
 @Composable
 fun FavouriteContentEmptyListPreview() {
     FavouriteContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         productList = emptyList(),
         isLoading = false,
         onProductSelected = {},

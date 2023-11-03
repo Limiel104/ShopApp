@@ -5,7 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.domain.model.Offer
+import com.example.shopapp.R
+import com.example.shopapp.domain.model.Banner
 import com.example.shopapp.util.Constants.HOME_VM
 import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,34 +29,22 @@ class HomeViewModel @Inject constructor(
         Log.i(TAG, HOME_VM)
 
         _homeState.value = homeState.value.copy(
-            offerList = listOf(
-                Offer(
+            bannerList = listOf(
+                Banner(
                     categoryId = "women's clothing",
-                    discountPercent = 10,
-                    description = "All clothes for women now 10% cheaper"
+                    resourceId = R.drawable.womans_clothing_banner
                 ),
-                Offer(
+                Banner(
                     categoryId = "men's clothing",
-                    discountPercent = 15,
-                    description = "All clothes for men now 15% cheaper"
+                    resourceId = R.drawable.mens_clothing_banner
                 ),
-                Offer(
-                    categoryId = "women's clothing",
-                    discountPercent = 20,
-                    description = "All shirts for women 20% cheaper with code SHIRT20"
-                ),
-                Offer(
+                Banner(
                     categoryId = "jewelery",
-                    discountPercent = 50,
-                    description = "Buy two pieces of jewelery for the price of one"
+                    resourceId = R.drawable.jewelery_banner
                 ),
-                Offer(
-                    discountPercent = 13,
-                    description = "13% off for purchase above 200\$"
-                ),
-                Offer(
-                    discountPercent = 10,
-                    description = "25% off for purchase above 500\$"
+                Banner(
+                    categoryId = "electronics",
+                    resourceId = R.drawable.electronics_banner
                 )
             )
         )
@@ -63,7 +52,7 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeEvent) {
         when(event) {
-            is HomeEvent.OnOfferSelected -> {
+            is HomeEvent.OnBannerSelected -> {
                 viewModelScope.launch {
                     _eventFlow.emit(HomeUiEvent.NavigateToCategory(event.value))
                 }

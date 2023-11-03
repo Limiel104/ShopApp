@@ -5,9 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +42,11 @@ fun CartIconButton(
 @Preview
 @Composable
 fun CartIconButtonPreview() {
-    CartIconButton(
-        icon = Icons.Sharp.Add,
-        description = "Button",
-        onClick = {}
-    )
+    Surface() {
+        CartIconButton(
+            icon = Icons.Sharp.Add,
+            description = "Button",
+            onClick = {}
+        )
+    }
 }

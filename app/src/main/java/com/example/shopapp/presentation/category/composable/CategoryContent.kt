@@ -2,22 +2,17 @@ package com.example.shopapp.presentation.category.composable
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
@@ -31,8 +26,6 @@ import com.example.shopapp.util.Constants.productDescription
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryContent(
-    scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     categoryName: String,
     productList: List<Product>,
     isSortAndFilterSectionVisible: Boolean,
@@ -59,17 +52,14 @@ fun CategoryContent(
                 onSortAndFilterSelected = { onSortAndFilterSelected() },
                 onCartSelected = { onGoToCart() }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(CATEGORY_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(horizontal = 10.dp)
         ) {
             AnimatedVisibility(
@@ -182,8 +172,6 @@ private fun getProductList(): List<Product> {
 fun CategoryContentPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -211,8 +199,6 @@ fun CategoryContentPreview() {
 fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "men's clothing",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -240,8 +226,6 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
 fun CategoryContentToggleTruePreviewCategoryIsAll() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
@@ -274,8 +258,6 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
 fun CategoryContentDialogPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
@@ -303,8 +285,6 @@ fun CategoryContentDialogPreview() {
 fun CategoryContentCPIPreview() {
     ShopAppTheme {
         CategoryContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             categoryName = "all",
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,

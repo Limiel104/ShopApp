@@ -1,11 +1,10 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ fun CategoryFilterSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
             .testTag(CATEGORY_CHECKBOXES),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -64,10 +62,12 @@ fun CategoryFilterSection(
 fun CategoryFilterSectionPreviewAllSelected() {
     val map = mapOf<String,Boolean>().withDefault { true }
 
-    CategoryFilterSection(
-        categoryFilterMap = map,
-        onCheckedChange = {}
-    )
+    Surface() {
+        CategoryFilterSection(
+            categoryFilterMap = map,
+            onCheckedChange = {}
+        )
+    }
 }
 
 @Preview
@@ -75,8 +75,10 @@ fun CategoryFilterSectionPreviewAllSelected() {
 fun CategoryFilterSectionPreviewNoneSelected() {
     val map = mapOf<String,Boolean>().withDefault { false }
 
-    CategoryFilterSection(
-        categoryFilterMap = map,
-        onCheckedChange = {}
-    )
+    Surface() {
+        CategoryFilterSection(
+            categoryFilterMap = map,
+            onCheckedChange = {}
+        )
+    }
 }

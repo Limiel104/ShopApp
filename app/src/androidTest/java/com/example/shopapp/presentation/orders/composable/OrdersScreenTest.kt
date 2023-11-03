@@ -1,18 +1,16 @@
 package com.example.shopapp.presentation.orders.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
-import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -33,6 +31,7 @@ import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
 import com.example.shopapp.util.Constants.EXPAND_OR_COLLAPSE_BTN
+import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.IMAGE
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
@@ -40,7 +39,6 @@ import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
 import com.example.shopapp.util.Constants.ORDERS_SORT_SECTION
 import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
 import com.example.shopapp.util.Constants.SORT_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -224,8 +222,6 @@ class OrdersScreenTest {
                         route = Screen.OrdersScreen.route
                     ) {
                         OrdersContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             orders = orders,
                             isLoading = isLoading,
                             orderOrder = orderOrder,
@@ -251,9 +247,7 @@ class OrdersScreenTest {
                     composable(
                         route = Screen.OrdersScreen.route
                     ) {
-                        OrdersScreen(
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
+                        OrdersScreen()
                     }
                 }
             }
@@ -269,7 +263,7 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(ORDERS_TOP_BAR).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(2)
+        assertThat(numberOfChildren).isEqualTo(3)
     }
 
     @Test
@@ -278,10 +272,26 @@ class OrdersScreenTest {
             orders = orders
         )
 
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
+    }
+
+    @Test
+    fun ordersScreenTopBar_goBackButtonIsDisplayedCorrectly() {
+        setScreenState(
+            orders = orders
+        )
+
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertHasClickAction()
+
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -292,8 +302,8 @@ class OrdersScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertTextEquals("Your Orders")
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp,)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertTextEquals("Your Orders")
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertLeftPositionInRootIsEqualTo(56.dp,)
     }
 
     @Test
@@ -304,13 +314,13 @@ class OrdersScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ORDERS_TOP_BAR).assertIsDisplayed()
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertContentDescriptionContains(SORT_BTN)
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertHasClickAction()
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(2).assertContentDescriptionContains(SORT_BTN)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(2).assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp)
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(2).assertPositionInRootIsEqualTo(deviceWidth-48.dp,12.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(2).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(ORDERS_TOP_BAR).onChildAt(2).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -347,7 +357,7 @@ class OrdersScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertTextEquals("Oldest to Newest")
         composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertHasClickAction()
-        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(20.dp)
+        composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
 
         composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(1).assertTextEquals("Newest to Oldest")
         composeRule.onNodeWithTag(ORDERS_SORT_SECTION).onChildAt(0).assertHasClickAction()
@@ -389,8 +399,8 @@ class OrdersScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertExists()
         composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertIsDisplayed()
-        composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertPositionInRootIsEqualTo(20.dp,66.dp)
-        composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertPositionInRootIsEqualTo(10.dp,64.dp)
+        composeRule.onNodeWithTag(ORDERS_LAZY_COLUMN).assertWidthIsEqualTo(deviceWidth-20.dp)
     }
 
     @Test
@@ -418,8 +428,8 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-20.dp)
     }
 
     @Test
@@ -447,15 +457,27 @@ class OrdersScreenTest {
         composeRule.onNodeWithTag(orders[0].orderId).onChildAt(0).assertTextEquals(formattedDate)
         composeRule.onNodeWithTag(orders[0].orderId).onChildAt(1).assertTextEquals("123,43 PLN")
         composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertContentDescriptionContains(EXPAND_OR_COLLAPSE_BTN)
+        composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertIsEnabled()
         composeRule.onNodeWithTag(orders[0].orderId).onChildAt(2).assertHasClickAction()
-        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(0).onChildAt(0).assertContentDescriptionEquals(IMAGE)
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(0).assertContentDescriptionContains(IMAGE)
         composeRule.onNodeWithTag(expandedOrderTag).onChildAt(1).assertTextEquals("title 4")
         composeRule.onNodeWithTag(expandedOrderTag).onChildAt(2).assertTextEquals("23,00 PLN")
         composeRule.onNodeWithTag(expandedOrderTag).onChildAt(3).assertTextEquals("Amount: 1")
 
         val deviceWidth = composeRule.onNodeWithTag(ORDERS_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(20.dp)
-        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-40.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(orders[0].orderId).assertWidthIsEqualTo(deviceWidth-20.dp)
+    }
+
+    @Test
+    fun ordersScreenOrderExpandedImage_isDisplayedCorrectly() {
+        setScreenState(
+            orders = ordersExpanded
+        )
+        val expandedOrderTag = orders[0].orderId + orders[0].products[0].title
+
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(0).assertWidthIsEqualTo(60.dp)
+        composeRule.onNodeWithTag(expandedOrderTag).onChildAt(0).assertHeightIsEqualTo(80.dp)
     }
 
     @Test
@@ -477,5 +499,6 @@ class OrdersScreenTest {
 
         composeRule.onNodeWithTag(ORDERS_CPI).onChild().assertPositionInRootIsEqualTo(leftPosition.dp-20.dp,topPosition.dp-20.dp)
         composeRule.onNodeWithTag(ORDERS_CPI).onChild().assertWidthIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(ORDERS_CPI).onChild().assertHeightIsEqualTo(40.dp)
     }
 }

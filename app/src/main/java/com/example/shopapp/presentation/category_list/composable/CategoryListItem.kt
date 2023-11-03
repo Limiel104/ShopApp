@@ -1,11 +1,10 @@
 package com.example.shopapp.presentation.category_list.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +22,6 @@ fun CategoryListItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
             .clickable { onClick() }
             .testTag(name),
         horizontalAlignment = Alignment.Start,
@@ -48,8 +46,10 @@ fun CategoryListItem(
 @Preview
 @Composable
 fun CategoryItemPreview() {
-    CategoryListItem(
-        name = "men's clothing",
-        onClick = {}
-    )
+    Surface() {
+        CategoryListItem(
+            name = "men's clothing",
+            onClick = {}
+        )
+    }
 }

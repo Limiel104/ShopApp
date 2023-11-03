@@ -1,6 +1,7 @@
 package com.example.shopapp.presentation.home
 
-import com.example.shopapp.domain.model.Offer
+import com.example.shopapp.R
+import com.example.shopapp.domain.model.Banner
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -8,41 +9,29 @@ import org.junit.Test
 class HomeViewModelTest {
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var offerList: List<Offer>
+    private lateinit var bannerList: List<Banner>
 
     @Before
     fun setUp() {
         homeViewModel = HomeViewModel()
 
-        offerList = listOf(
-            Offer(
-                categoryId = "women's clothing",
-                discountPercent = 10,
-                description = "All clothes for women now 10% cheaper"
-            ),
-            Offer(
-                categoryId = "men's clothing",
-                discountPercent = 15,
-                description = "All clothes for men now 15% cheaper"
-            ),
-            Offer(
-                categoryId = "women's clothing",
-                discountPercent = 20,
-                description = "All shirts for women 20% cheaper with code SHIRT20"
-            ),
-            Offer(
-                categoryId = "jewelery",
-                discountPercent = 50,
-                description = "Buy two pieces of jewelery for the price of one"
-            ),
-            Offer(
-                discountPercent = 13,
-                description = "13% off for purchase above 200\$"
-            ),
-            Offer(
-                discountPercent = 10,
-                description = "25% off for purchase above 500\$"
-            )
+        bannerList = listOf(
+                Banner(
+                    categoryId = "women's clothing",
+                    resourceId = R.drawable.womans_clothing_banner
+                ),
+                Banner(
+                    categoryId = "men's clothing",
+                    resourceId = R.drawable.mens_clothing_banner
+                ),
+                Banner(
+                    categoryId = "jewelery",
+                    resourceId = R.drawable.jewelery_banner
+                ),
+                Banner(
+                    categoryId = "electronics",
+                    resourceId = R.drawable.electronics_banner
+                )
         )
     }
 
@@ -52,7 +41,7 @@ class HomeViewModelTest {
 
     @Test
     fun `offerList is set correctly on init`() {
-        val offerList = getCurrentHomeState().offerList
-        assertThat(offerList).isEqualTo(offerList)
+        val result = getCurrentHomeState().bannerList
+        assertThat(result).isEqualTo(bannerList)
     }
 }

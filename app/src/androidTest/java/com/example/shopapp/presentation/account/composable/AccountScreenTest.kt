@@ -1,20 +1,20 @@
 package com.example.shopapp.presentation.account.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
-import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
@@ -38,7 +38,6 @@ import com.example.shopapp.util.Constants.COUPON_ITEM_50
 import com.example.shopapp.util.Constants.LOGOUT_BTN
 import com.example.shopapp.util.Constants.MY_PROFILE_BTN
 import com.example.shopapp.util.Constants.ORDERS_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -61,6 +60,13 @@ class AccountScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+    }
+
+    private fun setScreenState(
+        name: String = "John",
+        userPoints: Int = 234,
+        isCouponActivated: Boolean = false
+    ) {
         composeRule.activity.setContent {
             val navController = rememberNavController()
             ShopAppTheme() {
@@ -72,11 +78,9 @@ class AccountScreenTest {
                         route = Screen.AccountScreen.route
                     ) {
                         AccountContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
-                            name = "John",
-                            userPoints = 234,
-                            isCouponActivated = false,
+                            name = name,
+                            userPoints = userPoints,
+                            isCouponActivated = isCouponActivated,
                             onActivateCoupon = {},
                             onLogout = {},
                             onGoToCart = {},
@@ -91,6 +95,8 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenTopBar_hasCorrectNumberOfItems() {
+        setScreenState()
+
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).fetchSemanticsNode().children.size
@@ -99,35 +105,43 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenTopBar_topBarIsDisplayedCorrectly() {
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        setScreenState()
+
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertTopPositionInRootIsEqualTo(0.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
     fun accountScreenTopBar_userNameIsDisplayedCorrectly() {
+        setScreenState()
+
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertTextContains("Hi John")
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(0).assertLeftPositionInRootIsEqualTo(16.dp)
     }
 
     @Test
     fun accountScreenTopBar_cartButtonIsDisplayedCorrectly() {
+        setScreenState()
+
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).assertIsDisplayed()
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertContentDescriptionContains(CART_BTN)
         composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertHasClickAction()
 
         val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-46.dp,15.dp,)
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertLeftPositionInRootIsEqualTo(deviceWidth-48.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(ACCOUNT_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
     fun accountScreenPointsCard_isDisplayedCorrectly() {
+        setScreenState()
+
         composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).assertExists()
         composeRule.onNodeWithTag(ACCOUNT_POINTS_CARD).assertIsDisplayed()
 
@@ -141,6 +155,7 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenLazyRow_isDisplayedCorrectly() {
+        setScreenState()
         val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).assertExists()
@@ -152,6 +167,7 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenLazyRow_isDisplayingCouponsCorrectly() {
+        setScreenState()
         val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
         val amountList  = listOf(10,20,50)
 
@@ -169,24 +185,181 @@ class AccountScreenTest {
 
     @Test
     fun accountScreenLazyRow_allCouponsHaveActivateButton() {
+        setScreenState()
+
         composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_50))
-        val activateButtonCount = composeRule.onAllNodesWithTag(ACTIVATE_COUPON_BTN).fetchSemanticsNodes().count()
+        val activateButtonCount = composeRule.onAllNodesWithContentDescription(ACTIVATE_COUPON_BTN).fetchSemanticsNodes().count()
         assertThat(activateButtonCount).isEqualTo(3)
     }
 
     @Test
-    fun accountScreenButtons_areDisplayedCorrectly() {
-        val buttonList = listOf(MY_PROFILE_BTN, ORDERS_BTN, LOGOUT_BTN)
-        val textList = listOf("My profile", "Orders", "Logout")
-        val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
+    fun accountScreenLazyRow_couponsAreNotEnabledTooLittlePoints_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 999
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(10,20,50)
 
-        buttonList.zip(textList) { button, text ->
-            composeRule.onNodeWithTag(LOGOUT_BTN).assertIsDisplayed()
-            composeRule.onNodeWithTag(LOGOUT_BTN).assertHasClickAction()
-
-            composeRule.onNodeWithTag(button).assertLeftPositionInRootIsEqualTo(10.dp)
-            composeRule.onNodeWithTag(button).assertWidthIsEqualTo(deviceWidth-20.dp)
-            composeRule.onNodeWithTag(button).assertTextContains(text)
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
         }
+    }
+
+    @Test
+    fun accountScreenLazyRow_allCouponsAreEnabled5000Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 5000,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(10,20,50)
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_twoCouponsAreEnabled4999Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 4999,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20)
+        val amountList  = listOf(10,20)
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsEnabled()
+        }
+
+        composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_50))
+        composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + 50).assertIsNotEnabled()
+    }
+
+    @Test
+    fun accountScreenLazyRow_oneCouponIsEnabled1000Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 1000,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(20,50)
+
+        composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_10))
+        composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + 10).assertIsEnabled()
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_oneCouponIsEnabled1999Points_couponIsNotActivated() {
+        setScreenState(
+            userPoints = 1999,
+            isCouponActivated = false
+        )
+        val couponList = listOf(COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(20,50)
+
+        composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(COUPON_ITEM_10))
+        composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + 10).assertIsEnabled()
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_allCouponsAreNotEnabled_TooLittlePoints_couponIsActivated() {
+        setScreenState(
+            userPoints = 999,
+            isCouponActivated = true
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(10,20,50)
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_allCouponsAreNotEnabled_EnoughPointsForAll_couponIsActivated() {
+        setScreenState(
+            userPoints = 5000,
+            isCouponActivated = true
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(10,20,50)
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenLazyRow_allCouponsAreNotEnabled_EnoughPointsForTwo_couponIsActivated() {
+        setScreenState(
+            userPoints = 2000,
+            isCouponActivated = true
+        )
+        val couponList = listOf(COUPON_ITEM_10, COUPON_ITEM_20, COUPON_ITEM_50)
+        val amountList  = listOf(10,20,50)
+
+        couponList.zip(amountList) { coupon, amount ->
+            composeRule.onNodeWithTag(ACCOUNT_LAZY_ROW).performScrollToNode(hasTestTag(coupon))
+            composeRule.onNodeWithTag(ACTIVATE_COUPON_BTN + amount).assertIsNotEnabled()
+        }
+    }
+
+    @Test
+    fun accountScreenMyProfileOption_isDisplayedCorrectly() {
+        setScreenState()
+        val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
+        val optionWidth = (deviceWidth-30.dp)/2
+
+        composeRule.onNodeWithTag(MY_PROFILE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(MY_PROFILE_BTN).assertHasClickAction()
+
+        composeRule.onNodeWithTag(MY_PROFILE_BTN).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(MY_PROFILE_BTN).assertWidthIsEqualTo(optionWidth)
+        composeRule.onNodeWithTag(MY_PROFILE_BTN).assertTextContains("My profile")
+    }
+
+    @Test
+    fun accountScreenOrdersOption_isDisplayedCorrectly() {
+        setScreenState()
+        val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
+        val optionWidth = (deviceWidth-30.dp)/2
+        val leftPosition = optionWidth+20.dp
+
+        composeRule.onNodeWithTag(ORDERS_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(ORDERS_BTN).assertHasClickAction()
+
+        composeRule.onNodeWithTag(ORDERS_BTN).assertLeftPositionInRootIsEqualTo(leftPosition)
+        composeRule.onNodeWithTag(ORDERS_BTN).assertWidthIsEqualTo(optionWidth)
+        composeRule.onNodeWithTag(ORDERS_BTN).assertTextContains("Orders")
+    }
+
+    @Test
+    fun accountScreenLogoutOption_isDisplayedCorrectly() {
+        setScreenState()
+        val deviceWidth = composeRule.onNodeWithTag(ACCOUNT_CONTENT).onParent().getBoundsInRoot().right
+        val optionWidth = deviceWidth-20.dp
+
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertHasClickAction()
+
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertLeftPositionInRootIsEqualTo(10.dp)
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertWidthIsEqualTo(optionWidth)
+        composeRule.onNodeWithTag(LOGOUT_BTN).assertTextContains("Logout")
     }
 }

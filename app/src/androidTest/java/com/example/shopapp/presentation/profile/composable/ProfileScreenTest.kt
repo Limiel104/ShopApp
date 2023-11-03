@@ -1,17 +1,16 @@
 package com.example.shopapp.presentation.profile.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -28,27 +27,25 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
 import com.example.shopapp.util.Constants.GO_BACK_BTN
-import com.example.shopapp.util.Constants.PROFILE_CITY_ERROR
 import com.example.shopapp.util.Constants.PROFILE_CITY_TF
 import com.example.shopapp.util.Constants.PROFILE_COLUMN
 import com.example.shopapp.util.Constants.PROFILE_CONTENT
 import com.example.shopapp.util.Constants.PROFILE_CPI
-import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_ERROR
 import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_TF
-import com.example.shopapp.util.Constants.PROFILE_LASTNAME_ERROR
 import com.example.shopapp.util.Constants.PROFILE_LASTNAME_TF
-import com.example.shopapp.util.Constants.PROFILE_STREET_ERROR
 import com.example.shopapp.util.Constants.PROFILE_STREET_TF
 import com.example.shopapp.util.Constants.PROFILE_TOP_BAR
-import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_ERROR
 import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_TF
 import com.example.shopapp.util.Constants.SAVE_BTN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import com.example.shopapp.util.Constants.cityEmptyError
+import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
+import com.example.shopapp.util.Constants.fieldContainsDigitsError
+import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
 import com.example.shopapp.util.Constants.fieldEmptyError
+import com.example.shopapp.util.Constants.streetContainsAtLeastOneDigitError
 import com.example.shopapp.util.Constants.streetEmptyError
+import com.example.shopapp.util.Constants.zipCodeBadFormat
 import com.example.shopapp.util.Constants.zipCodeEmptyError
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -62,6 +59,9 @@ import org.junit.Test
 @HiltAndroidTest
 @UninstallModules(AppModule::class)
 class ProfileScreenTest {
+    private lateinit var nodeList: List<String>
+    private lateinit var errors: List<String>
+    private lateinit var labels: List<String>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -72,6 +72,24 @@ class ProfileScreenTest {
     @Before
     fun setUp() {
         hiltRule.inject()
+
+        nodeList = listOf(
+            PROFILE_FIRSTNAME_TF,
+            PROFILE_LASTNAME_TF,
+            PROFILE_STREET_TF,
+            PROFILE_CITY_TF,
+            PROFILE_ZIP_CODE_TF
+        )
+
+        errors = listOf(
+            fieldEmptyError,
+            fieldEmptyError,
+            streetEmptyError,
+            cityEmptyError,
+            zipCodeEmptyError
+        )
+
+        labels = listOf("First Name", "Last Name", "Street", "City", "Zip Code")
     }
 
     private fun setScreenState(
@@ -98,8 +116,6 @@ class ProfileScreenTest {
                         route = Screen.ProfileScreen.route
                     ) {
                         ProfileContent(
-                            scaffoldState = rememberScaffoldState(),
-                            bottomBarHeight = bottomBarHeight.dp,
                             firstName = firstName,
                             firstNameError = firstNameError,
                             lastName = lastName,
@@ -135,12 +151,7 @@ class ProfileScreenTest {
                 ) {
                     composable(
                         route = Screen.ProfileScreen.route
-                    ) {
-                        ProfileScreen(
-                            navController = navController,
-                            bottomBarHeight = bottomBarHeight.dp
-                        )
-                    }
+                    ) { ProfileScreen(navController = navController) }
                 }
             }
         }
@@ -160,10 +171,10 @@ class ProfileScreenTest {
     fun profileScreenTopBar_topBarIsDisplayedCorrectly() {
         setScreenState()
 
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertTopPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertHeightIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertHeightIsEqualTo(64.dp)
         val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -175,9 +186,9 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
         composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertHasClickAction()
 
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(10.dp,15.dp)
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(PROFILE_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
@@ -213,18 +224,18 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_COLUMN).assertExists()
         composeRule.onNodeWithTag(PROFILE_COLUMN).assertIsDisplayed()
         val numberOfChildren = composeRule.onNodeWithTag(PROFILE_COLUMN).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(11)
+        assertThat(numberOfChildren).isEqualTo(6)
     }
 
     @Test
-    fun profileScreen_isDisplayedCorrectly() {
+    fun profileScreenColumn_isDisplayedCorrectly() {
         setScreenState()
         val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
-        val deviceHeight = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().bottom
 
-        composeRule.onNodeWithTag(PROFILE_CONTENT).assertPositionInRootIsEqualTo(10.dp,0.dp)
-        composeRule.onNodeWithTag(PROFILE_CONTENT).assertHeightIsEqualTo(deviceHeight-bottomBarHeight.dp)
-        composeRule.onNodeWithTag(PROFILE_CONTENT).assertWidthIsEqualTo(deviceWidth-20.dp)
+        composeRule.onNodeWithTag(PROFILE_COLUMN).assertExists()
+        composeRule.onNodeWithTag(PROFILE_COLUMN).assertIsDisplayed()
+        composeRule.onNodeWithTag(PROFILE_COLUMN).assertPositionInRootIsEqualTo(0.dp,64.dp)
+        composeRule.onNodeWithTag(PROFILE_COLUMN).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
@@ -233,15 +244,10 @@ class ProfileScreenTest {
         setScreenState(
             firstName = firstName
         )
-        val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
         val passwordNode = composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(firstName)
     }
 
@@ -251,15 +257,10 @@ class ProfileScreenTest {
         setScreenState(
             lastName = lastName
         )
-        val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
         val passwordNode = composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(lastName)
     }
 
@@ -269,15 +270,10 @@ class ProfileScreenTest {
         setScreenState(
             street = street
         )
-        val deviceWidth = composeRule.onNodeWithTag(PROFILE_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
         val passwordNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).assertWidthIsEqualTo(deviceWidth-20.dp)
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(street)
     }
 
@@ -290,9 +286,6 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
         val passwordNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).assertLeftPositionInRootIsEqualTo(10.dp)
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(city)
     }
 
@@ -306,8 +299,6 @@ class ProfileScreenTest {
         composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
         val passwordNode = composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).fetchSemanticsNode()
         val textInput = passwordNode.config.getOrNull(SemanticsProperties.EditableText).toString()
-
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
         assertThat(textInput).isEqualTo(zipCode)
     }
 
@@ -317,10 +308,11 @@ class ProfileScreenTest {
             firstNameError = fieldEmptyError
         )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(fieldEmptyError)
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val firstNameNode = composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = firstNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = firstNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(errorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
@@ -329,10 +321,11 @@ class ProfileScreenTest {
             lastNameError = fieldEmptyError
         )
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(fieldEmptyError)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val lastNameNode = composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = lastNameNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = lastNameNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(errorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
@@ -341,10 +334,11 @@ class ProfileScreenTest {
             streetError = streetEmptyError
         )
 
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(streetEmptyError)
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val streetNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
+        val errorLabel = streetNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = streetNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(errorValue).isEqualTo(streetEmptyError)
     }
 
     @Test
@@ -353,10 +347,11 @@ class ProfileScreenTest {
             cityError = cityEmptyError
         )
 
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(cityEmptyError)
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertLeftPositionInRootIsEqualTo(10.dp)
+        val cityNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
+        val errorLabel = cityNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = cityNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(errorValue).isEqualTo(cityEmptyError)
     }
 
     @Test
@@ -365,662 +360,836 @@ class ProfileScreenTest {
             zipCodeError = zipCodeEmptyError
         )
 
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(zipCodeEmptyError)
+        val zipCodeNode = composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = zipCodeNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val errorValue = zipCodeNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(errorValue).isEqualTo(zipCodeEmptyError)
     }
 
     @Test
     fun profileScreenFirstNameErrorTextField_performClickOnButtonWileFirstNameTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(fieldEmptyError)
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if (node != PROFILE_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
     fun profileScreenLastNameErrorTextField_performClickOnButtonWileLastNameTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val firstName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(fieldEmptyError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldEmptyError)
     }
 
     @Test
     fun profileScreenStreetErrorTextField_performClickOnButtonWileStreetTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(streetEmptyError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(streetEmptyError)
     }
 
     @Test
     fun profileScreenCityErrorTextField_performClickOnButtonWileCityTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(cityEmptyError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(cityEmptyError)
     }
 
     @Test
     fun profileScreenZipCodeErrorTextField_performClickOnButtonWileZipCodeTextFieldIsEmpty_errorDisplayedCorrectly() {
-        val firstName = "Smith"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            ""
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(zipCodeEmptyError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(2).toString()
+
+        for(node in nodeList) {
+            if (node != PROFILE_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(zipCodeEmptyError)
     }
 
     @Test
     fun profileScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveDigit_errorDisplayedCorrectly() {
-        val firstName = "J0hn"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "J0hn",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
     fun profileScreenFirstNameTextField_performClickOnButtonWileFirstNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val firstName = "John%"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John%",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_FIRSTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("First Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun profileScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveDigit_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith1"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith1",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
     fun profileScreenLastNameTextField_performClickOnButtonWileLastNameDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith#"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith#",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_LASTNAME_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Last Name")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun profileScreenStreetTextField_performClickOnButtonWileStreetHasNoLetters_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "61"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "61",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.fieldContainsAtLeastOneLetterError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsAtLeastOneLetterError)
     }
 
     @Test
     fun profileScreenStreetTextField_performClickOnButtonWileStreetDoesNotHaveOneDigit_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.streetContainsAtLeastOneDigitError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(streetContainsAtLeastOneDigitError)
     }
 
     @Test
     fun profileScreenStreetTextField_performClickOnButtonWileStreetDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1%"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1%",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_STREET_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_STREET_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Street")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun profileScreenCityTextField_performClickOnButtonWileCityHasNoLetters_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "34"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "34",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsAtLeastOneLetterError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsAtLeastOneLetterError)
     }
 
     @Test
     fun profileScreenCityTextField_performClickOnButtonWileCityDoesHaveDigit_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw5"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw5",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsDigitsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsDigitsError)
     }
 
     @Test
     fun profileScreenCityTextField_performClickOnButtonWileCityDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw$"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw$",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_CITY_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_CITY_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("City")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun profileScreenZipCodeTextField_performClickOnButtonWileZipCodeHasBadFormat_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(Constants.zipCodeBadFormat)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(zipCodeBadFormat)
     }
 
     @Test
     fun profileScreenZipCodeTextField_performClickOnButtonWileZipCodeDoesHaveSpecialChar_errorDisplayedCorrectly() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "{2-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "{2-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertExists()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertIsDisplayed()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertTextEquals(Constants.fieldContainsSpecialCharsError)
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
+        val resultNode = composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).fetchSemanticsNode()
+        val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+        val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+
+        for(node in nodeList) {
+            if(node != PROFILE_ZIP_CODE_TF) {
+                val resultNodeErrorState =
+                    composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                        SemanticsProperties.Error
+                    )
+                assertThat(resultNodeErrorState).isNull()
+            }
+        }
+        assertThat(errorLabel).isEqualTo("Zip Code")
+        assertThat(resultErrorValue).isEqualTo(fieldContainsSpecialCharsError)
     }
 
     @Test
     fun profileScreenErrorTextFields_performClickOnButtonWileAllTextFieldsAreEmpty_errorsDisplayedCorrectly() {
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        val errors = listOf(
-            PROFILE_FIRSTNAME_ERROR,
-            PROFILE_LASTNAME_ERROR,
-            PROFILE_STREET_ERROR,
-            PROFILE_CITY_ERROR,
-            PROFILE_ZIP_CODE_ERROR
-        )
-
-        val constants = listOf(
-            fieldEmptyError,
-            fieldEmptyError,
-            streetEmptyError,
-            cityEmptyError,
-            zipCodeEmptyError
-        )
-
-        errors.zip(constants) { error, constant ->
-            composeRule.onNodeWithTag(error).assertExists()
-            composeRule.onNodeWithTag(error).assertTextEquals(constant)
+        for(i in 0 until(nodeList.size-1)) {
+            val resultNode = composeRule.onNodeWithTag(nodeList[i]).fetchSemanticsNode()
+            val errorLabel = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(0).toString()
+            val resultErrorValue = resultNode.config.getOrNull(SemanticsProperties.Text)?.get(1).toString()
+            assertThat(errorLabel).isEqualTo(labels[i])
+            assertThat(resultErrorValue).isEqualTo(errors[i])
         }
     }
 
     @Test
     fun profileScreenErrorTextFields_noErrorsAfterClickingOnTheButton() {
-        val firstName = "John"
-        val lastName = "Smith"
-        val street = "Street 1"
-        val city = "Warsaw"
-        val zipCode = "12-345"
         setScreen()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        val inputValues = listOf(
+            "John",
+            "Smith",
+            "Street 1",
+            "Warsaw",
+            "12-345"
+        )
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_TF).performTextInput(firstName)
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_TF).performTextInput(lastName)
-        composeRule.onNodeWithTag(PROFILE_STREET_TF).performTextInput(street)
-        composeRule.onNodeWithTag(PROFILE_CITY_TF).performTextInput(city)
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_TF).performTextInput(zipCode)
+        for(node in nodeList) {
+            val initialNodeErrorState =  composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                SemanticsProperties.Error
+            )
+            assertThat(initialNodeErrorState).isNull()
+        }
 
-        composeRule.onNodeWithTag(SAVE_BTN).assertExists()
+        nodeList.zip(inputValues) { node, value ->
+            composeRule.onNodeWithTag(node).performTextInput(value)
+        }
+
         composeRule.onNodeWithTag(SAVE_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(SAVE_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(SAVE_BTN).performClick()
 
-        composeRule.onNodeWithTag(PROFILE_FIRSTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_LASTNAME_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_STREET_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_CITY_ERROR).assertDoesNotExist()
-        composeRule.onNodeWithTag(PROFILE_ZIP_CODE_ERROR).assertDoesNotExist()
+        for(node in nodeList) {
+            val resultNodeErrorState =
+                composeRule.onNodeWithTag(node).fetchSemanticsNode().config.getOrNull(
+                    SemanticsProperties.Error
+                )
+            assertThat(resultNodeErrorState).isNull()
+        }
     }
 
     @Test

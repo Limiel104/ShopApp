@@ -1,16 +1,14 @@
 package com.example.shopapp.presentation.common.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +16,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
@@ -29,25 +25,19 @@ import com.example.shopapp.util.Constants.USER_NOT_LOGGED_IN_CONTENT
 
 @Composable
 fun UserNotLoggedInContent(
-    scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     onLogin: () -> Unit,
     onSignup: () -> Unit
 ) {
 
     Scaffold(
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(USER_NOT_LOGGED_IN_CONTENT)
-    ) { innerPadding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -69,23 +59,27 @@ fun UserNotLoggedInContent(
                 )
             }
 
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                verticalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ShopButtonItem(
-                    text = stringResource(id = R.string.login),
-                    testTag = LOGIN_BTN,
+                Button(
+                    modifier = Modifier
+                        .testTag(LOGIN_BTN),
                     onClick = { onLogin() }
-                )
+                ) {
+                    Text(text = stringResource(id = R.string.login))
+                }
 
-                ShopButtonItem(
-                    text = stringResource(id = R.string.signup),
-                    testTag = SIGNUP_BTN,
+                Button(
+                    modifier = Modifier
+                        .testTag(SIGNUP_BTN),
                     onClick = { onSignup() }
-                )
+                ) {
+                    Text(text = stringResource(id = R.string.signup))
+                }
             }
         }
     }
@@ -96,8 +90,6 @@ fun UserNotLoggedInContent(
 fun UserNotLoggedInContentPreview() {
     ShopAppTheme {
         UserNotLoggedInContent(
-            scaffoldState = rememberScaffoldState(),
-            bottomBarHeight = 56.dp,
             onLogin = {},
             onSignup = {}
         )

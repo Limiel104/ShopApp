@@ -1,33 +1,42 @@
-package com.example.shopapp.presentation.account.composable
+package com.example.shopapp.presentation.product_details.composable
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.ACCOUNT_TOP_BAR
 import com.example.shopapp.util.Constants.CART_BTN
+import com.example.shopapp.util.Constants.GO_BACK_BTN
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_TOP_BAR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountTopBar(
-    userName: String,
-    onClick: () -> Unit
+fun ProductDetailsTopBar(
+    onNavigateBack: () -> Unit,
+    onNavigateToCart: () -> Unit
 ) {
     TopAppBar(
-        title = { Text(text = stringResource(id = R.string.hi) + " $userName") },
+        title = {},
+        navigationIcon = {
+            IconButton(
+                onClick = { onNavigateBack() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = GO_BACK_BTN
+                )
+            }
+        },
         actions = {
             IconButton(
-                onClick = { onClick() }
+                onClick = { onNavigateToCart() }
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingCart,
@@ -35,17 +44,17 @@ fun AccountTopBar(
                 )
             }
         },
-        modifier = Modifier.testTag(ACCOUNT_TOP_BAR)
+        modifier = Modifier.testTag(PRODUCT_DETAILS_TOP_BAR)
     )
 }
 
 @Preview
 @Composable
-fun AccountTopBarPreview() {
+fun FavouriteTopBarPreview() {
     ShopAppTheme {
-        AccountTopBar(
-            userName = "John",
-            onClick = {}
+        ProductDetailsTopBar(
+            onNavigateBack = {},
+            onNavigateToCart = {}
         )
     }
 }

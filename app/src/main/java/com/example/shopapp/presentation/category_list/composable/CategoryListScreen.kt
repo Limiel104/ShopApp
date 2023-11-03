@@ -2,10 +2,8 @@ package com.example.shopapp.presentation.category_list.composable
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.category_list.CategoryListEvent
@@ -20,10 +18,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CategoryListScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: CategoryListViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val categoryList = viewModel.categoryListState.value.categoryList
 
     LaunchedEffect(key1 = true) {
@@ -41,8 +37,6 @@ fun CategoryListScreen(
     }
 
     CategoryListContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
         categoryList = categoryList,
         onCategorySelected = { viewModel.onEvent(CategoryListEvent.OnCategorySelected(it)) },
         onGoToCart = { viewModel.onEvent(CategoryListEvent.GoToCart) }

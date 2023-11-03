@@ -1,8 +1,8 @@
 package com.example.shopapp.presentation.common.composable
 
-import androidx.compose.foundation.background
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,21 +19,22 @@ fun ErrorTextFieldItem(
     Text(
         text = errorMessage,
         fontSize = 13.sp,
-        color = MaterialTheme.colors.error,
+        color = MaterialTheme.colorScheme.error,
         textAlign = TextAlign.Start,
         modifier = Modifier
             .testTag(testTag)
-            .background(MaterialTheme.colors.background)
     )
 }
 
 @Preview
 @Composable
 fun ErrorTextFieldItemPreview() {
-    ShopAppTheme {
-        ErrorTextFieldItem(
-            errorMessage = "Error",
-            testTag = "tag"
-        )
+    Surface() {
+        ShopAppTheme {
+            ErrorTextFieldItem(
+                errorMessage = "Error",
+                testTag = "tag"
+            )
+        }
     }
 }

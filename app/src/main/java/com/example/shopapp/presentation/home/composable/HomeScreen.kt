@@ -1,10 +1,8 @@
 package com.example.shopapp.presentation.home.composable
 
 import android.util.Log
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.home.HomeEvent
@@ -18,11 +16,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun HomeScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
-    val offerList = viewModel.homeState.value.offerList
+    val bannerList = viewModel.homeState.value.bannerList
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -39,10 +35,8 @@ fun HomeScreen(
     }
 
     HomeContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
-        offerList = offerList,
-        onOfferSelected = { viewModel.onEvent(HomeEvent.OnOfferSelected(it)) },
+        bannerList = bannerList,
+        onOfferSelected = { viewModel.onEvent(HomeEvent.OnBannerSelected(it)) },
         onGoToCart = { viewModel.onEvent(HomeEvent.GoToCart) }
     )
 }

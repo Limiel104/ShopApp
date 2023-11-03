@@ -1,25 +1,22 @@
 package com.example.shopapp.presentation.product_details.composable
 
 import androidx.activity.compose.setContent
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.ui.test.assertContentDescriptionContains
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertLeftPositionInRootIsEqualTo
 import androidx.compose.ui.test.assertPositionInRootIsEqualTo
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.assertTopPositionInRootIsEqualTo
-import androidx.compose.ui.test.assertTouchHeightIsEqualTo
 import androidx.compose.ui.test.assertWidthIsEqualTo
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performTouchInput
@@ -35,15 +32,16 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
+import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.FAVOURITES_BTN
 import com.example.shopapp.util.Constants.GO_BACK_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_COLUMN
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_ITEM
-import com.example.shopapp.util.Constants.bottomSheetPeekHeight
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_BOX
+import com.example.shopapp.util.Constants.PRODUCT_DETAILS_TOP_BAR
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Screen
 import com.google.common.truth.Truth.assertThat
@@ -81,7 +79,7 @@ class ProductDetailsScreenTest {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     private fun setScreenState(
         product: Product,
         isLoading: Boolean = false
@@ -118,58 +116,103 @@ class ProductDetailsScreenTest {
     }
 
     @Test
-    fun productDetailsScreenProductDetailsImageItem_hasCorrectNumberOfItems() {
+    fun productDetailsScreenTopBar_hasCorrectNumberOfItems() {
         setScreenState(
             product = product
         )
 
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertExists()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertIsDisplayed()
-        val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).fetchSemanticsNode().children.size
-        assertThat(numberOfChildren).isEqualTo(3)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(2)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsImageItem_imageIsDisplayedCorrectly() {
+    fun productDetailsScreenTopBar_topBarIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
 
-        val deviceHeight = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().bottom
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertPositionInRootIsEqualTo(0.dp,0.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertHeightIsEqualTo(64.dp)
+        val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertWidthIsEqualTo(deviceWidth)
+    }
+
+    @Test
+    fun productDetailsScreenTopBar_goBackButtonIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(0).assertContentDescriptionContains(GO_BACK_BTN)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(0).assertHasClickAction()
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(0).assertPositionInRootIsEqualTo(8.dp,12.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(0).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(0).assertWidthIsEqualTo(40.dp)
+    }
+
+    @Test
+    fun productDetailsScreenTopBar_cartButtonIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(1).assertContentDescriptionContains(CART_BTN)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(1).assertHasClickAction()
+
+        val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(1).assertPositionInRootIsEqualTo(deviceWidth-48.dp,12.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(1).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_TOP_BAR).onChildAt(1).assertWidthIsEqualTo(40.dp)
+    }
+
+    @Test
+    fun productDetailsScreenColumn_hasCorrectNumberOfItems() {
+        setScreenState(
+            product = product
+        )
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_COLUMN).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_COLUMN).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_COLUMN).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(1)
+    }
+
+    @Test
+    fun productDetailsScreenImageBox_hasCorrectNumberOfItems() {
+        setScreenState(
+            product = product
+        )
+
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertIsDisplayed()
+        val numberOfChildren = composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).fetchSemanticsNode().children.size
+        assertThat(numberOfChildren).isEqualTo(1)
+    }
+
+    @Test
+    fun productDetailsScreenImageBox_imageIsDisplayedCorrectly() {
+        setScreenState(
+            product = product
+        )
+
         val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertExists()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertExists()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertPositionInRootIsEqualTo(15.dp,15.dp)
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertTouchHeightIsEqualTo(deviceHeight-bottomSheetPeekHeight.dp-15.dp)
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_ITEM).assertWidthIsEqualTo(deviceWidth-30.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertPositionInRootIsEqualTo(0.dp,64.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_IMAGE_BOX).assertWidthIsEqualTo(deviceWidth)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsImageItem_buttonsAreDisplayedCorrectly() {
-        setScreenState(
-            product = product
-        )
-
-        val buttonList = listOf(GO_BACK_BTN, ADD_TO_CART_BTN)
-        val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
-        val leftPositionList = listOf(20.dp,deviceWidth-20.dp-36.dp)
-
-        buttonList.zip(leftPositionList) { button, leftPosition ->
-            composeRule.onNodeWithContentDescription(button).assertExists()
-            composeRule.onNodeWithContentDescription(button).assertIsDisplayed()
-            composeRule.onNodeWithContentDescription(button).assertHasClickAction()
-
-            composeRule.onNodeWithContentDescription(button).assertTopPositionInRootIsEqualTo(20.dp)
-            composeRule.onNodeWithContentDescription(button).assertLeftPositionInRootIsEqualTo(leftPosition)
-            composeRule.onNodeWithContentDescription(button).assertHeightIsEqualTo(36.dp)
-            composeRule.onNodeWithContentDescription(button).assertWidthIsEqualTo(36.dp)
-        }
-    }
-
-    @Test
-    fun productDetailsScreenProductDetailsBottomSheet_hasCorrectNumberOfItems() {
+    fun productDetailsScreenBottomSheet_hasCorrectNumberOfItems() {
         setScreenState(
             product = product
         )
@@ -183,7 +226,7 @@ class ProductDetailsScreenTest {
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_isDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_isDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -199,7 +242,7 @@ class ProductDetailsScreenTest {
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_swipeUpAndDownWorksCorrectly() {
+    fun productDetailsScreenBottomSheet_swipeUpAndDownWorksCorrectly() {
         setScreenState(
             product = product
         )
@@ -215,7 +258,7 @@ class ProductDetailsScreenTest {
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_productTitleIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_productTitleIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -224,12 +267,12 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertTextContains("Shirt")
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertTextEquals("Shirt")
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(0).assertLeftPositionInRootIsEqualTo(15.dp)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_productPriceIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_productPriceIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -238,12 +281,12 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(1).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(1).assertTextContains("195,59 PLN")
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(1).assertTextEquals("195,59 PLN")
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(1).assertLeftPositionInRootIsEqualTo(15.dp)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_favouriteButtonIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_favouriteButtonIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -255,13 +298,13 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertIsDisplayed()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertContentDescriptionContains(FAVOURITES_BTN)
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertHasClickAction()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertLeftPositionInRootIsEqualTo(deviceWidth-15.dp-36.dp-5.dp)
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertHeightIsEqualTo(36.dp)
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertWidthIsEqualTo(36.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertLeftPositionInRootIsEqualTo(deviceWidth-15.dp-44.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertHeightIsEqualTo(40.dp)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(2).assertWidthIsEqualTo(40.dp)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_productDescriptionTitleIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_productDescriptionTitleIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -270,12 +313,12 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertTextContains("Description")
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertTextEquals("Description")
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(3).assertLeftPositionInRootIsEqualTo(15.dp)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_productDescriptionIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_productDescriptionIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
@@ -285,26 +328,24 @@ class ProductDetailsScreenTest {
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertIsDisplayed()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertTextContains(productDescription)
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertTextEquals(productDescription)
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertLeftPositionInRootIsEqualTo(15.dp)
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).onChildAt(4).assertWidthIsEqualTo(deviceWidth-30.dp)
     }
 
     @Test
-    fun productDetailsScreenProductDetailsBottomSheet_addToCartButtonIsDisplayedCorrectly() {
+    fun productDetailsScreenBottomSheet_addToCartButtonIsDisplayedCorrectly() {
         setScreenState(
             product = product
         )
-        val deviceWidth = composeRule.onNodeWithTag(PRODUCT_DETAILS_CONTENT).onParent().getBoundsInRoot().right
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).performTouchInput { swipeUp() }
         composeRule.onNodeWithTag(PRODUCT_DETAILS_BOTTOM_SHEET).assertIsDisplayed()
 
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertIsDisplayed()
+        composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertIsEnabled()
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertTextEquals("Add to Cart")
         composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertHasClickAction()
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertLeftPositionInRootIsEqualTo(15.dp)
-        composeRule.onNodeWithTag(PRODUCT_DETAILS_ADD_TO_CART_BTN).assertWidthIsEqualTo(deviceWidth-30.dp)
     }
 
     @Test

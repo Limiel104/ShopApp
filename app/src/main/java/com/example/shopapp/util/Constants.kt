@@ -7,18 +7,20 @@ object Constants {
     const val ORDERS_BTN: String = "Orders button"
     const val LOGOUT_BTN: String = "Sign out button"
     const val LOGIN_CONTENT: String = "Login content"
+    const val LOGIN_TOP_BAR: String = "Login top bar"
+    const val LOGIN_COLUMN: String = "Login column"
     const val LOGIN_EMAIL_TF: String = "Login email"
-    const val LOGIN_EMAIL_ERROR: String = "Login email error"
     const val LOGIN_PASSWORD_TF: String = "Login password"
-    const val LOGIN_PASSWORD_ERROR: String = "Login password error"
     const val LOGIN_BTN: String = "Login button"
     const val LOGIN_SIGNUP_BTN: String = "Go to sign up screen button"
     const val LOGIN_CPI: String = "Login circular progress indicator"
     const val PRODUCT_DETAILS_CONTENT: String = "Product details content"
+    const val PRODUCT_DETAILS_COLUMN: String = "Product details column"
     const val PRODUCT_DETAILS_ADD_TO_CART_BTN: String = "Add to cart"
     const val HOME_CONTENT: String = "Home content"
     const val HOME_TOP_BAR: String = "Home top bar"
     const val HOME_LAZY_COLUMN: String = "Home lazy column"
+    const val HOME_BANNER: String = "Home banner"
     const val ACCOUNT_CONTENT: String = "Account content"
     const val ACCOUNT_TOP_BAR: String = "Account top bar"
     const val COUPON_ITEM_: String = "Coupon item for "
@@ -45,34 +47,26 @@ object Constants {
     const val CATEGORY_NAME_5: String = "Electronics"
     const val CATEGORY_CPI: String = "Category circular progress indicator"
     const val NOT_LOGGED_IN_DIALOG: String = "Not logged in dialog"
-    const val DISMISS_BTN: String = "Dismiss button"
     const val FAVOURITES_CONTENT: String = "Favourites content"
     const val FAVOURITES_TOP_BAR: String = "Favourites top bar"
     const val FAVOURITES_LAZY_VERTICAL_GRID: String = "Favourite lazy vertical grid"
     const val FAVOURITES_CPI: String = "Favourites circular progress indicator"
+    const val PRODUCT_DETAILS_TOP_BAR: String = "Product details top bar"
     const val PRODUCT_ITEM_TITLE: String = "Product item title"
-    const val PRODUCT_DETAILS_IMAGE_ITEM: String = "Product details image item"
+    const val PRODUCT_DETAILS_IMAGE_BOX: String = "Product details image item"
     const val PRODUCT_DETAILS_BOTTOM_SHEET: String = "Product details bottom sheet"
     const val PRODUCT_DETAILS_CPI: String = "Product details circular progress indicator"
     const val SIGNUP_CONTENT: String = "Signup content"
     const val SIGNUP_TOP_BAR: String = "Signup top bar"
     const val SIGNUP_COLUMN: String = "Signup column"
     const val SIGNUP_EMAIL_TF: String = "Signup email"
-    const val SIGNUP_EMAIL_ERROR: String = "Signup email error"
     const val SIGNUP_PASSWORD_TF: String = "Signup password"
-    const val SIGNUP_PASSWORD_ERROR: String = "Signup password error"
     const val SIGNUP_CONFIRM_PASSWORD_TF: String = "Signup confirm password"
-    const val SIGNUP_CONFIRM_PASSWORD_ERROR: String = "Signup confirm password error"
     const val SIGNUP_FIRSTNAME_TF: String = "Signup first name"
-    const val SIGNUP_FIRSTNAME_ERROR: String = "Signup first name error"
     const val SIGNUP_LASTNAME_TF: String = "Signup last name"
-    const val SIGNUP_LASTNAME_ERROR: String = "Signup last name error"
     const val SIGNUP_STREET_TF: String = "Signup street"
-    const val SIGNUP_STREET_ERROR: String = "Signup street error"
     const val SIGNUP_CITY_TF: String = "Signup city"
-    const val SIGNUP_CITY_ERROR: String = "Signup city error"
     const val SIGNUP_ZIP_CODE_TF: String = "Signup zip code"
-    const val SIGNUP_ZIP_CODE_ERROR: String = "Signup zip code error"
     const val SIGNUP_BTN: String = "Signup button"
     const val SIGNUP_CPI: String = "Signup circular progress indicator"
     const val USER_NOT_LOGGED_IN_CONTENT: String = "User not logged in content"
@@ -84,8 +78,8 @@ object Constants {
     const val ORDER_BTN: String = "Order button"
     const val ORDER_PLACED_DIALOG: String = "Order placed dialog"
     const val CART_CPI: String = "Cart circular progress indicator"
-    const val HOME_BTN: String = "Home button"
-    const val CART_TOTAL_AMOUNT_ROW: String = "Cart total amount row"
+    const val CART_TOTAL_AMOUNT_SECTION: String = "Cart total amount section"
+    const val CART_TOTAL_AMOUNT_COLUMN: String = "Cart total amount row"
     const val ORDERS_CONTENT: String = "Orders content"
     const val ORDERS_LAZY_COLUMN: String = "Orders lazy column"
     const val ORDERS_TOP_BAR: String = "Orders top bar"
@@ -101,11 +95,6 @@ object Constants {
     const val PROFILE_STREET_TF: String = "Profile street tf"
     const val PROFILE_CITY_TF: String = "Profile city tf"
     const val PROFILE_ZIP_CODE_TF: String = "Profile zip code tf"
-    const val PROFILE_FIRSTNAME_ERROR: String = "Profile first name tf error"
-    const val PROFILE_LASTNAME_ERROR: String = "Profile last name tf error"
-    const val PROFILE_STREET_ERROR: String = "Profile street tf error"
-    const val PROFILE_CITY_ERROR: String = "Profile city tf error"
-    const val PROFILE_ZIP_CODE_ERROR: String = "Profile zip code tf error"
     const val PROFILE_CPI: String = "Profile circular progress indicator"
     const val SAVE_BTN: String = "Save button"
 
@@ -123,10 +112,7 @@ object Constants {
     const val snackbarActionLabel: String = "Undo"
 
     //TEST VALUES
-    const val badgeCount: Int = 10
-    const val badgeCountZero: Int = 0
     const val productDescription: String = "95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter."
-    const val bottomBarHeight: Int = 56
 
     //IMAGE SIZE
     const val productItemImageWidth: Int = 180
@@ -135,7 +121,6 @@ object Constants {
     const val cartProductItemImageHeight: Int = 80
 
     //VALUES
-    const val bottomSheetPeekHeight: Int = 100
     const val passwordMinLength: Int = 8
     const val zipCodeLength: Int = 6
 

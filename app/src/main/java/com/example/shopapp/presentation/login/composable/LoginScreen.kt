@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.common.getLastDestination
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun LoginScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val email = viewModel.loginState.value.email
@@ -51,7 +49,6 @@ fun LoginScreen(
     }
 
     LoginContent(
-        bottomBarHeight = bottomBarHeight,
         email = email,
         emailError = emailError,
         password = password,

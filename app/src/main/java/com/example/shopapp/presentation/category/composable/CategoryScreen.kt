@@ -2,11 +2,9 @@ package com.example.shopapp.presentation.category.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.category.CategoryEvent
@@ -20,10 +18,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CategoryScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: CategoryViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val categoryId = viewModel.categoryState.value.categoryId
     val productList = viewModel.categoryState.value.productList
     val isSortSectionVisible = viewModel.categoryState.value.isSortAndFilterSectionVisible
@@ -54,8 +50,6 @@ fun CategoryScreen(
     }
 
     CategoryContent(
-        scaffoldState = scaffoldState,
-        bottomBarHeight = bottomBarHeight,
         categoryName = categoryId,
         productList = productList,
         isSortAndFilterSectionVisible = isSortSectionVisible,

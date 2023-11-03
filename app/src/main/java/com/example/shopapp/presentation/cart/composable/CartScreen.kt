@@ -2,12 +2,12 @@ package com.example.shopapp.presentation.cart.composable
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.material.SnackbarResult
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.cart.CartEvent
@@ -24,10 +24,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun CartScreen(
     navController: NavController,
-    bottomBarHeight: Dp,
     viewModel: CartViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val isUserLoggedIn = viewModel.cartState.value.isUserLoggedIn
     val cartProducts = viewModel.cartState.value.cartProducts
     val totalAmount = viewModel.cartState.value.totalAmount
@@ -52,7 +51,7 @@ fun CartScreen(
                     navController.popBackStack()
                 }
                 is CartUiEvent.ShowSnackbar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                    val result = snackbarHostState.showSnackbar(
                         message = snackbarMessage,
                         actionLabel = snackbarActionLabel
                     )
@@ -71,8 +70,7 @@ fun CartScreen(
 
     if(isUserLoggedIn) {
         CartContent(
-            scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
+            snackbarHostState = snackbarHostState,
             totalAmount = totalAmount,
             cartProducts = cartProducts,
             isLoading = isLoading,
@@ -87,8 +85,6 @@ fun CartScreen(
     }
     else {
         UserNotLoggedInContent(
-            scaffoldState = scaffoldState,
-            bottomBarHeight = bottomBarHeight,
             onLogin = { viewModel.onEvent(CartEvent.OnLogin) },
             onSignup = { viewModel.onEvent(CartEvent.OnSignup) }
         )

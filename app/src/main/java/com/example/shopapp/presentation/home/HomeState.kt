@@ -1,7 +1,7 @@
 package com.example.shopapp.presentation.home
 
-import com.example.shopapp.domain.model.Offer
+import com.example.shopapp.domain.model.Banner
 
 data class HomeState (
-    val offerList: List<Offer> = emptyList()
+    val bannerList: List<Banner> = emptyList()
 )

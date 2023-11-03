@@ -6,24 +6,19 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
@@ -31,14 +26,11 @@ import com.example.shopapp.domain.util.OrderOrder
 import com.example.shopapp.util.Constants.ORDERS_CONTENT
 import com.example.shopapp.util.Constants.ORDERS_CPI
 import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
-import com.example.shopapp.util.Constants.bottomBarHeight
 import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrdersContent(
-    scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
     orders: List<Order>,
     isLoading: Boolean,
     orderOrder: OrderOrder,
@@ -50,19 +42,17 @@ fun OrdersContent(
     Scaffold(
         topBar = {
             OrdersTopBar(
-                onSortSelected = { onSortSelected() }
+                onSortSelected = { onSortSelected() },
+                onNavigateBack = { /*TODO*/ }
             ) },
-        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(ORDERS_CONTENT)
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(horizontal = 10.dp)
         ) {
             AnimatedVisibility(
@@ -177,8 +167,6 @@ fun getOrders(): List<Order> {
 @Composable
 fun OrdersContentPreview() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -193,8 +181,6 @@ fun OrdersContentPreview() {
 @Composable
 fun OrdersContentPreviewSortSectionVisible() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
         orders = getOrders(),
         isLoading = false,
         orderOrder = OrderOrder.DateDescending(),
@@ -209,8 +195,6 @@ fun OrdersContentPreviewSortSectionVisible() {
 @Composable
 fun OrdersContentCPIPreview() {
     OrdersContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = bottomBarHeight.dp,
         orders = getOrders(),
         isLoading = true,
         orderOrder = OrderOrder.DateDescending(),

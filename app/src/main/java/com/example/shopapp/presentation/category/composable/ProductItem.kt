@@ -1,14 +1,13 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +36,6 @@ fun ProductItem(
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
             .testTag(product.title),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -48,14 +46,14 @@ fun ProductItem(
             onClick = { onImageClick() }
         )
 
-        Column(
+        Row(
             modifier = Modifier
                 .width(180.dp)
                 .padding(5.dp)
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
+            Column(
+                modifier = Modifier.weight(1F)
+                ) {
                 Text(
                     text = product.title,
                     fontWeight = FontWeight.Light,
@@ -63,23 +61,26 @@ fun ProductItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .weight(5F)
+                        .fillMaxWidth()
                 )
 
+                Text(
+                    text = product.priceToString(),
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
+            Column() {
                 Icon(
                     imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                     tint = if(product.isInFavourites) Color.Red else Color.Gray,
                     contentDescription = FAVOURITES_BTN,
                     modifier = Modifier
-                        .weight(1F)
-                        .clickable { if(!isButtonLocked) { onFavourite() } }
-                )
-            }
-
-            Row {
-                Text(
-                    text = product.priceToString(),
-                    fontWeight = FontWeight.Bold,
+                        .clickable {
+                            if (!isButtonLocked) {
+                                onFavourite()
+                            }
+                        }
                 )
             }
         }
@@ -89,45 +90,49 @@ fun ProductItem(
 @Preview
 @Composable
 fun ProductItemFavouriteFalsePreview() {
-    ShopAppTheme {
-        val product = Product(
-            id = 1,
-            title = "Shirt",
-            price = 195.59,
-            description = productDescription,
-            category = "men's clothing",
-            imageUrl = "imageUrl",
-            isInFavourites = false
-        )
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            )
 
-        ProductItem(
-            product = product,
-            isButtonLocked = false,
-            onImageClick = {},
-            onFavourite = {}
-        )
+            ProductItem(
+                product = product,
+                isButtonLocked = false,
+                onImageClick = {},
+                onFavourite = {}
+            )
+        }
     }
 }
 
 @Preview
 @Composable
 fun ProductItemFavouriteTruePreview() {
-    ShopAppTheme {
-        val product = Product(
-            id = 1,
-            title = "Shirt",
-            price = 195.59,
-            description = productDescription,
-            category = "men's clothing",
-            imageUrl = "imageUrl",
-            isInFavourites = true
-        )
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            )
 
-        ProductItem(
-            product = product,
-            isButtonLocked = false,
-            onImageClick = {},
-            onFavourite = {}
-        )
+            ProductItem(
+                product = product,
+                isButtonLocked = false,
+                onImageClick = {},
+                onFavourite = {}
+            )
+        }
     }
 }

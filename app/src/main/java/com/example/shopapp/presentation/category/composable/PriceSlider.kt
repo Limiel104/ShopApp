@@ -1,11 +1,9 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RangeSlider
-import androidx.compose.material.Text
+import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
 import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PriceSlider(
     sliderPosition: ClosedFloatingPointRange<Float>,
@@ -23,7 +20,6 @@ fun PriceSlider(
 ) {
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
             .testTag(CATEGORY_PRICE_SLIDER),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -44,9 +40,11 @@ fun PriceSlider(
 @Preview
 @Composable
 fun PriceSliderPreview() {
-    PriceSlider(
-        sliderPosition = 1f..3f,
-        sliderRange = 0f..10f,
-        onValueChange = {}
-    )
+    Surface() {
+        PriceSlider(
+            sliderPosition = 1f..3f,
+            sliderRange = 0f..10f,
+            onValueChange = {}
+        )
+    }
 }

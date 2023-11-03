@@ -1,6 +1,5 @@
 package com.example.shopapp.presentation.cart.composable
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,43 +10,39 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.rememberDismissState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
-import com.example.shopapp.presentation.common.composable.ShopButtonItem
 import com.example.shopapp.util.Constants.CART_CONTENT
 import com.example.shopapp.util.Constants.CART_CPI
 import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
-import com.example.shopapp.util.Constants.ORDER_BTN
 
-@OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartContent(
-    scaffoldState: ScaffoldState,
-    bottomBarHeight: Dp,
+    snackbarHostState: SnackbarHostState,
     cartProducts: List<CartProduct>,
     totalAmount: Double,
     isLoading: Boolean,
@@ -64,33 +59,33 @@ fun CartContent(
             CartTopBar(
                 onClick = { onGoBack() }
             ) },
-        scaffoldState = scaffoldState,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            ) },
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = bottomBarHeight)
             .testTag(CART_CONTENT)
-    ) {
+    ) { paddingValues ->
         if (cartProducts.isNotEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 10.dp)
+                    .padding(paddingValues),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(bottom = 10.dp)
                         .testTag(CART_LAZY_COLUMN)
                 ) {
                     itemsIndexed(
                         items = cartProducts,
                         key = { _, item -> item.hashCode() }
-                    ) { _, cartProduct ->
+                    ) { index, cartProduct ->
                         val dismissState = rememberDismissState(
-                            confirmStateChange = {
+                            confirmValueChange = {
                                 if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
                                     onDelete(cartProduct.id)
                                     true
@@ -103,8 +98,8 @@ fun CartContent(
                             directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
                             background = {
                                 val color = when(dismissState.dismissDirection) {
-                                    DismissDirection.StartToEnd -> MaterialTheme.colors.onSecondary
-                                    DismissDirection.EndToStart -> MaterialTheme.colors.onSecondary
+                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.secondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.secondary
                                     null -> Color.Transparent
                                 }
 
@@ -114,17 +109,23 @@ fun CartContent(
                                     null -> Alignment.Center
                                 }
 
+                                val tint = when(dismissState.dismissDirection) {
+                                    DismissDirection.StartToEnd -> MaterialTheme.colorScheme.onSecondary
+                                    DismissDirection.EndToStart -> MaterialTheme.colorScheme.onSecondary
+                                    null -> Color.Transparent
+                                }
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(color)
-                                        .padding(8.dp),
+                                        .padding(vertical = 30.dp),
                                     contentAlignment = alignment
                                 ){
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = stringResource(id = R.string.delete_cart_product),
-                                        tint = MaterialTheme.colors.onPrimary
+                                        tint = tint
                                     )
                                 }
                             },
@@ -137,20 +138,17 @@ fun CartContent(
                                 )
                             }
                         )
+
+                        if(index != cartProducts.size-1){
+                            Spacer(modifier = Modifier.height(10.dp))
+                        }
                     }
                 }
 
-                TotalAmountItem(
-                    totalAmount = totalAmount
+                TotalAmountSection(
+                    totalAmount = totalAmount,
+                    onOrderPlaced = { onOrderPlaced() }
                 )
-
-                ShopButtonItem(
-                    text = stringResource(id = R.string.order),
-                    testTag = ORDER_BTN,
-                    onClick = { onOrderPlaced() }
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
         else {
@@ -244,13 +242,13 @@ private fun returnCartProducts(): List<CartProduct> {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreview() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
+        snackbarHostState = snackbarHostState,
         totalAmount = 155.45,
         cartProducts = returnCartProducts(),
         isLoading = false,
@@ -264,13 +262,13 @@ fun CartContentPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewListIsEmpty() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
+        snackbarHostState = snackbarHostState,
         cartProducts = emptyList(),
         totalAmount = 155.45,
         isLoading = false,
@@ -284,13 +282,13 @@ fun CartContentPreviewListIsEmpty() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewDialogActivated() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
+        snackbarHostState = snackbarHostState,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = false,
@@ -304,13 +302,13 @@ fun CartContentPreviewDialogActivated() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun CartContentPreviewLoading() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     CartContent(
-        scaffoldState = rememberScaffoldState(),
-        bottomBarHeight = 56.dp,
+        snackbarHostState = snackbarHostState,
         cartProducts = returnCartProducts(),
         totalAmount = 155.45,
         isLoading = true,
