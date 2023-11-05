@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Category
@@ -62,6 +63,16 @@ class FavouritesViewModel @Inject constructor(
                 val favourites = _favouritesState.value.favouriteList
                 val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites, event.value)
                 deleteProductFromFavourites(favouriteId)
+            }
+            is FavouritesEvent.OnAddToCart -> {
+                viewModelScope.launch {
+                    val productToAddToCartId = event.value
+
+                    addOrUpdateProductInCart(
+                        _favouritesState.value.userUID,
+                        productToAddToCartId
+                    )
+                }
             }
             is FavouritesEvent.GoToCart -> {
                 viewModelScope.launch {
@@ -167,6 +178,85 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Deleted product from favourites")
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun addOrUpdateProductInCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.getUserCartItemUseCase(userUID,productId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading get user cart item: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        if (!response.data.isNullOrEmpty()) {
+                            val cartItem = CartItem(
+                                cartItemId = response.data[0].cartItemId,
+                                userUID = response.data[0].userUID,
+                                productId = response.data[0].productId,
+                                amount = response.data[0].amount+1
+                            )
+                            updateProductInCart(cartItem)
+                        }
+                        else {
+                            addProductToCart(userUID,productId)
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun addProductToCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.addProductToCartUseCase(userUID,productId,1).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product from favourites to add to cart: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product added to the cart")
+                        _eventFlow.emit(FavouritesUiEvent.ShowProductAddedToCartMessage)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateProductInCart(cartItem: CartItem) {
+        viewModelScope.launch {
+            shopUseCases.updateProductInCartUseCase(cartItem).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product from favourites to update in cart: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product updated in the cart")
+                        _eventFlow.emit(FavouritesUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())

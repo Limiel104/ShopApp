@@ -32,6 +32,7 @@ fun FavouriteContent(
     isLoading: Boolean,
     onProductSelected: (Int) -> Unit,
     onDelete: (Int) -> Unit,
+    onAddToCart: (Int) -> Unit,
     onGoToCart: () -> Unit
 ) {
     Scaffold(
@@ -60,7 +61,8 @@ fun FavouriteContent(
                     FavouriteProductItem(
                         product = product,
                         onDelete = { onDelete(product.id) },
-                        onClick = { onProductSelected(product.id) }
+                        onClick = { onProductSelected(product.id) },
+                        onAddToCart = { onAddToCart(it) }
                     )
                 }
             }
@@ -131,7 +133,8 @@ fun FavouriteContentPreview() {
             isLoading = false,
             onProductSelected = {},
             onDelete = {},
-            onGoToCart = {}
+            onGoToCart = {},
+            onAddToCart = {}
         )
     }
 }
@@ -144,6 +147,7 @@ fun FavouriteContentEmptyListPreview() {
         isLoading = false,
         onProductSelected = {},
         onDelete = {},
-        onGoToCart = {}
+        onGoToCart = {},
+        onAddToCart = {}
     )
 }

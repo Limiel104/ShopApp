@@ -37,7 +37,8 @@ import com.example.shopapp.util.Constants.PRODUCT_ITEM_TITLE
 fun FavouriteProductItem(
     product: Product,
     onClick: () -> Unit,
-    onDelete: () ->  Unit
+    onDelete: () ->  Unit,
+    onAddToCart: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -93,10 +94,9 @@ fun FavouriteProductItem(
         FilledTonalButton(
             modifier = Modifier
                 .testTag(ADD_TO_CART_BTN + " ${product.title}"),
-            onClick = { /*TODO*/ }
+            onClick = { onAddToCart(product.id) }
         ) {
             Text(text = stringResource(id = R.string.add_to_cart))
-
         }
     }
 }
@@ -119,7 +119,8 @@ fun FavouriteProductItemPreview() {
             FavouriteProductItem(
                 product = product,
                 onClick = {},
-                onDelete = {}
+                onDelete = {},
+                onAddToCart = {}
             )
         }
     }
