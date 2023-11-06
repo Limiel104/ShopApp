@@ -10,4 +10,5 @@ sealed class SignupEvent {
     data class EnteredCity(val value: String): SignupEvent()
     data class EnteredZipCode(val value: String): SignupEvent()
     object Signup: SignupEvent()
+    object OnGoBack: SignupEvent()
 }

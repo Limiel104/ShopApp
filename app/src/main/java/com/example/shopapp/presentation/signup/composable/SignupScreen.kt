@@ -54,6 +54,9 @@ fun SignupScreen(
                         popUpTo(destination) { inclusive = true }
                     }
                 }
+                is SignupUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -86,6 +89,6 @@ fun SignupScreen(
         onCityChange = { viewModel.onEvent(SignupEvent.EnteredCity(it)) },
         onZipCodeChange = { viewModel.onEvent(SignupEvent.EnteredZipCode(it)) },
         onSignup = { viewModel.onEvent(SignupEvent.Signup) },
-        onGoBack = {}
+        onGoBack = { viewModel.onEvent(SignupEvent.OnGoBack) }
     )
 }

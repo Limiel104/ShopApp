@@ -89,7 +89,7 @@ fun NavigationGraph(
         composable(
             route = Screen.OrdersScreen.route
         ) {
-            OrdersScreen()
+            OrdersScreen(navController = navController)
         }
         composable(
             route = Screen.ProfileScreen.route + "userUID" + "={userUID}",

@@ -58,6 +58,11 @@ class LoginViewModel @Inject constructor(
                     Log.i(TAG, "Form validation error")
                 }
             }
+            is LoginEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(LoginUiEvent.NavigateBack)
+                }
+            }
         }
     }
 

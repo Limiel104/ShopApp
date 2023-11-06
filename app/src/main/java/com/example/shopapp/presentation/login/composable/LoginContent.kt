@@ -39,12 +39,13 @@ fun LoginContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLogin: () -> Unit,
-    onSignup: () -> Unit
+    onSignup: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
             LoginTopBar(
-                onClick = { /*TODO*/ }
+                onClick = { onGoBack() }
             )
         },
         modifier = Modifier
@@ -164,7 +165,8 @@ fun LoginContentPreview() {
             onPasswordChange = {},
             isLoading = false,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -182,7 +184,8 @@ fun LoginContentErrorPreview() {
             onPasswordChange = {},
             isLoading = false,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -200,7 +203,8 @@ fun LoginContentCPIPreview() {
             onPasswordChange = {},
             isLoading = true,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }

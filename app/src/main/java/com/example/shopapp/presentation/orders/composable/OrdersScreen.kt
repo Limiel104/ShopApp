@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.shopapp.presentation.orders.OrdersEvent
 import com.example.shopapp.presentation.orders.OrdersUiEvent
 import com.example.shopapp.presentation.orders.OrdersViewModel
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun OrdersScreen(
+    navController: NavController,
     viewModel: OrdersViewModel = hiltViewModel()
 ) {
     val orders = viewModel.ordersState.value.orders
@@ -30,6 +32,9 @@ fun OrdersScreen(
                 is OrdersUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
+                is OrdersUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -41,6 +46,7 @@ fun OrdersScreen(
         isSortSectionVisible = isSortSectionVisible,
         onOrderSelected = { viewModel.onEvent(OrdersEvent.OnOrderSelected(it)) },
         onOrderChange = { viewModel.onEvent(OrdersEvent.OnOrderChange(it)) },
-        onSortSelected = { viewModel.onEvent(OrdersEvent.ToggleSortSection) }
+        onSortSelected = { viewModel.onEvent(OrdersEvent.ToggleSortSection) },
+        onGoBack = { viewModel.onEvent(OrdersEvent.OnGoBack) }
     )
 }

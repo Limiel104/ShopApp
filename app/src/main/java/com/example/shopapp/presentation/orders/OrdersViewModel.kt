@@ -51,6 +51,11 @@ class OrdersViewModel @Inject constructor(
                     isSortSectionVisible = !_ordersState.value.isSortSectionVisible
                 )
             }
+            is OrdersEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(OrdersUiEvent.NavigateBack)
+                }
+            }
         }
     }
 

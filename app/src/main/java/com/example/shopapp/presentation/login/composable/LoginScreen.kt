@@ -44,6 +44,9 @@ fun LoginScreen(
                 is LoginUiEvent.NavigateToSignup -> {
                     navController.navigate(Screen.SignupScreen.route)
                 }
+                is LoginUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -57,6 +60,7 @@ fun LoginScreen(
         onPasswordChange = { viewModel.onEvent(LoginEvent.EnteredPassword(it)) },
         isLoading = isLoading,
         onLogin = { viewModel.onEvent(LoginEvent.Login) },
-        onSignup = { viewModel.onEvent(LoginEvent.OnSignupButtonSelected) }
+        onSignup = { viewModel.onEvent(LoginEvent.OnSignupButtonSelected) },
+        onGoBack = { viewModel.onEvent(LoginEvent.OnGoBack) }
     )
 }

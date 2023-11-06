@@ -71,7 +71,7 @@ fun SignupContent(
     onCityChange: (String) -> Unit,
     onZipCodeChange: (String) -> Unit,
     onSignup: () -> Unit,
-    onGoBack: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
