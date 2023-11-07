@@ -615,9 +615,9 @@ class CategoryViewModelTest {
 
         categoryViewModel = setViewModel()
 
-        val initialSate = getCurrentCategoryState().isButtonLocked
+        val initialSate = getCurrentCategoryState().isButtonEnabled
         categoryViewModel.changeButtonLockState(!initialSate)
-        val resultState = getCurrentCategoryState().isButtonLocked
+        val resultState = getCurrentCategoryState().isButtonEnabled
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
@@ -1063,9 +1063,9 @@ class CategoryViewModelTest {
 
         categoryViewModel = setViewModel()
 
-        val initialState = getCurrentCategoryState().isButtonLocked
+        val initialState = getCurrentCategoryState().isButtonEnabled
         categoryViewModel.onEvent(CategoryEvent.OnFavouriteButtonSelected(2))
-        val resultState = getCurrentCategoryState().isButtonLocked
+        val resultState = getCurrentCategoryState().isButtonEnabled
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()

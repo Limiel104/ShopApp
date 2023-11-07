@@ -13,7 +13,7 @@ data class CategoryState (
     val isLoading: Boolean = false,
     val userFavourites: List<Favourite> = emptyList(),
     val userUID: String? = null,
-    val isButtonLocked: Boolean = false,
+    val isButtonEnabled: Boolean = true,
     val isDialogActivated: Boolean = false,
     val priceSliderRange: ClosedFloatingPointRange<Float> = 0f..0f,
     val priceSliderPosition: ClosedFloatingPointRange<Float> = 0f..0f,

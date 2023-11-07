@@ -196,7 +196,7 @@ class CategoryScreenTest {
                             productList = productList,
                             isSortAndFilterSectionVisible = isSortAndFilterSectionVisible,
                             isLoading = isLoading,
-                            isButtonLocked = isButtonLocked,
+                            isButtonEnabled = isButtonLocked,
                             isDialogActivated = isDialogActivated,
                             sliderPosition = sliderPosition,
                             sliderRange = sliderRange,

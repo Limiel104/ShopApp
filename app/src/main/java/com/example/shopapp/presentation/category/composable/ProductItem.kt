@@ -1,12 +1,13 @@
 package com.example.shopapp.presentation.category.composable
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +31,7 @@ import com.example.shopapp.util.Constants.productItemImageWidth
 @Composable
 fun ProductItem(
     product: Product,
-    isButtonLocked: Boolean,
+    isButtonEnabled: Boolean,
     onImageClick: () -> Unit,
     onFavourite: () -> Unit
 ) {
@@ -71,17 +72,19 @@ fun ProductItem(
             }
 
             Column() {
-                Icon(
-                    imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                    tint = if(product.isInFavourites) Color.Red else Color.Gray,
-                    contentDescription = FAVOURITES_BTN,
-                    modifier = Modifier
-                        .clickable {
-                            if (!isButtonLocked) {
-                                onFavourite()
-                            }
-                        }
-                )
+                IconButton(
+                    onClick = { onFavourite() },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = if(product.isInFavourites) Color.Red else Color.Gray
+                    ),
+                    enabled = isButtonEnabled,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = FAVOURITES_BTN,
+                    )
+                }
             }
         }
     }
@@ -104,7 +107,32 @@ fun ProductItemFavouriteFalsePreview() {
 
             ProductItem(
                 product = product,
-                isButtonLocked = false,
+                isButtonEnabled = true,
+                onImageClick = {},
+                onFavourite = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProductItemFavouriteFalsePreviewNotEnabled() {
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = false
+            )
+
+            ProductItem(
+                product = product,
+                isButtonEnabled = false,
                 onImageClick = {},
                 onFavourite = {}
             )
@@ -129,7 +157,32 @@ fun ProductItemFavouriteTruePreview() {
 
             ProductItem(
                 product = product,
-                isButtonLocked = false,
+                isButtonEnabled = true,
+                onImageClick = {},
+                onFavourite = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProductItemFavouriteTruePreviewNotEnabled() {
+    Surface() {
+        ShopAppTheme {
+            val product = Product(
+                id = 1,
+                title = "Shirt",
+                price = 195.59,
+                description = productDescription,
+                category = "men's clothing",
+                imageUrl = "imageUrl",
+                isInFavourites = true
+            )
+
+            ProductItem(
+                product = product,
+                isButtonEnabled = false,
                 onImageClick = {},
                 onFavourite = {}
             )

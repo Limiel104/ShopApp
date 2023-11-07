@@ -54,8 +54,8 @@ class CategoryViewModel @Inject constructor(
                 }
             }
             is CategoryEvent.OnFavouriteButtonSelected -> {
-                if(!_categoryState.value.isButtonLocked) {
-                    changeButtonLockState(true)
+                if(_categoryState.value.isButtonEnabled) {
+                    changeButtonLockState(false)
                     onFavouriteButtonClicked(event.value)
                 }
             }
@@ -184,7 +184,7 @@ class CategoryViewModel @Inject constructor(
     fun changeButtonLockState(value: Boolean) {
         Log.i(TAG,"LOCK - $value")
         _categoryState.value = categoryState.value.copy(
-            isButtonLocked = value
+            isButtonEnabled = value
         )
     }
 
@@ -197,7 +197,7 @@ class CategoryViewModel @Inject constructor(
             _categoryState.value = categoryState.value.copy(
                 isDialogActivated = true
             )
-            changeButtonLockState(false)
+            changeButtonLockState(true)
         }
         else if(isProductInFavourites) {
             val favourites = _categoryState.value.userFavourites
@@ -227,7 +227,7 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(false)
+                changeButtonLockState(true)
             }
         }
     }
@@ -250,7 +250,7 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(false)
+                changeButtonLockState(true)
             }
         }
     }

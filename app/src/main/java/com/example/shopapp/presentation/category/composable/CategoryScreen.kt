@@ -24,7 +24,7 @@ fun CategoryScreen(
     val productList = viewModel.categoryState.value.productList
     val isSortSectionVisible = viewModel.categoryState.value.isSortAndFilterSectionVisible
     val isLoading = viewModel.categoryState.value.isLoading
-    val isButtonLocked = viewModel.categoryState.value.isButtonLocked
+    val isButtonEnabled = viewModel.categoryState.value.isButtonEnabled
     val isDialogActivated = viewModel.categoryState.value.isDialogActivated
     val sliderPosition = viewModel.categoryState.value.priceSliderPosition
     val sliderRange = viewModel.categoryState.value.priceSliderRange
@@ -54,7 +54,7 @@ fun CategoryScreen(
         productList = productList,
         isSortAndFilterSectionVisible = isSortSectionVisible,
         isLoading = isLoading,
-        isButtonLocked = isButtonLocked,
+        isButtonEnabled = isButtonEnabled,
         isDialogActivated = isDialogActivated,
         sliderPosition = sliderPosition,
         sliderRange = sliderRange,
