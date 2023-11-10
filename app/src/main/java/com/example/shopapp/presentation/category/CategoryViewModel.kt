@@ -47,15 +47,12 @@ class CategoryViewModel @Inject constructor(
         when(event) {
             is CategoryEvent.OnProductSelected -> {
                 viewModelScope.launch {
-                    _categoryState.value = categoryState.value.copy(
-                        productId = event.value
-                    )
                     _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
             is CategoryEvent.OnFavouriteButtonSelected -> {
                 if(_categoryState.value.isButtonEnabled) {
-                    changeButtonLockState(false)
+                    isFavouriteButtonEnabled(false)
                     onFavouriteButtonClicked(event.value)
                 }
             }
@@ -181,8 +178,8 @@ class CategoryViewModel @Inject constructor(
         return product!!.isInFavourites
     }
 
-    fun changeButtonLockState(value: Boolean) {
-        Log.i(TAG,"LOCK - $value")
+    fun isFavouriteButtonEnabled(value: Boolean) {
+        Log.i(TAG,"isEnabled - $value")
         _categoryState.value = categoryState.value.copy(
             isButtonEnabled = value
         )
@@ -197,7 +194,7 @@ class CategoryViewModel @Inject constructor(
             _categoryState.value = categoryState.value.copy(
                 isDialogActivated = true
             )
-            changeButtonLockState(true)
+            isFavouriteButtonEnabled(true)
         }
         else if(isProductInFavourites) {
             val favourites = _categoryState.value.userFavourites
@@ -227,7 +224,7 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(true)
+                isFavouriteButtonEnabled(true)
             }
         }
     }
@@ -250,7 +247,7 @@ class CategoryViewModel @Inject constructor(
                         _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(true)
+                isFavouriteButtonEnabled(true)
             }
         }
     }

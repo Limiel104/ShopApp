@@ -60,7 +60,7 @@ fun NavigationGraph(
             AccountScreen(navController = navController)
         }
         composable(
-            route = Screen.ProductDetailsScreen.route + "productId" + "={productId}",
+            route = Screen.ProductDetailsScreen.route + "productId={productId}",
             arguments = listOf(
                 navArgument(
                     name = "productId"
@@ -92,7 +92,7 @@ fun NavigationGraph(
             OrdersScreen(navController = navController)
         }
         composable(
-            route = Screen.ProfileScreen.route + "userUID" + "={userUID}",
+            route = Screen.ProfileScreen.route + "userUID={userUID}",
             arguments = listOf(
                 navArgument(
                     name = "userUID"

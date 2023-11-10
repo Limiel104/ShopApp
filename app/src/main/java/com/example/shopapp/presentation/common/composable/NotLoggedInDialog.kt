@@ -1,4 +1,4 @@
-package com.example.shopapp.presentation.category.composable
+package com.example.shopapp.presentation.common.composable
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Surface

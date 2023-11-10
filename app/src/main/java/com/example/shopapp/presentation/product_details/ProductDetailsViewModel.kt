@@ -44,9 +44,10 @@ class ProductDetailsViewModel @Inject constructor(
 
     fun onEvent(event: ProductDetailsEvent) {
         when(event) {
-            ProductDetailsEvent.GoBack -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(ProductDetailsUiEvent.NavigateBack)
+            is ProductDetailsEvent.OnFavouriteButtonSelected -> {
+                if(_productDetailsState.value.isButtonEnabled) {
+                    isFavouriteButtonEnabled(false)
+                    onFavouriteButtonClicked(_productDetailsState.value.isInFavourites)
                 }
             }
             is ProductDetailsEvent.OnAddToCart -> {
@@ -60,6 +61,16 @@ class ProductDetailsViewModel @Inject constructor(
                     viewModelScope.launch {
                         _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
                     }
+                }
+            }
+            is ProductDetailsEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(ProductDetailsUiEvent.NavigateToCart)
+                }
+            }
+            is ProductDetailsEvent.GoBack -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(ProductDetailsUiEvent.NavigateBack)
                 }
             }
         }
@@ -95,6 +106,39 @@ class ProductDetailsViewModel @Inject constructor(
                     userUID = currentUser.uid
                 )
             }
+
+            getProductFavouriteId(
+                _productDetailsState.value.userUID,
+                _productDetailsState.value.productId
+            )
+        }
+    }
+
+    fun getProductFavouriteId(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.getUserFavouriteUseCase(userUID,productId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        if (!response.data.isNullOrEmpty()) {
+                            _productDetailsState.value = productDetailsState.value.copy(
+                                favouriteId = response.data[0].favouriteId,
+                                isInFavourites = true
+                            )
+                            Log.i(TAG,"Product is user in favourites")
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
         }
     }
 
@@ -109,7 +153,7 @@ class ProductDetailsViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success -> {
-                        if (!response.data.isNullOrEmpty()) {
+                        if(!response.data.isNullOrEmpty()) {
                             val cartItem = CartItem(
                                 cartItemId = response.data[0].cartItemId,
                                 userUID = response.data[0].userUID,
@@ -173,6 +217,81 @@ class ProductDetailsViewModel @Inject constructor(
                         _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
+            }
+        }
+    }
+
+    fun isFavouriteButtonEnabled(value: Boolean) {
+        Log.i(TAG,"isEnabled - $value")
+        _productDetailsState.value = productDetailsState.value.copy(
+            isButtonEnabled = value
+        )
+    }
+    private fun onFavouriteButtonClicked(isInFavourites: Boolean) {
+        val userUID = _productDetailsState.value.userUID
+
+        if(userUID == null) {
+            Log.i(TAG,"User is not logged in - login or signup")
+            _productDetailsState.value = productDetailsState.value.copy(
+                isDialogActivated = true
+            )
+            isFavouriteButtonEnabled(true)
+        }
+        else if(isInFavourites) {
+            deleteProductFromUserFavourites(_productDetailsState.value.favouriteId)
+        }
+        else {
+            val productId = _productDetailsState.value.productId
+            addProductToUserFavourites(productId,userUID)
+        }
+    }
+
+    fun addProductToUserFavourites(productId: Int, userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.addProductToFavouritesUseCase(productId,userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading add favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Added product to favourites")
+                        getProductFavouriteId(userUID, productId)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                isFavouriteButtonEnabled(true)
+            }
+        }
+    }
+
+    fun deleteProductFromUserFavourites(favouriteId: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteProductFromFavouritesUseCase(favouriteId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Deleted product from favourites")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isInFavourites = false
+                        )
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                isFavouriteButtonEnabled(true)
             }
         }
     }

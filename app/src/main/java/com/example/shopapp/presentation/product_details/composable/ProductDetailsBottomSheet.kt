@@ -31,7 +31,7 @@ import com.example.shopapp.util.Constants.productDescription
 @Composable
 fun ProductDetailsBottomSheet(
     product: Product,
-    isProductInFavourites: Boolean,
+    onFavourite: () -> Unit,
     onAddToCart: () -> Unit
 ) {
     Column(
@@ -62,12 +62,12 @@ fun ProductDetailsBottomSheet(
             )
 
             IconButton(
-                onClick = { /*TODO*/ }
+                onClick = { onFavourite() }
             ) {
                 Icon(
-                    imageVector = if(isProductInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                    imageVector = if(product.isInFavourites) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = FAVOURITES_BTN,
-                    tint = if(isProductInFavourites) Color.Red else Color.Gray
+                    tint = if(product.isInFavourites) Color.Red else Color.Gray
                 )
             }
         }
@@ -123,8 +123,8 @@ fun ProductDetailsBottomSheetPreview() {
 
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = true,
-                onAddToCart = {}
+                onAddToCart = {},
+                onFavourite = {}
             )
         }
     }
@@ -147,8 +147,8 @@ fun ProductDetailsBottomSheetFalsePreview() {
 
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = false,
-                onAddToCart = {}
+                onAddToCart = {},
+                onFavourite = {}
             )
         }
     }

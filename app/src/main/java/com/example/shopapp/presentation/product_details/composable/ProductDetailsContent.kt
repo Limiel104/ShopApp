@@ -39,20 +39,22 @@ fun ProductDetailsContent(
     scaffoldState: BottomSheetScaffoldState,
     product: Product,
     isLoading: Boolean,
+    onFavourite: () -> Unit,
+    onAddToCart: () -> Unit,
     onNavigateBack: () -> Unit,
-    onAddToCart: () -> Unit
+    onNavigateToCart: () -> Unit
 ) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         topBar = {
             ProductDetailsTopBar(
                 onNavigateBack = { onNavigateBack() },
-                onNavigateToCart = { /*TODO*/ }
+                onNavigateToCart = { onNavigateToCart() }
             ) },
         sheetContent = {
             ProductDetailsBottomSheet(
                 product = product,
-                isProductInFavourites = true,
+                onFavourite = { onFavourite() },
                 onAddToCart = { onAddToCart() }
             ) },
         sheetContainerColor = MaterialTheme.colorScheme.background,
@@ -121,8 +123,10 @@ fun ProductDetailsContentPreview() {
             scaffoldState = scaffoldState,
             product = product,
             isLoading = false,
+            onFavourite = {},
+            onAddToCart = {},
             onNavigateBack = {},
-            onAddToCart = {}
+            onNavigateToCart = {}
         )
     }
 }

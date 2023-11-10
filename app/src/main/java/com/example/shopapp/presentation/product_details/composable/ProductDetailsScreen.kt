@@ -15,6 +15,7 @@ import com.example.shopapp.presentation.product_details.ProductDetailsUiEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsViewModel
 import com.example.shopapp.util.Constants.PRODUCT_DETAILS_SCREEN_LE
 import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,14 +42,17 @@ fun ProductDetailsScreen(
         viewModel.eventFlow.collectLatest { event ->
             Log.i(TAG, PRODUCT_DETAILS_SCREEN_LE)
             when(event) {
-                is ProductDetailsUiEvent.NavigateBack -> {
-                    navController.popBackStack()
-                }
                 is ProductDetailsUiEvent.ShowErrorMessage -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
                 ProductDetailsUiEvent.ShowProductAddedToCartMessage -> {
                     Toast.makeText(context, "Added to the cart", Toast.LENGTH_LONG).show()
+                }
+                is ProductDetailsUiEvent.NavigateToCart -> {
+                    navController.navigate(Screen.CartScreen.route)
+                }
+                is ProductDetailsUiEvent.NavigateBack -> {
+                    navController.popBackStack()
                 }
             }
         }
@@ -58,7 +62,9 @@ fun ProductDetailsScreen(
         scaffoldState = scaffoldState,
         product = product,
         isLoading = isLoading,
+        onFavourite = { viewModel.onEvent(ProductDetailsEvent.OnFavouriteButtonSelected) },
+        onAddToCart = { viewModel.onEvent(ProductDetailsEvent.OnAddToCart) },
         onNavigateBack = { viewModel.onEvent(ProductDetailsEvent.GoBack) },
-        onAddToCart = { viewModel.onEvent(ProductDetailsEvent.OnAddToCart) }
+        onNavigateToCart = { viewModel.onEvent(ProductDetailsEvent.GoToCart) }
     )
 }

@@ -42,6 +42,7 @@ import com.example.shopapp.domain.use_case.FilterProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserCouponUseCase
+import com.example.shopapp.domain.use_case.GetUserFavouriteUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
 import com.example.shopapp.domain.use_case.GetUserPointsUseCase
 import com.example.shopapp.domain.use_case.GetUserUseCase
@@ -209,7 +210,8 @@ object AppModule {
             addCouponUseCase = AddCouponUseCase(couponsRepository),
             getUserCouponUseCase = GetUserCouponUseCase(couponsRepository),
             deleteCouponUseCase = DeleteCouponUseCase(couponsRepository),
-            isCouponExpiredUseCase = IsCouponExpiredUseCase()
+            isCouponExpiredUseCase = IsCouponExpiredUseCase(),
+            getUserFavouriteUseCase = GetUserFavouriteUseCase(favouritesRepository)
         )
     }
 }

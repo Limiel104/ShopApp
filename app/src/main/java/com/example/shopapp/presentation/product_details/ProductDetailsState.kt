@@ -9,5 +9,8 @@ data class ProductDetailsState(
     val imageUrl: String = "",
     val isInFavourites: Boolean = false,
     val userUID: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isButtonEnabled: Boolean = true,
+    val isDialogActivated: Boolean = false,
+    val favouriteId: String = "",
 )

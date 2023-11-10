@@ -78,4 +78,36 @@ class FavouritesRepositoryImpl @Inject constructor(
             emit(Resource.Loading(false))
         }
     }
+
+    override suspend fun getUserFavourite(
+        userUID: String,
+        productId: Int
+    ): Flow<Resource<List<Favourite>>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                val favourite = favouritesRef
+                    .whereEqualTo("userUID", userUID)
+                    .whereEqualTo("productId", productId)
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { snapshot ->
+                        snapshot.toObject(Favourite::class.java)
+                    }
+                if(favourite.isEmpty()) {
+                    emit(Resource.Success(emptyList()))
+                }
+                else {
+                    emit(Resource.Success(favourite))
+                }
+            }
+            catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage as String))
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
 }
