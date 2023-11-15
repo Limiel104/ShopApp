@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.account.AccountEvent
 import com.example.shopapp.presentation.account.AccountUiEvent
@@ -26,28 +29,31 @@ fun AccountScreen(
     val isUserLoggedIn = viewModel.accountState.value.isUserLoggedIn
     val isCouponActivated = viewModel.accountState.value.isCouponActivated
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG, ACCOUNT_SCREEN_LE)
-            when(event) {
-                is AccountUiEvent.NavigateToLogin -> {
-                    navController.navigate(Screen.LoginScreen.route)
-                }
-                is AccountUiEvent.NavigateToSignup -> {
-                    navController.navigate(Screen.SignupScreen.route)
-                }
-                is AccountUiEvent.NavigateToCart -> {
-                    navController.navigate(Screen.CartScreen.route)
-                }
-                is AccountUiEvent.NavigateToOrders -> {
-                    navController.navigate(Screen.OrdersScreen.route)
-                }
-                is AccountUiEvent.NavigateToProfile -> {
-                    navController.navigate(Screen.ProfileScreen.route + "userUID=" + event.userUID)
-                }
-                is AccountUiEvent.ShowErrorMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.accountEventChannelFlow.collectLatest { event ->
+                Log.i(TAG, ACCOUNT_SCREEN_LE)
+                when(event) {
+                    is AccountUiEvent.NavigateToLogin -> {
+                        navController.navigate(Screen.LoginScreen.route)
+                    }
+                    is AccountUiEvent.NavigateToSignup -> {
+                        navController.navigate(Screen.SignupScreen.route)
+                    }
+                    is AccountUiEvent.NavigateToCart -> {
+                        navController.navigate(Screen.CartScreen.route)
+                    }
+                    is AccountUiEvent.NavigateToOrders -> {
+                        navController.navigate(Screen.OrdersScreen.route)
+                    }
+                    is AccountUiEvent.NavigateToProfile -> {
+                        navController.navigate(Screen.ProfileScreen.route + "userUID=" + event.userUID)
+                    }
+                    is AccountUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }

@@ -6,7 +6,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.common.getLastDestination
 import com.example.shopapp.presentation.signup.SignupEvent
@@ -40,22 +43,25 @@ fun SignupScreen(
     val zipCodeError = viewModel.signupState.value.zipCodeError
     val isLoading = viewModel.signupState.value.isLoading
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG,SIGNUP_SCREEN_LE)
-            when(event) {
-                is SignupUiEvent.ShowErrorMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                }
-                is SignupUiEvent.Signup -> {
-                    val destination = getLastDestination(navController)
-                    navController.navigate(destination) {
-                        popUpTo(destination) { inclusive = true }
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.signupEventChannelFlow.collectLatest { event ->
+                Log.i(TAG, SIGNUP_SCREEN_LE)
+                when(event) {
+                    is SignupUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                     }
-                }
-                is SignupUiEvent.NavigateBack -> {
-                    navController.popBackStack()
+                    is SignupUiEvent.Signup -> {
+                        val destination = getLastDestination(navController)
+                        navController.navigate(destination) {
+                            popUpTo(destination) { inclusive = true }
+                        }
+                    }
+                    is SignupUiEvent.NavigateBack -> {
+                        navController.popBackStack()
+                    }
                 }
             }
         }

@@ -12,8 +12,8 @@ import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +26,8 @@ class ProductDetailsViewModel @Inject constructor(
     private val _productDetailsState = mutableStateOf(ProductDetailsState())
     val productDetailsState: State<ProductDetailsState> = _productDetailsState
 
-    private val _eventFlow = MutableSharedFlow<ProductDetailsUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _productDetailsEventChannel = Channel<ProductDetailsUiEvent>()
+    val productDetailsEventChannelFlow = _productDetailsEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, PRODUCT_DETAILS_VM)
@@ -59,18 +59,18 @@ class ProductDetailsViewModel @Inject constructor(
                 }
                 else {
                     viewModelScope.launch {
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
                     }
                 }
             }
             is ProductDetailsEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(ProductDetailsUiEvent.NavigateToCart)
+                    _productDetailsEventChannel.send(ProductDetailsUiEvent.NavigateToCart)
                 }
             }
             is ProductDetailsEvent.GoBack -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(ProductDetailsUiEvent.NavigateBack)
+                    _productDetailsEventChannel.send(ProductDetailsUiEvent.NavigateBack)
                 }
             }
         }
@@ -135,7 +135,7 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -168,7 +168,7 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -187,11 +187,11 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product added to the cart")
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -210,11 +210,11 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product updated in the cart")
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -262,7 +262,7 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
                 isFavouriteButtonEnabled(true)
@@ -288,7 +288,7 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
                 isFavouriteButtonEnabled(true)

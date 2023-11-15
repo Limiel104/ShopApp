@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.category.CategoryEvent
 import com.example.shopapp.presentation.category.CategoryUiEvent
@@ -31,19 +34,22 @@ fun CategoryScreen(
     val productOrder = viewModel.categoryState.value.productOrder
     val categoryFilterMap = viewModel.categoryState.value.categoryFilterMap
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG, CATEGORY_SCREEN_LE)
-            when(event) {
-                is CategoryUiEvent.NavigateToProductDetails -> {
-                    navController.navigate(Screen.ProductDetailsScreen.route + "productId="+ event.productId)
-                }
-                is CategoryUiEvent.ShowErrorMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                }
-                is CategoryUiEvent.NavigateToCart -> {
-                    navController.navigate(Screen.CartScreen.route)
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.categoryEventChannelFlow.collectLatest { event ->
+                Log.i(TAG, CATEGORY_SCREEN_LE)
+                when(event) {
+                    is CategoryUiEvent.NavigateToProductDetails -> {
+                        navController.navigate(Screen.ProductDetailsScreen.route + "productId=" + event.productId)
+                    }
+                    is CategoryUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    }
+                    is CategoryUiEvent.NavigateToCart -> {
+                        navController.navigate(Screen.CartScreen.route)
+                    }
                 }
             }
         }

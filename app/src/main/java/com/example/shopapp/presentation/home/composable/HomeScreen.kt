@@ -3,7 +3,10 @@ package com.example.shopapp.presentation.home.composable
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.home.HomeEvent
 import com.example.shopapp.presentation.home.HomeUiEvent
@@ -19,16 +22,19 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val bannerList = viewModel.homeState.value.bannerList
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG,HOME_SCREEN_LE)
-            when(event) {
-                is HomeUiEvent.NavigateToCategory -> {
-                    navController.navigate(Screen.CategoryScreen.route + "categoryId="+ event.categoryId)
-                }
-                is HomeUiEvent.NavigateToCart -> {
-                    navController.navigate(Screen.CartScreen.route)
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.homeEventChannelFlow.collectLatest { event ->
+                Log.i(TAG, HOME_SCREEN_LE)
+                when(event) {
+                    is HomeUiEvent.NavigateToCategory -> {
+                        navController.navigate(Screen.CategoryScreen.route + "categoryId=" + event.categoryId)
+                    }
+                    is HomeUiEvent.NavigateToCart -> {
+                        navController.navigate(Screen.CartScreen.route)
+                    }
                 }
             }
         }

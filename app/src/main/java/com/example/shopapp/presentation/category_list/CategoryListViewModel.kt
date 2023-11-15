@@ -9,8 +9,8 @@ import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.Constants.CATEGORY_LIST_VM
 import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +22,8 @@ class CategoryListViewModel @Inject constructor(
     private val _categoryListState = mutableStateOf(CategoryListState())
     val categoryListState: State<CategoryListState> = _categoryListState
 
-    private val _eventFlow = MutableSharedFlow<CategoryListUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _categoryListEventChannel = Channel<CategoryListUiEvent>()
+    val categoryListEventChannelFlow = _categoryListEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, CATEGORY_LIST_VM)
@@ -37,12 +37,12 @@ class CategoryListViewModel @Inject constructor(
                     _categoryListState.value = categoryListState.value.copy(
                         categoryId = event.value
                     )
-                    _eventFlow.emit(CategoryListUiEvent.NavigateToCategory(event.value))
+                    _categoryListEventChannel.send(CategoryListUiEvent.NavigateToCategory(event.value))
                 }
             }
             is CategoryListEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CategoryListUiEvent.NavigateToCart)
+                    _categoryListEventChannel.send(CategoryListUiEvent.NavigateToCart)
                 }
             }
         }

@@ -14,8 +14,8 @@ import com.example.shopapp.util.Constants.CATEGORY_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +28,8 @@ class CategoryViewModel @Inject constructor(
     private val _categoryState = mutableStateOf(CategoryState())
     val categoryState: State<CategoryState> = _categoryState
 
-    private val _eventFlow = MutableSharedFlow<CategoryUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _categoryEventChannel = Channel<CategoryUiEvent>()
+    val categoryEventChannelFlow = _categoryEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, CATEGORY_VM)
@@ -47,7 +47,7 @@ class CategoryViewModel @Inject constructor(
         when(event) {
             is CategoryEvent.OnProductSelected -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
+                    _categoryEventChannel.send(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
             is CategoryEvent.OnFavouriteButtonSelected -> {
@@ -81,7 +81,7 @@ class CategoryViewModel @Inject constructor(
             }
             is CategoryEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CategoryUiEvent.NavigateToCart)
+                    _categoryEventChannel.send(CategoryUiEvent.NavigateToCart)
                 }
             }
         }
@@ -128,7 +128,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -156,7 +156,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -221,7 +221,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
                 isFavouriteButtonEnabled(true)
@@ -244,7 +244,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
                 isFavouriteButtonEnabled(true)

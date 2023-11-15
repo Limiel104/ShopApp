@@ -5,7 +5,10 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.profile.ProfileEvent
 import com.example.shopapp.presentation.profile.ProfileUiEvent
@@ -31,16 +34,19 @@ fun ProfileScreen(
     val zipCodeError = viewModel.profileState.value.zipCodeError
     val isLoading = viewModel.profileState.value.isLoading
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG, PROFILE_SCREEN_LE)
-            when(event) {
-                is ProfileUiEvent.ShowErrorMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                }
-                is ProfileUiEvent.NavigateBack -> {
-                    navController.popBackStack()
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.profileEventChannelFlow.collectLatest { event ->
+                Log.i(TAG, PROFILE_SCREEN_LE)
+                when(event) {
+                    is ProfileUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    }
+                    is ProfileUiEvent.NavigateBack -> {
+                        navController.popBackStack()
+                    }
                 }
             }
         }

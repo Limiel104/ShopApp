@@ -10,8 +10,8 @@ import com.example.shopapp.domain.model.Banner
 import com.example.shopapp.util.Constants.HOME_VM
 import com.example.shopapp.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,8 +22,8 @@ class HomeViewModel @Inject constructor(
     private val _homeState = mutableStateOf(HomeState())
     val homeState: State<HomeState> = _homeState
 
-    private val _eventFlow = MutableSharedFlow<HomeUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _homeEventChannel = Channel<HomeUiEvent>()
+    val homeEventChannelFlow = _homeEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, HOME_VM)
@@ -54,12 +54,12 @@ class HomeViewModel @Inject constructor(
         when(event) {
             is HomeEvent.OnBannerSelected -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(HomeUiEvent.NavigateToCategory(event.value))
+                    _homeEventChannel.send(HomeUiEvent.NavigateToCategory(event.value))
                 }
             }
             is HomeEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(HomeUiEvent.NavigateToCart)
+                    _homeEventChannel.send(HomeUiEvent.NavigateToCart)
                 }
             }
         }

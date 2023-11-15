@@ -13,8 +13,8 @@ import com.example.shopapp.util.Constants.FAVOURITES_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +26,8 @@ class FavouritesViewModel @Inject constructor(
     private val _favouritesState = mutableStateOf(FavouritesState())
     val favouritesState: State<FavouritesState> = _favouritesState
 
-    private val _eventFlow = MutableSharedFlow<FavouritesUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _favouritesEventChannel = Channel<FavouritesUiEvent>()
+    val favouritesEventChannelFlow = _favouritesEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, FAVOURITES_VM)
@@ -46,17 +46,17 @@ class FavouritesViewModel @Inject constructor(
                     _favouritesState.value = favouritesState.value.copy(
                         productId = event.value
                     )
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToProductDetails(event.value))
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToProductDetails(event.value))
                 }
             }
             is FavouritesEvent.OnLogin -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToLogin)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToLogin)
                 }
             }
             is FavouritesEvent.OnSignup -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToSignup)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToSignup)
                 }
             }
             is FavouritesEvent.OnDelete -> {
@@ -76,7 +76,7 @@ class FavouritesViewModel @Inject constructor(
             }
             is FavouritesEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToCart)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToCart)
                 }
             }
         }
@@ -125,7 +125,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -151,7 +151,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -181,7 +181,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -214,7 +214,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -233,11 +233,11 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product added to the cart")
-                        _eventFlow.emit(FavouritesUiEvent.ShowProductAddedToCartMessage)
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -256,11 +256,11 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product updated in the cart")
-                        _eventFlow.emit(FavouritesUiEvent.ShowProductAddedToCartMessage)
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }

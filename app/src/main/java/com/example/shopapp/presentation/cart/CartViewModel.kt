@@ -13,8 +13,8 @@ import com.example.shopapp.util.Constants.CART_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -28,8 +28,8 @@ class CartViewModel @Inject constructor(
     private val _cartState = mutableStateOf(CartState())
     val cartState: State<CartState> = _cartState
 
-    private val _eventFlow = MutableSharedFlow<CartUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _cartEventChannel = Channel<CartUiEvent>()
+    val cartEventChannelFlow = _cartEventChannel.receiveAsFlow()
 
     private var deletedCartItem: CartItem? = null
 
@@ -48,12 +48,12 @@ class CartViewModel @Inject constructor(
         when(event) {
             is CartEvent.OnLogin -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CartUiEvent.NavigateToLogin)
+                    _cartEventChannel.send(CartUiEvent.NavigateToLogin)
                 }
             }
             is CartEvent.OnSignup -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CartUiEvent.NavigateToSignup)
+                    _cartEventChannel.send(CartUiEvent.NavigateToSignup)
                 }
             }
             is CartEvent.OnPlus -> {
@@ -71,7 +71,7 @@ class CartViewModel @Inject constructor(
             }
             is CartEvent.OnGoBack -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CartUiEvent.NavigateBack)
+                    _cartEventChannel.send(CartUiEvent.NavigateBack)
                 }
             }
             is CartEvent.OnDelete -> {
@@ -79,7 +79,7 @@ class CartViewModel @Inject constructor(
                 deletedCartItem = cartItemToDelete
                 deleteCartItem(cartItemToDelete.cartItemId)
                 viewModelScope.launch {
-                    _eventFlow.emit(CartUiEvent.ShowSnackbar)
+                    _cartEventChannel.send(CartUiEvent.ShowSnackbar)
                 }
             }
             is CartEvent.OnCartItemRestore -> {
@@ -102,7 +102,7 @@ class CartViewModel @Inject constructor(
                         isDialogActivated = false
                     )
 
-                    _eventFlow.emit(CartUiEvent.NavigateToHome)
+                    _cartEventChannel.send(CartUiEvent.NavigateToHome)
                 }
             }
         }
@@ -150,7 +150,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -177,7 +177,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -222,7 +222,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -247,7 +247,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -304,7 +304,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -326,7 +326,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -352,7 +352,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -398,7 +398,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -427,7 +427,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -449,7 +449,7 @@ class CartViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CartUiEvent.ShowErrorMessage(response.message.toString()))
+                        _cartEventChannel.send(CartUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
