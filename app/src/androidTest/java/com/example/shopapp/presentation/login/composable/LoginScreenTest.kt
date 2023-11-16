@@ -87,7 +87,8 @@ class LoginScreenTest {
                             onEmailChange = {},
                             onPasswordChange = {},
                             onLogin = {},
-                            onSignup = {}
+                            onSignup = {},
+                            onGoBack = {}
                         )
                     }
                 }

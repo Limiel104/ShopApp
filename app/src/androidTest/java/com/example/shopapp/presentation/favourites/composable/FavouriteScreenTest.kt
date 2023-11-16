@@ -129,6 +129,7 @@ class FavouriteScreenTest {
                             isLoading = isLoading,
                             onProductSelected = {},
                             onDelete = {},
+                            onAddToCart = {},
                             onGoToCart = {}
                         )
                     }

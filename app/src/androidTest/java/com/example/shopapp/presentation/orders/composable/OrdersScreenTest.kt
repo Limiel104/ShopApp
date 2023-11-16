@@ -228,7 +228,8 @@ class OrdersScreenTest {
                             isSortSectionVisible = isSortSectionVisible,
                             onOrderSelected = {},
                             onOrderChange = {},
-                            onSortSelected = {}
+                            onSortSelected = {},
+                            onGoBack = {}
                         )
                     }
                 }
@@ -247,7 +248,7 @@ class OrdersScreenTest {
                     composable(
                         route = Screen.OrdersScreen.route
                     ) {
-                        OrdersScreen()
+                        OrdersScreen(navController = navController)
                     }
                 }
             }

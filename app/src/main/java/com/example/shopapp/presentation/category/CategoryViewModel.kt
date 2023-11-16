@@ -175,7 +175,7 @@ class CategoryViewModel @Inject constructor(
             product.id == productId
         }
 
-        return product!!.isInFavourites
+        return product?.isInFavourites ?: false
     }
 
     fun isFavouriteButtonEnabled(value: Boolean) {

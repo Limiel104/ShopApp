@@ -106,8 +106,10 @@ class ProductDetailsScreenTest {
                             scaffoldState = rememberBottomSheetScaffoldState(),
                             product = product,
                             isLoading = isLoading,
+                            onFavourite = {},
+                            onAddToCart = {},
                             onNavigateBack = {},
-                            onAddToCart = {}
+                            onNavigateToCart = {}
                         )
                     }
                 }
