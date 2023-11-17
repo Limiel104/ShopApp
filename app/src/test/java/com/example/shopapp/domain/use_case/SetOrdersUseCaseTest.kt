@@ -4,7 +4,6 @@ import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -53,7 +52,7 @@ class SetOrdersUseCaseTest {
                 title = "Polo Shirt",
                 price = 55.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -62,7 +61,7 @@ class SetOrdersUseCaseTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -71,7 +70,7 @@ class SetOrdersUseCaseTest {
                 title = "Skirt",
                 price = 78.78,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -80,7 +79,7 @@ class SetOrdersUseCaseTest {
                 title = "Jeans",
                 price = 235.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -89,7 +88,7 @@ class SetOrdersUseCaseTest {
                 title = "Shirt",
                 price = 85.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -98,7 +97,7 @@ class SetOrdersUseCaseTest {
                 title = "Blouse",
                 price = 99.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )

@@ -3,7 +3,6 @@ package com.example.shopapp.presentation.favourites
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
@@ -160,7 +159,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -173,7 +172,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(favourites).isEqualTo(favouriteProducts)
@@ -185,7 +184,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(emptyList()))
 
         favouritesViewModel = setViewModel()
@@ -197,7 +196,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -252,7 +251,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -267,7 +266,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(favourites).isEqualTo(userFavourites)
@@ -281,7 +280,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Error("Error"))
 
         favouritesViewModel = setViewModel()
@@ -293,7 +292,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -306,7 +305,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
@@ -318,7 +317,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -331,7 +330,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -348,7 +347,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")
         }
@@ -361,7 +360,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -378,7 +377,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")
         }
@@ -391,7 +390,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -406,7 +405,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(initialProductId).isEqualTo(-1)
@@ -419,7 +418,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -439,7 +438,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.getFavouriteIdUseCase(userFavourites,1)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")

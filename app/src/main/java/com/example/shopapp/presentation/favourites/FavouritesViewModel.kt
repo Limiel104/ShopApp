@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.FAVOURITES_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
@@ -114,7 +113,7 @@ class FavouritesViewModel @Inject constructor(
                                 favouriteList = favourites
                             )
                             if(favourites.isNotEmpty()) {
-                                getProducts(Category.All.id)
+                                getProducts("all")
                             }
                             else {
                                 _favouritesState.value = favouritesState.value.copy(

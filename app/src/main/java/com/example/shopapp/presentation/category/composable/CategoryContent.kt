@@ -18,7 +18,6 @@ import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.presentation.common.composable.NotLoggedInDialog
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CATEGORY_CONTENT
 import com.example.shopapp.util.Constants.CATEGORY_CPI
 import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
@@ -237,10 +236,10 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
             sliderRange = 0f..5f,
             productOrder = ProductOrder.NameDescending(),
             categoryFilterMap = mapOf(
-                Pair(Category.Men.title,true),
-                Pair(Category.Women.title,true),
-                Pair(Category.Jewelery.title,true),
-                Pair(Category.Electronics.title,true)
+                Pair("Men's clothing",true),
+                Pair("Women's clothing",true),
+                Pair("Jewelery",true),
+                Pair("Electronics",true)
             ),
             onProductSelected = {},
             onSortAndFilterSelected = {},

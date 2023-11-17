@@ -1,15 +1,10 @@
 package com.example.shopapp.presentation.category_list
 
-import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.getCategory
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -23,29 +18,28 @@ class CategoryListViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @MockK
-    private lateinit var shopUseCases: ShopUseCases
     private lateinit var categoryListViewModel: CategoryListViewModel
-    private lateinit var categoryList: List<Category>
-    private lateinit var categoryIdList: List<String>
+    private lateinit var categoryListIds: List<String>
+    private lateinit var categoryListTitles: List<String>
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
-        categoryList = listOf(
-            Category.All,
-            Category.Men,
-            Category.Women,
-            Category.Jewelery,
-            Category.Electronics
+        categoryListIds = listOf(
+            "all",
+            "men's clothing",
+            "women's clothing",
+            "jewelery",
+            "electronics"
         )
 
-        categoryIdList = listOf(
-            Category.All.id,
-            Category.Men.id,
-            Category.Women.id,
-            Category.Jewelery.id,
-            Category.Electronics.id
+        categoryListTitles = listOf(
+            "All",
+            "Men's clothing",
+            "Women's clothing",
+            "Jewelery",
+            "Electronics"
         )
     }
 
@@ -55,7 +49,7 @@ class CategoryListViewModelTest {
     }
 
     private fun setViewModel(): CategoryListViewModel {
-        return CategoryListViewModel(shopUseCases)
+        return CategoryListViewModel()
     }
 
     private fun getCurrentCategoryListState(): CategoryListState {
@@ -63,70 +57,33 @@ class CategoryListViewModelTest {
     }
 
     @Test
-    fun `categoryList remains empty when getCategoriesUseCase returns empty list`() {
-       every { shopUseCases.getCategoriesUseCase() } returns emptyList()
-
-        categoryListViewModel = setViewModel()
-
-        val categories = getCurrentCategoryListState().categoryList
-
-        assertThat(categories).isEmpty()
-        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
-    }
-
-    @Test
-    fun `getCategories returns empty list`() {
-        every { shopUseCases.getCategoriesUseCase() } returns emptyList()
-
-        categoryListViewModel = setViewModel()
-        categoryListViewModel.getCategories()
-        val categories = getCurrentCategoryListState().categoryList
-
-        assertThat(categories).isEmpty()
-        verify(exactly = 2) { shopUseCases.getCategoriesUseCase() }
-    }
-
-    @Test
     fun `getCategories returns category list`() {
-        every { shopUseCases.getCategoriesUseCase() } returns getCategory()
-
         categoryListViewModel = setViewModel()
         categoryListViewModel.getCategories()
         val categories = getCurrentCategoryListState().categoryList
 
-        assertThat(categories).isEqualTo(categoryList)
-        verify(exactly = 2) { shopUseCases.getCategoriesUseCase() }
+        assertThat(categories).isEqualTo(categoryListTitles)
     }
 
     @Test
     fun `categoryList is of correct size when getCategoriesUseCase returns correct list`() {
-        every { shopUseCases.getCategoriesUseCase() } returns getCategory()
-
         categoryListViewModel = setViewModel()
-
         val categories = getCurrentCategoryListState().categoryList
 
         assertThat(categories).isNotEmpty()
         assertThat(categories.size).isEqualTo(5)
-        assertThat(categories).isEqualTo(categoryList)
-        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
+        assertThat(categories).isEqualTo(categoryListTitles)
     }
 
     @Test
     fun `event onCategorySelected sets categoryId correctly`() {
-        every { shopUseCases.getCategoriesUseCase() } returns getCategory()
-
         categoryListViewModel = setViewModel()
-
         val initialId = getCurrentCategoryListState().categoryId
-        assertThat(initialId).isEqualTo("")
-
         categoryListViewModel.onEvent(CategoryListEvent.OnCategorySelected("men's clothing"))
-
         val resultId = getCurrentCategoryListState().categoryId
 
+        assertThat(initialId).isEqualTo("")
         assertThat(resultId).isEqualTo("men's clothing")
-        assertThat(categoryIdList).contains(resultId)
-        verify(exactly = 1) { shopUseCases.getCategoriesUseCase() }
+        assertThat(categoryListIds).contains(resultId)
     }
 }

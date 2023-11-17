@@ -33,7 +33,6 @@ import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CART_BTN
 import com.example.shopapp.util.Constants.CATEGORY_CHECKBOXES
 import com.example.shopapp.util.Constants.CATEGORY_CONTENT
@@ -154,10 +153,10 @@ class CategoryScreenTest {
         )
 
         categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
     }
 

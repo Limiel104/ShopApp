@@ -10,7 +10,6 @@ import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.util.OrderOrder
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.ORDERS_VM
 import com.example.shopapp.util.Constants.TAG
 import com.example.shopapp.util.Resource
@@ -99,7 +98,7 @@ class OrdersViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            shopUseCases.getProductsUseCase(Category.All.id).collect { response ->
+            shopUseCases.getProductsUseCase("all").collect { response ->
                 when(response) {
                     is Resource.Loading -> {
                         Log.i(TAG,"Loading products: ${response.isLoading}")

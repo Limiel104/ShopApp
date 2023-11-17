@@ -2,7 +2,6 @@ package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.example.shopapp.util.Resource
 import com.google.common.truth.Truth.assertThat
@@ -33,7 +32,7 @@ class GetProductUseCaseTest {
             title = "Shirt",
             price = 195.59,
             description = productDescription,
-            category = Category.Women.id,
+            category = "women's clothing",
             imageUrl = "imageUrl",
             isInFavourites = false
         )

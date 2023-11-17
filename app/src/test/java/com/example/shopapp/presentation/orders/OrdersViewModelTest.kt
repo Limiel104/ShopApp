@@ -6,7 +6,6 @@ import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.util.OrderOrder
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants
 import com.example.shopapp.util.MainDispatcherRule
 import com.example.shopapp.util.Resource
@@ -97,7 +96,7 @@ class OrdersViewModelTest {
                 title = "Polo Shirt",
                 price = 55.99,
                 description = Constants.productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -106,7 +105,7 @@ class OrdersViewModelTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -115,7 +114,7 @@ class OrdersViewModelTest {
                 title = "Skirt",
                 price = 78.78,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -124,7 +123,7 @@ class OrdersViewModelTest {
                 title = "Jeans",
                 price = 235.99,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -133,7 +132,7 @@ class OrdersViewModelTest {
                 title = "Shirt",
                 price = 85.99,
                 description = Constants.productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -142,7 +141,7 @@ class OrdersViewModelTest {
                 title = "Blouse",
                 price = 99.99,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )

@@ -31,7 +31,6 @@ import com.example.shopapp.util.Constants.CATEGORY_NAME_3
 import com.example.shopapp.util.Constants.CATEGORY_NAME_4
 import com.example.shopapp.util.Constants.CATEGORY_NAME_5
 import com.example.shopapp.util.Screen
-import com.example.shopapp.util.getCategory
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -64,7 +63,13 @@ class CategoryListScreenTest {
                         route = Screen.CategoryListScreen.route,
                     ) {
                         CategoryListContent(
-                            categoryList = getCategory(),
+                            categoryList = listOf(
+                                "All",
+                                "Men's clothing",
+                                "Women's clothing",
+                                "Jewelery",
+                                "Electronics"
+                            ),
                             onCategorySelected = {},
                             onGoToCart = {}
                         )

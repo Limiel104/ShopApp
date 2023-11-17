@@ -2,7 +2,6 @@ package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.productDescription
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
@@ -25,7 +24,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Polo Shirt",
                 price = 55.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -34,7 +33,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -43,7 +42,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Skirt",
                 price = 78.78,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -52,7 +51,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Jeans",
                 price = 235.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -61,7 +60,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 85.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -70,7 +69,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Blouse",
                 price = 99.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )
@@ -100,7 +99,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Cargo Pants",
                 price = 90.00,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = true
             ),
@@ -109,7 +108,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 85.99,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = true
             ),
@@ -118,7 +117,7 @@ class FilterProductsByUserFavouritesUseCaseTest {
                 title = "Blouse",
                 price = 99.99,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = true
             )

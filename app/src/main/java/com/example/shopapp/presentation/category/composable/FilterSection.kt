@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.Constants.CATEGORY_FILTER_SECTION
 
 @Composable
@@ -79,10 +78,10 @@ fun FilterSectionPreviewCategoryFilterVisible() {
             sliderRange = 0f..5f,
             isCategoryFilterVisible = true,
             categoryFilterMap = mapOf(
-                Pair(Category.Men.title,true),
-                Pair(Category.Women.title,true),
-                Pair(Category.Jewelery.title,true),
-                Pair(Category.Electronics.title,true)
+                Pair("Men's clothing",true),
+                Pair("Women's clothing",true),
+                Pair("Jewelery",true),
+                Pair("Electronics",true)
             ),
             onValueChange = {},
             onCheckedChange = {}

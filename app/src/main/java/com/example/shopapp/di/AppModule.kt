@@ -27,7 +27,6 @@ import com.example.shopapp.domain.use_case.DeleteCouponUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromCartUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.FilterProductsByUserFavouritesUseCase
-import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
 import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
@@ -169,7 +168,6 @@ object AppModule {
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
-            getCategoriesUseCase = GetCategoriesUseCase(),
             getProductUseCase = GetProductUseCase(productRepository),
             validateEmailUseCase = ValidateEmailUseCase(),
             validateLoginPasswordUseCase = ValidateLoginPasswordUseCase(),

@@ -1,6 +1,5 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.util.Category
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -15,10 +14,10 @@ class ToggleCheckBoxUseCaseTest {
         toggleCheckBoxUseCase = ToggleCheckBoxUseCase()
 
         categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
     }
 
@@ -28,10 +27,10 @@ class ToggleCheckBoxUseCaseTest {
 
         assertThat(map).isEqualTo(
             mapOf(
-                Pair(Category.Men.title,true),
-                Pair(Category.Women.title,false),
-                Pair(Category.Jewelery.title,true),
-                Pair(Category.Electronics.title,true)
+                Pair("Men's clothing",true),
+                Pair("Women's clothing",false),
+                Pair("Jewelery",true),
+                Pair("Electronics",true)
             )
         )
     }
@@ -42,10 +41,10 @@ class ToggleCheckBoxUseCaseTest {
 
         assertThat(map).isEqualTo(
             mapOf(
-                Pair(Category.Men.title,true),
-                Pair(Category.Women.title,true),
-                Pair(Category.Jewelery.title,true),
-                Pair(Category.Electronics.title,false)
+                Pair("Men's clothing",true),
+                Pair("Women's clothing",true),
+                Pair("Jewelery",true),
+                Pair("Electronics",false)
             )
         )
     }
