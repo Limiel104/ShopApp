@@ -143,7 +143,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(emptyList()))
 
         favouritesViewModel = setViewModel()
-
         val isUserLoggedIn = getCurrentFavouritesState().isUserLoggedIn
 
         coVerifySequence {
@@ -166,7 +165,6 @@ class FavouritesViewModelTest {
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().productList
 
         coVerifySequence {
@@ -188,7 +186,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(emptyList()))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -210,7 +207,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Error("Error"))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -231,7 +227,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -258,7 +253,6 @@ class FavouritesViewModelTest {
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -284,7 +278,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Error("Error"))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -309,7 +302,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -340,7 +332,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.deleteProductFromFavourites("favouriteId")
         val loadingState = getCurrentFavouritesState().isLoading
 
@@ -370,7 +361,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.deleteProductFromFavourites("favouriteId")
         val loadingState = getCurrentFavouritesState().isLoading
 
@@ -397,7 +387,6 @@ class FavouritesViewModelTest {
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val initialProductId = getCurrentFavouritesState().productId
         favouritesViewModel.onEvent(FavouritesEvent.OnProductSelected(1))
         val resultProductId = getCurrentFavouritesState().productId
@@ -431,7 +420,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.onEvent(FavouritesEvent.OnDelete(1))
         val loadingState = getCurrentFavouritesState().isLoading
 

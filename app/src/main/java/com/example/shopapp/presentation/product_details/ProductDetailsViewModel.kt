@@ -79,7 +79,12 @@ class ProductDetailsViewModel @Inject constructor(
     private fun getProduct(productId: Int) {
         viewModelScope.launch {
             when(val response = shopUseCases.getProductUseCase(productId)) {
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    Log.i(TAG,"Loading products: ${response.isLoading}")
+                    _productDetailsState.value = productDetailsState.value.copy(
+                        isLoading = response.isLoading
+                    )
+                }
                 is Resource.Success -> {
                     if (response.data != null) {
                         _productDetailsState.value = productDetailsState.value.copy(

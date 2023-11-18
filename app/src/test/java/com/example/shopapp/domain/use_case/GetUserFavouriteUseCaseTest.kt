@@ -16,16 +16,16 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class GetUserFavouritesUseCaseTest {
+class GetUserFavouriteUseCaseTest {
 
     @MockK
     private lateinit var favouritesRepository: FavouritesRepository
-    private lateinit var getUserFavouritesUseCase: GetUserFavouritesUseCase
+    private lateinit var getUserFavouriteUseCase: GetUserFavouriteUseCase
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        getUserFavouritesUseCase = GetUserFavouritesUseCase(favouritesRepository)
+        getUserFavouriteUseCase = GetUserFavouriteUseCase(favouritesRepository)
     }
 
     @After
@@ -36,41 +36,29 @@ class GetUserFavouritesUseCaseTest {
     @Test
     fun `getting user favourites was successfully`() {
         runBlocking {
-            val favourites = listOf(
+            val favourite = listOf(
                 Favourite(
                     favouriteId = "favouriteId1",
                     userUID = "userUID",
                     productId = 1
-                ),
-                Favourite(
-                    favouriteId = "favouriteId3",
-                    userUID = "userUID",
-                    productId = 3
-                ),
-                Favourite(
-                    favouriteId = "favouriteId4",
-                    userUID = "userUID",
-                    productId = 4
-                ),
-                Favourite(
-                    favouriteId = "favouriteId9",
-                    userUID = "userUID",
-                    productId = 9
                 )
             )
-            val result = Resource.Success(favourites)
+            val result = Resource.Success(favourite)
 
-            coEvery { favouritesRepository.getUserFavourites("userUID") } returns flowOf(result)
+            coEvery {
+                favouritesRepository.getUserFavourite("userUID",1)
+            } returns flowOf(result)
 
-            val response = getUserFavouritesUseCase("userUID").first()
+            val response = getUserFavouriteUseCase("userUID",1).first()
 
-            coVerify(exactly = 1) { getUserFavouritesUseCase("userUID") }
+            coVerify(exactly = 1) { getUserFavouriteUseCase("userUID",1) }
             assertThat(response).isEqualTo(result)
-            assertThat(response.data).containsExactlyElementsIn(favourites)
+            assertThat(response.data).containsExactlyElementsIn(favourite)
             assertThat(response.message).isNull()
-            for (favourite in response.data!!) {
-                assertThat(favourite.userUID).isEqualTo("userUID")
-            }
+            assertThat(result.data!!.size).isEqualTo(1)
+            assertThat(result.data!![0].favouriteId).isEqualTo("favouriteId1")
+            assertThat(result.data!![0].userUID).isEqualTo("userUID")
+            assertThat(result.data!![0].productId).isEqualTo(1)
         }
     }
 
@@ -78,14 +66,14 @@ class GetUserFavouritesUseCaseTest {
     fun `getting user favourites was not successful and error message was returned`() {
         runBlocking {
             coEvery {
-                favouritesRepository.getUserFavourites("userUID")
+                favouritesRepository.getUserFavourite("userUID",1)
             } returns flowOf(
                 Resource.Error("Error")
             )
 
-            val response = getUserFavouritesUseCase("userUID").first()
+            val response = getUserFavouriteUseCase("userUID",1).first()
 
-            coVerify(exactly = 1) { getUserFavouritesUseCase("userUID") }
+            coVerify(exactly = 1) { getUserFavouriteUseCase("userUID",1) }
             assertThat(response.data).isNull()
             assertThat(response.message).isEqualTo("Error")
         }

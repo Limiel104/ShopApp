@@ -93,7 +93,6 @@ class ProfileViewModelTest {
         val firstName = "Bob"
         val initialFirstName = getCurrentProfileState().firstName
         profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
-
         val resultFirstName = getCurrentProfileState().firstName
 
         assertThat(initialFirstName).isEqualTo("John")
@@ -107,7 +106,6 @@ class ProfileViewModelTest {
         val lastName = "Hall"
         val initialLastName = getCurrentProfileState().lastName
         profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
-
         val resultLastName = getCurrentProfileState().lastName
 
         assertThat(initialLastName).isEqualTo("Smith")
@@ -121,7 +119,6 @@ class ProfileViewModelTest {
         val street = "Street 2"
         val initialStreet = getCurrentProfileState().street
         profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
-
         val resultStreet = getCurrentProfileState().street
 
         assertThat(initialStreet).isEqualTo("Street 1")
@@ -135,7 +132,6 @@ class ProfileViewModelTest {
         val city = "Berlin"
         val initialCity = getCurrentProfileState().city
         profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
-
         val resultCity = getCurrentProfileState().city
 
         assertThat(initialCity).isEqualTo("Warsaw")
@@ -149,7 +145,6 @@ class ProfileViewModelTest {
         val zipCode = "98-765"
         val initialZipCode = getCurrentProfileState().zipCode
         profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
-
         val resultZipCode = getCurrentProfileState().zipCode
 
         assertThat(initialZipCode).isEqualTo("12-345")
