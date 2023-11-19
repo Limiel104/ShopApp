@@ -263,7 +263,7 @@ class CartViewModel @Inject constructor(
             totalAmount += cartProduct.amount * cartProduct.price
         }
 
-        if(_cartState.value.isCouponActivated && (totalAmount+1 >= couponAmount)) {
+        if(_cartState.value.isCouponActivated && (totalAmount >= couponAmount+1)) {
             _cartState.value = cartState.value.copy(
                 totalAmount = totalAmount - couponAmount,
                 isCouponUsedInCalculatingTotalAmount = true
