@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.GO_BACK_BTN
-import com.example.shopapp.util.Constants.ORDERS_TOP_BAR
-import com.example.shopapp.util.Constants.SORT_BTN
+import com.example.shopapp.presentation.common.Constants.GO_BACK_BTN
+import com.example.shopapp.presentation.common.Constants.ORDERS_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.SORT_BTN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

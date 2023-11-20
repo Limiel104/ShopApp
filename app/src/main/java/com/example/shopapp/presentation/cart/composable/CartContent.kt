@@ -35,9 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.CartProduct
-import com.example.shopapp.util.Constants.CART_CONTENT
-import com.example.shopapp.util.Constants.CART_CPI
-import com.example.shopapp.util.Constants.CART_LAZY_COLUMN
+import com.example.shopapp.presentation.common.Constants.CART_CONTENT
+import com.example.shopapp.presentation.common.Constants.CART_CPI
+import com.example.shopapp.presentation.common.Constants.CART_LAZY_COLUMN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -12,9 +12,9 @@ import androidx.navigation.NavController
 import com.example.shopapp.presentation.category_list.CategoryListEvent
 import com.example.shopapp.presentation.category_list.CategoryListUiEvent
 import com.example.shopapp.presentation.category_list.CategoryListViewModel
-import com.example.shopapp.util.Constants.CATEGORY_LIST_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

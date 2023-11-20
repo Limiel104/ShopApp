@@ -17,11 +17,11 @@ import com.example.shopapp.presentation.cart.CartEvent
 import com.example.shopapp.presentation.cart.CartUiEvent
 import com.example.shopapp.presentation.cart.CartViewModel
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.util.Constants.CART_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.snackbarActionLabel
-import com.example.shopapp.util.Constants.snackbarMessage
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.CART_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.common.Constants.snackbarActionLabel
+import com.example.shopapp.presentation.common.Constants.snackbarMessage
+import com.example.shopapp.presentation.navigation.Screen
 
 @Composable
 fun CartScreen(

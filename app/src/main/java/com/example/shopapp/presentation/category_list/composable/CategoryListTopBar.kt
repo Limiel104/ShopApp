@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.CATEGORY_LIST_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.CART_BTN
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_TOP_BAR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

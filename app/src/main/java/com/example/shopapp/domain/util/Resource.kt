@@ -1,4 +1,4 @@
-package com.example.shopapp.util
+package com.example.shopapp.domain.util
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T?): Resource<T>(data)

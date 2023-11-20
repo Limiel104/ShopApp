@@ -22,9 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_COLUMN
-import com.example.shopapp.util.Constants.CART_TOTAL_AMOUNT_SECTION
-import com.example.shopapp.util.Constants.ORDER_BTN
+import com.example.shopapp.presentation.common.Constants.CART_TOTAL_AMOUNT_COLUMN
+import com.example.shopapp.presentation.common.Constants.CART_TOTAL_AMOUNT_SECTION
+import com.example.shopapp.presentation.common.Constants.ORDER_BTN
 
 @Composable
 fun TotalAmountSection(

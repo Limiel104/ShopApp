@@ -26,12 +26,12 @@ import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.IMAGE
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_COLUMN
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_BOX
-import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.IMAGE
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_COLUMN
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_CPI
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_IMAGE_BOX
+import com.example.shopapp.presentation.common.Constants.productDescription
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

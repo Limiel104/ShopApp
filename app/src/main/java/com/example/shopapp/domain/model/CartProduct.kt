@@ -6,4 +6,9 @@ data class CartProduct(
     val price: Double,
     val imageUrl: String,
     val amount: Int
-)
+) {
+    fun priceToString(): String {
+        val formattedPrice = String.format("%.2f PLN", price)
+        return formattedPrice.replace(".", ",")
+    }
+}

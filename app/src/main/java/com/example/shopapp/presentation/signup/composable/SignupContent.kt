@@ -21,25 +21,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.SIGNUP_BTN
-import com.example.shopapp.util.Constants.SIGNUP_CITY_TF
-import com.example.shopapp.util.Constants.SIGNUP_COLUMN
-import com.example.shopapp.util.Constants.SIGNUP_CONFIRM_PASSWORD_TF
-import com.example.shopapp.util.Constants.SIGNUP_CONTENT
-import com.example.shopapp.util.Constants.SIGNUP_CPI
-import com.example.shopapp.util.Constants.SIGNUP_EMAIL_TF
-import com.example.shopapp.util.Constants.SIGNUP_FIRSTNAME_TF
-import com.example.shopapp.util.Constants.SIGNUP_LASTNAME_TF
-import com.example.shopapp.util.Constants.SIGNUP_PASSWORD_TF
-import com.example.shopapp.util.Constants.SIGNUP_STREET_TF
-import com.example.shopapp.util.Constants.SIGNUP_ZIP_CODE_TF
-import com.example.shopapp.util.Constants.cityEmptyError
-import com.example.shopapp.util.Constants.confirmPasswordError
-import com.example.shopapp.util.Constants.emailEmptyError
-import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.passwordEmptyError
-import com.example.shopapp.util.Constants.streetEmptyError
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.SIGNUP_BTN
+import com.example.shopapp.presentation.common.Constants.SIGNUP_CITY_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_COLUMN
+import com.example.shopapp.presentation.common.Constants.SIGNUP_CONFIRM_PASSWORD_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_CONTENT
+import com.example.shopapp.presentation.common.Constants.SIGNUP_CPI
+import com.example.shopapp.presentation.common.Constants.SIGNUP_EMAIL_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_FIRSTNAME_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_LASTNAME_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_PASSWORD_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_STREET_TF
+import com.example.shopapp.presentation.common.Constants.SIGNUP_ZIP_CODE_TF
+import com.example.shopapp.presentation.common.Constants.cityEmptyError
+import com.example.shopapp.presentation.common.Constants.confirmPasswordError
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

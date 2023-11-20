@@ -13,8 +13,8 @@ import androidx.navigation.NavController
 import com.example.shopapp.presentation.profile.ProfileEvent
 import com.example.shopapp.presentation.profile.ProfileUiEvent
 import com.example.shopapp.presentation.profile.ProfileViewModel
-import com.example.shopapp.util.Constants.PROFILE_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.presentation.common.Constants.PROFILE_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

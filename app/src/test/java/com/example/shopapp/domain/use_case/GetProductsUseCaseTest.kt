@@ -3,8 +3,8 @@ package com.example.shopapp.domain.use_case
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
 import com.google.common.truth.Truth.assertThat
-import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.productDescription
+import com.example.shopapp.domain.util.Resource
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery

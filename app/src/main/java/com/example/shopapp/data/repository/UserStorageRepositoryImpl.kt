@@ -2,7 +2,7 @@ package com.example.shopapp.data.repository
 
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.repository.UserStorageRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

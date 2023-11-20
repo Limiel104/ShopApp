@@ -1,6 +1,6 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.util.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test

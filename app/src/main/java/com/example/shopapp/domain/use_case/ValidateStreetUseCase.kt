@@ -1,11 +1,11 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
-import com.example.shopapp.util.Constants.specialCharsStreet
-import com.example.shopapp.util.Constants.streetContainsAtLeastOneDigitError
-import com.example.shopapp.util.Constants.fieldContainsAtLeastOneLetterError
-import com.example.shopapp.util.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldContainsSpecialCharsError
+import com.example.shopapp.presentation.common.Constants.specialCharsStreet
+import com.example.shopapp.presentation.common.Constants.streetContainsAtLeastOneDigitError
+import com.example.shopapp.presentation.common.Constants.fieldContainsAtLeastOneLetterError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
 
 class ValidateStreetUseCase {
     operator fun invoke(street: String): ValidationResult {

@@ -13,8 +13,8 @@ import androidx.navigation.NavController
 import com.example.shopapp.presentation.orders.OrdersEvent
 import com.example.shopapp.presentation.orders.OrdersUiEvent
 import com.example.shopapp.presentation.orders.OrdersViewModel
-import com.example.shopapp.util.Constants.ORDERS_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.presentation.common.Constants.ORDERS_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

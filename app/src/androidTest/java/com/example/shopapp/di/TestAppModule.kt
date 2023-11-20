@@ -62,11 +62,11 @@ import com.example.shopapp.domain.use_case.ValidateNameUseCase
 import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateStreetUseCase
 import com.example.shopapp.domain.use_case.ValidateZipCodeUseCase
-import com.example.shopapp.util.Constants
-import com.example.shopapp.util.Constants.CARTS_COLLECTION
-import com.example.shopapp.util.Constants.FAVOURITES_COLLECTION
-import com.example.shopapp.util.Constants.ORDERS_COLLECTION
-import com.example.shopapp.util.Constants.USERS_COLLECTION
+import com.example.shopapp.presentation.common.Constants
+import com.example.shopapp.presentation.common.Constants.CARTS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_COLLECTION
+import com.example.shopapp.presentation.common.Constants.ORDERS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.USERS_COLLECTION
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

@@ -1,10 +1,10 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneCapitalLetterError
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneDigitError
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneSpecialCharError
-import com.example.shopapp.util.Constants.passwordEmptyError
-import com.example.shopapp.util.Constants.shortPasswordError
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneCapitalLetterError
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneDigitError
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneSpecialCharError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.shortPasswordError
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test

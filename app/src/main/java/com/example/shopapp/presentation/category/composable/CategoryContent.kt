@@ -18,10 +18,10 @@ import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.presentation.common.composable.NotLoggedInDialog
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.CATEGORY_CONTENT
-import com.example.shopapp.util.Constants.CATEGORY_CPI
-import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
-import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CONTENT
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CPI
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LAZY_VERTICAL_GRID
+import com.example.shopapp.presentation.common.Constants.productDescription
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

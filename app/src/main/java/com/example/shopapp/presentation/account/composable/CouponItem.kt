@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.ACTIVATE_COUPON_BTN
-import com.example.shopapp.util.Constants.COUPON_ITEM_
+import com.example.shopapp.presentation.common.Constants.ACTIVATE_COUPON_BTN
+import com.example.shopapp.presentation.common.Constants.COUPON_ITEM_
 
 @Composable
 fun CouponItem(

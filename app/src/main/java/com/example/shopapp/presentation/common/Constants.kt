@@ -1,4 +1,4 @@
-package com.example.shopapp.util
+package com.example.shopapp.presentation.common
 
 object Constants {
     //TEST TAGS

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.CATEGORY_FILTER_SECTION
+import com.example.shopapp.presentation.common.Constants.CATEGORY_FILTER_SECTION
 
 @Composable
 fun FilterSection(

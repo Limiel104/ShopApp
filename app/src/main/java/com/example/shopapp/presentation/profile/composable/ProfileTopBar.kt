@@ -13,8 +13,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.GO_BACK_BTN
-import com.example.shopapp.util.Constants.PROFILE_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.GO_BACK_BTN
+import com.example.shopapp.presentation.common.Constants.PROFILE_TOP_BAR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

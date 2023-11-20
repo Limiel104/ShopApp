@@ -1,7 +1,7 @@
 package com.example.shopapp.presentation.common
 
 import androidx.navigation.NavController
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.navigation.Screen
 
 fun getLastDestination(navController: NavController): String {
     val destinationQueue = mutableListOf<String>()

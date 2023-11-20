@@ -18,9 +18,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.IMAGE
-import com.example.shopapp.util.Constants.productItemImageHeight
-import com.example.shopapp.util.Constants.productItemImageWidth
+import com.example.shopapp.presentation.common.Constants.IMAGE
+import com.example.shopapp.presentation.common.Constants.productItemImageHeight
+import com.example.shopapp.presentation.common.Constants.productItemImageWidth
 
 @Composable
 fun ImageItem(

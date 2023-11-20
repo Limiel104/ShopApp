@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.util.OrderOrder
-import com.example.shopapp.util.Constants.ORDERS_CONTENT
-import com.example.shopapp.util.Constants.ORDERS_CPI
-import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
+import com.example.shopapp.presentation.common.Constants.ORDERS_CONTENT
+import com.example.shopapp.presentation.common.Constants.ORDERS_CPI
+import com.example.shopapp.presentation.common.Constants.ORDERS_LAZY_COLUMN
 import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

@@ -3,7 +3,7 @@ package com.example.shopapp.domain.use_case
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.productDescription
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test

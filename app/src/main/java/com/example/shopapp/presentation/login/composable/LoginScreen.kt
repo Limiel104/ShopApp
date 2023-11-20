@@ -14,9 +14,9 @@ import com.example.shopapp.presentation.common.getLastDestination
 import com.example.shopapp.presentation.login.LoginEvent
 import com.example.shopapp.presentation.login.LoginUiEvent
 import com.example.shopapp.presentation.login.LoginViewModel
-import com.example.shopapp.util.Constants.LOGIN_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.LOGIN_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

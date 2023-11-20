@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.NOT_LOGGED_IN_DIALOG
+import com.example.shopapp.presentation.common.Constants.NOT_LOGGED_IN_DIALOG
 
 @Composable
 fun NotLoggedInDialog(

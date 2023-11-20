@@ -5,12 +5,12 @@ import com.example.shopapp.domain.model.Address
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.cityEmptyError
-import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.streetEmptyError
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.cityEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldEmptyError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks

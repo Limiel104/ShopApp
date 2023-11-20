@@ -16,9 +16,9 @@ import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.product_details.ProductDetailsEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsUiEvent
 import com.example.shopapp.presentation.product_details.ProductDetailsViewModel
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)

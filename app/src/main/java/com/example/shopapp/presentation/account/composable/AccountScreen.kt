@@ -14,9 +14,9 @@ import com.example.shopapp.presentation.account.AccountEvent
 import com.example.shopapp.presentation.account.AccountUiEvent
 import com.example.shopapp.presentation.account.AccountViewModel
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.util.Constants.ACCOUNT_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.ACCOUNT_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.navigation.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

@@ -5,8 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shopapp.util.Constants.CATEGORY_LIST_VM
-import com.example.shopapp.util.Constants.TAG
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_VM
+import com.example.shopapp.presentation.common.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.ACCOUNT_POINTS_CARD
+import com.example.shopapp.presentation.common.Constants.ACCOUNT_POINTS_CARD
 
 @Composable
 fun PointsCard(
