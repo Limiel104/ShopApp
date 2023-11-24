@@ -2,7 +2,7 @@ package com.example.shopapp.data.repository
 
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.repository.FavouritesRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -70,6 +70,38 @@ class FavouritesRepositoryImpl @Inject constructor(
                     .delete()
                     .await()
                 emit(Resource.Success(true))
+            }
+            catch (e: Exception) {
+                emit(Resource.Error(e.localizedMessage as String))
+            }
+
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun getUserFavourite(
+        userUID: String,
+        productId: Int
+    ): Flow<Resource<List<Favourite>>> {
+        return flow {
+            emit(Resource.Loading(true))
+
+            try {
+                val favourite = favouritesRef
+                    .whereEqualTo("userUID", userUID)
+                    .whereEqualTo("productId", productId)
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { snapshot ->
+                        snapshot.toObject(Favourite::class.java)
+                    }
+                if(favourite.isEmpty()) {
+                    emit(Resource.Success(emptyList()))
+                }
+                else {
+                    emit(Resource.Success(favourite))
+                }
             }
             catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage as String))

@@ -5,7 +5,7 @@ import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations

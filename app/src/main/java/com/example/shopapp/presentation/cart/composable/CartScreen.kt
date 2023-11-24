@@ -8,18 +8,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.example.shopapp.presentation.cart.CartEvent
 import com.example.shopapp.presentation.cart.CartUiEvent
 import com.example.shopapp.presentation.cart.CartViewModel
 import com.example.shopapp.presentation.common.composable.UserNotLoggedInContent
-import com.example.shopapp.util.Constants.CART_SCREEN_LE
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Constants.snackbarActionLabel
-import com.example.shopapp.util.Constants.snackbarMessage
-import com.example.shopapp.util.Screen
-import kotlinx.coroutines.flow.collectLatest
+import com.example.shopapp.presentation.common.Constants.CART_SCREEN_LE
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.presentation.common.Constants.snackbarActionLabel
+import com.example.shopapp.presentation.common.Constants.snackbarMessage
+import com.example.shopapp.presentation.navigation.Screen
 
 @Composable
 fun CartScreen(
@@ -33,35 +35,38 @@ fun CartScreen(
     val isLoading = viewModel.cartState.value.isLoading
     val isDialogActivated = viewModel.cartState.value.isDialogActivated
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            Log.i(TAG, CART_SCREEN_LE)
-            when(event) {
-                is CartUiEvent.NavigateToLogin -> {
-                    navController.navigate(Screen.LoginScreen.route)
-                }
-                is CartUiEvent.NavigateToSignup -> {
-                    navController.navigate(Screen.SignupScreen.route)
-                }
-                is CartUiEvent.ShowErrorMessage -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
-                }
-                is CartUiEvent.NavigateBack -> {
-                    navController.popBackStack()
-                }
-                is CartUiEvent.ShowSnackbar -> {
-                    val result = snackbarHostState.showSnackbar(
-                        message = snackbarMessage,
-                        actionLabel = snackbarActionLabel
-                    )
-                    if(result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(CartEvent.OnCartItemRestore)
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.cartEventChannelFlow.collect { event ->
+                Log.i(TAG, CART_SCREEN_LE)
+                when(event) {
+                    is CartUiEvent.NavigateToLogin -> {
+                        navController.navigate(Screen.LoginScreen.route)
                     }
-                }
-                is CartUiEvent.NavigateToHome -> {
-                    navController.navigate(Screen.HomeScreen.route) {
-                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    is CartUiEvent.NavigateToSignup -> {
+                        navController.navigate(Screen.SignupScreen.route)
+                    }
+                    is CartUiEvent.ShowErrorMessage -> {
+                        Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                    }
+                    is CartUiEvent.NavigateBack -> {
+                        navController.popBackStack()
+                    }
+                    is CartUiEvent.ShowSnackbar -> {
+                        val result = snackbarHostState.showSnackbar(
+                            message = snackbarMessage,
+                            actionLabel = snackbarActionLabel
+                        )
+                        if(result == SnackbarResult.ActionPerformed) {
+                            viewModel.onEvent(CartEvent.OnCartItemRestore)
+                        }
+                    }
+                    is CartUiEvent.NavigateToHome -> {
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                        }
                     }
                 }
             }

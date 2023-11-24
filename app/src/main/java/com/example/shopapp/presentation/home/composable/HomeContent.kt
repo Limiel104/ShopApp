@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.Banner
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.HOME_CONTENT
-import com.example.shopapp.util.Constants.HOME_LAZY_COLUMN
+import com.example.shopapp.presentation.common.Constants.HOME_CONTENT
+import com.example.shopapp.presentation.common.Constants.HOME_LAZY_COLUMN
 
 @Composable
 fun HomeContent(

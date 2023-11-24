@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.ACCOUNT_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.ACCOUNT_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -26,8 +26,8 @@ class AccountViewModel @Inject constructor(
     private val _accountState = mutableStateOf(AccountState())
     val accountState: State<AccountState> = _accountState
 
-    private val _eventFlow = MutableSharedFlow<AccountUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _accountEventChannel = Channel<AccountUiEvent>()
+    val accountEventChannelFlow = _accountEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, ACCOUNT_VM)
@@ -39,12 +39,12 @@ class AccountViewModel @Inject constructor(
         when(event) {
             is AccountEvent.OnLogin -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(AccountUiEvent.NavigateToLogin)
+                    _accountEventChannel.send(AccountUiEvent.NavigateToLogin)
                 }
             }
             is AccountEvent.OnSignup -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(AccountUiEvent.NavigateToSignup)
+                    _accountEventChannel.send(AccountUiEvent.NavigateToSignup)
                 }
             }
             is AccountEvent.OnActivateCoupon -> {
@@ -61,18 +61,18 @@ class AccountViewModel @Inject constructor(
             }
             is AccountEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(AccountUiEvent.NavigateToCart)
+                    _accountEventChannel.send(AccountUiEvent.NavigateToCart)
                 }
             }
             AccountEvent.GoToOrders -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(AccountUiEvent.NavigateToOrders)
+                    _accountEventChannel.send(AccountUiEvent.NavigateToOrders)
                 }
             }
             is AccountEvent.GoToProfile -> {
                 viewModelScope.launch {
                     val userUID = _accountState.value.user.userUID
-                    _eventFlow.emit(AccountUiEvent.NavigateToProfile(userUID))
+                    _accountEventChannel.send(AccountUiEvent.NavigateToProfile(userUID))
                 }
             }
         }
@@ -112,7 +112,7 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                        _accountEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -149,7 +149,7 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                        _accountEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -174,7 +174,7 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                        _accountEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -200,7 +200,7 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                        _accountEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -222,7 +222,7 @@ class AccountViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(AccountUiEvent.ShowErrorMessage(response.message.toString()))
+                        _accountEventChannel.send(AccountUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }

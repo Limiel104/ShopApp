@@ -6,7 +6,7 @@ import com.example.shopapp.data.mapper.toProductEntity
 import com.example.shopapp.data.remote.FakeShopApi
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException

@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
-import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
+import com.example.shopapp.presentation.common.Constants.CATEGORY_PRICE_SLIDER
+import com.example.shopapp.presentation.common.Constants.CATEGORY_PRICE_SLIDER_ITEM
 
 @Composable
 fun PriceSlider(

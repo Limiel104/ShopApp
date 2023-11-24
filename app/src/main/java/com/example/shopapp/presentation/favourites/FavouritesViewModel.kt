@@ -5,15 +5,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.FAVOURITES_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +25,8 @@ class FavouritesViewModel @Inject constructor(
     private val _favouritesState = mutableStateOf(FavouritesState())
     val favouritesState: State<FavouritesState> = _favouritesState
 
-    private val _eventFlow = MutableSharedFlow<FavouritesUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _favouritesEventChannel = Channel<FavouritesUiEvent>()
+    val favouritesEventChannelFlow = _favouritesEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, FAVOURITES_VM)
@@ -45,17 +45,17 @@ class FavouritesViewModel @Inject constructor(
                     _favouritesState.value = favouritesState.value.copy(
                         productId = event.value
                     )
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToProductDetails(event.value))
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToProductDetails(event.value))
                 }
             }
             is FavouritesEvent.OnLogin -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToLogin)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToLogin)
                 }
             }
             is FavouritesEvent.OnSignup -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToSignup)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToSignup)
                 }
             }
             is FavouritesEvent.OnDelete -> {
@@ -63,9 +63,19 @@ class FavouritesViewModel @Inject constructor(
                 val favouriteId = shopUseCases.getFavouriteIdUseCase(favourites, event.value)
                 deleteProductFromFavourites(favouriteId)
             }
+            is FavouritesEvent.OnAddToCart -> {
+                viewModelScope.launch {
+                    val productToAddToCartId = event.value
+
+                    addOrUpdateProductInCart(
+                        _favouritesState.value.userUID,
+                        productToAddToCartId
+                    )
+                }
+            }
             is FavouritesEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(FavouritesUiEvent.NavigateToCart)
+                    _favouritesEventChannel.send(FavouritesUiEvent.NavigateToCart)
                 }
             }
         }
@@ -103,7 +113,7 @@ class FavouritesViewModel @Inject constructor(
                                 favouriteList = favourites
                             )
                             if(favourites.isNotEmpty()) {
-                                getProducts(Category.All.id)
+                                getProducts("all")
                             }
                             else {
                                 _favouritesState.value = favouritesState.value.copy(
@@ -114,7 +124,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -140,7 +150,7 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -170,7 +180,86 @@ class FavouritesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun addOrUpdateProductInCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.getUserCartItemUseCase(userUID,productId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading get user cart item: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        if (!response.data.isNullOrEmpty()) {
+                            val cartItem = CartItem(
+                                cartItemId = response.data[0].cartItemId,
+                                userUID = response.data[0].userUID,
+                                productId = response.data[0].productId,
+                                amount = response.data[0].amount+1
+                            )
+                            updateProductInCart(cartItem)
+                        }
+                        else {
+                            addProductToCart(userUID,productId)
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun addProductToCart(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.addProductToCartUseCase(userUID,productId,1).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product from favourites to add to cart: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product added to the cart")
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowProductAddedToCartMessage)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateProductInCart(cartItem: CartItem) {
+        viewModelScope.launch {
+            shopUseCases.updateProductInCartUseCase(cartItem).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading product from favourites to update in cart: ${response.isLoading}")
+                        _favouritesState.value = favouritesState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Product updated in the cart")
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowProductAddedToCartMessage)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _favouritesEventChannel.send(FavouritesUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }

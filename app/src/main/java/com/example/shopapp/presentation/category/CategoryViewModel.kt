@@ -10,12 +10,12 @@ import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.util.ProductOrder
-import com.example.shopapp.util.Constants.CATEGORY_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.CATEGORY_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +28,8 @@ class CategoryViewModel @Inject constructor(
     private val _categoryState = mutableStateOf(CategoryState())
     val categoryState: State<CategoryState> = _categoryState
 
-    private val _eventFlow = MutableSharedFlow<CategoryUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _categoryEventChannel = Channel<CategoryUiEvent>()
+    val categoryEventChannelFlow = _categoryEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, CATEGORY_VM)
@@ -47,15 +47,12 @@ class CategoryViewModel @Inject constructor(
         when(event) {
             is CategoryEvent.OnProductSelected -> {
                 viewModelScope.launch {
-                    _categoryState.value = categoryState.value.copy(
-                        productId = event.value
-                    )
-                    _eventFlow.emit(CategoryUiEvent.NavigateToProductDetails(event.value))
+                    _categoryEventChannel.send(CategoryUiEvent.NavigateToProductDetails(event.value))
                 }
             }
             is CategoryEvent.OnFavouriteButtonSelected -> {
-                if(!_categoryState.value.isButtonLocked) {
-                    changeButtonLockState(true)
+                if(_categoryState.value.isButtonEnabled) {
+                    isFavouriteButtonEnabled(false)
                     onFavouriteButtonClicked(event.value)
                 }
             }
@@ -84,7 +81,7 @@ class CategoryViewModel @Inject constructor(
             }
             is CategoryEvent.GoToCart -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(CategoryUiEvent.NavigateToCart)
+                    _categoryEventChannel.send(CategoryUiEvent.NavigateToCart)
                 }
             }
         }
@@ -131,7 +128,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -159,7 +156,7 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -178,13 +175,13 @@ class CategoryViewModel @Inject constructor(
             product.id == productId
         }
 
-        return product!!.isInFavourites
+        return product?.isInFavourites ?: false
     }
 
-    fun changeButtonLockState(value: Boolean) {
-        Log.i(TAG,"LOCK - $value")
+    fun isFavouriteButtonEnabled(value: Boolean) {
+        Log.i(TAG,"isEnabled - $value")
         _categoryState.value = categoryState.value.copy(
-            isButtonLocked = value
+            isButtonEnabled = value
         )
     }
 
@@ -197,7 +194,7 @@ class CategoryViewModel @Inject constructor(
             _categoryState.value = categoryState.value.copy(
                 isDialogActivated = true
             )
-            changeButtonLockState(false)
+            isFavouriteButtonEnabled(true)
         }
         else if(isProductInFavourites) {
             val favourites = _categoryState.value.userFavourites
@@ -224,10 +221,10 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(false)
+                isFavouriteButtonEnabled(true)
             }
         }
     }
@@ -247,10 +244,10 @@ class CategoryViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
+                        _categoryEventChannel.send(CategoryUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
-                changeButtonLockState(false)
+                isFavouriteButtonEnabled(true)
             }
         }
     }

@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.LOGIN_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.LOGIN_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +23,8 @@ class LoginViewModel @Inject constructor(
     private val _loginState = mutableStateOf(LoginState())
     val loginState: State<LoginState> = _loginState
 
-    private val _eventFlow = MutableSharedFlow<LoginUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _loginEventChannel = Channel<LoginUiEvent>()
+    val loginEventChannelFlow = _loginEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG,LOGIN_VM)
@@ -44,7 +44,7 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.OnSignupButtonSelected -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(LoginUiEvent.NavigateToSignup)
+                    _loginEventChannel.send(LoginUiEvent.NavigateToSignup)
                 }
             }
             is LoginEvent.Login -> {
@@ -56,6 +56,11 @@ class LoginViewModel @Inject constructor(
                 }
                 else {
                     Log.i(TAG, "Form validation error")
+                }
+            }
+            is LoginEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _loginEventChannel.send(LoginUiEvent.NavigateBack)
                 }
             }
         }
@@ -73,7 +78,7 @@ class LoginViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                     Log.i(TAG,"Login was successful")
-                    _eventFlow.emit(LoginUiEvent.Login)
+                    _loginEventChannel.send(LoginUiEvent.Login)
                     }
                     is Resource.Error -> {
                         Log.i("TAG", "Login Error")
@@ -83,7 +88,7 @@ class LoginViewModel @Inject constructor(
                         )
 
                         val errorMessage = response.message
-                        _eventFlow.emit(LoginUiEvent.ShowErrorMessage(errorMessage!!))
+                        _loginEventChannel.send(LoginUiEvent.ShowErrorMessage(errorMessage!!))
                     }
                 }
             }

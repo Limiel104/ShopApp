@@ -8,4 +8,9 @@ data class Product(
     val category: String,
     val imageUrl: String,
     val isInFavourites: Boolean
-)
+) {
+    fun priceToString(): String {
+        val formattedPrice = String.format("%.2f PLN", price)
+        return formattedPrice.replace(".", ",")
+    }
+}

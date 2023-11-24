@@ -2,7 +2,7 @@ package com.example.shopapp.data.repository
 
 import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.repository.CouponsRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

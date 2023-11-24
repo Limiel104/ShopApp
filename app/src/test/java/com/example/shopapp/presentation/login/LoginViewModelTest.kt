@@ -2,10 +2,10 @@ package com.example.shopapp.presentation.login
 
 import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.emailEmptyError
-import com.example.shopapp.util.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
@@ -56,7 +56,6 @@ class LoginViewModelTest {
         val initialEmailState = getCurrentLoginState().email
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
-
         val resultEmail = getCurrentLoginState().email
 
         assertThat(initialEmailState).isEqualTo("")
@@ -69,7 +68,6 @@ class LoginViewModelTest {
         val initialPasswordState = getCurrentLoginState().password
 
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         val resultPassword = getCurrentLoginState().password
 
         assertThat(initialPasswordState).isEqualTo("")
@@ -81,8 +79,12 @@ class LoginViewModelTest {
         val email = "email@email.com"
         val password = "Qwerty1+"
 
-        every { shopUseCases.validateEmailUseCase(email) } returns ValidationResult(isSuccessful = true)
-        every { shopUseCases.validateLoginPasswordUseCase(password) } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateEmailUseCase(email)
+        } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateLoginPasswordUseCase(password)
+        } returns ValidationResult(isSuccessful = true)
 
         val result = loginViewModel.isValidationSuccessful(email,password)
         val loginState = getCurrentLoginState()
@@ -107,7 +109,9 @@ class LoginViewModelTest {
             isSuccessful = false,
             errorMessage = emailEmptyError
         )
-        every { shopUseCases.validateLoginPasswordUseCase(password) } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateLoginPasswordUseCase(password)
+        } returns ValidationResult(isSuccessful = true)
 
         val result = loginViewModel.isValidationSuccessful(email,password)
         val loginState = getCurrentLoginState()
@@ -126,7 +130,9 @@ class LoginViewModelTest {
         val email = "email@email.com"
         val password = ""
 
-        every { shopUseCases.validateEmailUseCase(email) } returns ValidationResult(isSuccessful = true)
+        every {
+            shopUseCases.validateEmailUseCase(email)
+        } returns ValidationResult(isSuccessful = true)
         every {
             shopUseCases.validateLoginPasswordUseCase(password)
         } returns ValidationResult(
@@ -200,7 +206,6 @@ class LoginViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         val initialLoginState = getCurrentLoginState().isLoading
-
         loginViewModel.login(email,password)
         val loadingState = getCurrentLoginState().isLoading
 
@@ -243,7 +248,6 @@ class LoginViewModelTest {
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         loginViewModel.onEvent(LoginEvent.Login)
         val loginState = getCurrentLoginState()
 
@@ -275,7 +279,6 @@ class LoginViewModelTest {
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         loginViewModel.onEvent(LoginEvent.Login)
         val loginState = getCurrentLoginState()
 
@@ -307,7 +310,6 @@ class LoginViewModelTest {
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         loginViewModel.onEvent(LoginEvent.Login)
         val loginState = getCurrentLoginState()
 
@@ -338,7 +340,6 @@ class LoginViewModelTest {
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         loginViewModel.onEvent(LoginEvent.Login)
         val loginState = getCurrentLoginState()
 
@@ -372,7 +373,6 @@ class LoginViewModelTest {
 
         loginViewModel.onEvent(LoginEvent.EnteredEmail(email))
         loginViewModel.onEvent(LoginEvent.EnteredPassword(password))
-
         loginViewModel.onEvent(LoginEvent.Login)
         val loginState = getCurrentLoginState()
 

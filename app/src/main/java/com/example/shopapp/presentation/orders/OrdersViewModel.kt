@@ -10,13 +10,12 @@ import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.domain.util.OrderOrder
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.ORDERS_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.ORDERS_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,8 +27,8 @@ class OrdersViewModel @Inject constructor(
     private val _ordersState = mutableStateOf(OrdersState())
     val ordersState: State<OrdersState> = _ordersState
 
-    private val _eventFlow = MutableSharedFlow<OrdersUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _ordersEventChannel = Channel<OrdersUiEvent>()
+    val ordersEventChannelFlow = _ordersEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, ORDERS_VM)
@@ -50,6 +49,11 @@ class OrdersViewModel @Inject constructor(
                 _ordersState.value = ordersState.value.copy(
                     isSortSectionVisible = !_ordersState.value.isSortSectionVisible
                 )
+            }
+            is OrdersEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _ordersEventChannel.send(OrdersUiEvent.NavigateBack)
+                }
             }
         }
     }
@@ -85,7 +89,7 @@ class OrdersViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(OrdersUiEvent.ShowErrorMessage(response.message.toString()))
+                        _ordersEventChannel.send(OrdersUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -94,7 +98,7 @@ class OrdersViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
-            shopUseCases.getProductsUseCase(Category.All.id).collect { response ->
+            shopUseCases.getProductsUseCase("all").collect { response ->
                 when(response) {
                     is Resource.Loading -> {
                         Log.i(TAG,"Loading products: ${response.isLoading}")
@@ -116,7 +120,7 @@ class OrdersViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(OrdersUiEvent.ShowErrorMessage(response.message.toString()))
+                        _ordersEventChannel.send(OrdersUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }

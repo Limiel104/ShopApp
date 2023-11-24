@@ -1,13 +1,13 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneCapitalLetterError
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneDigitError
-import com.example.shopapp.util.Constants.passwordContainsAtLeastOneSpecialCharError
-import com.example.shopapp.util.Constants.passwordEmptyError
-import com.example.shopapp.util.Constants.passwordMinLength
-import com.example.shopapp.util.Constants.shortPasswordError
-import com.example.shopapp.util.Constants.specialChars
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneCapitalLetterError
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneDigitError
+import com.example.shopapp.presentation.common.Constants.passwordContainsAtLeastOneSpecialCharError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordMinLength
+import com.example.shopapp.presentation.common.Constants.shortPasswordError
+import com.example.shopapp.presentation.common.Constants.specialChars
 
 class ValidateSignupPasswordUseCase {
     operator fun invoke(password: String): ValidationResult {

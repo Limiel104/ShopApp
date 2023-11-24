@@ -3,9 +3,8 @@ package com.example.shopapp.domain.use_case
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.repository.ProductRepository
 import com.google.common.truth.Truth.assertThat
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.productDescription
+import com.example.shopapp.domain.util.Resource
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -36,7 +35,7 @@ class GetProductsUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -45,7 +44,7 @@ class GetProductsUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -54,7 +53,7 @@ class GetProductsUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = productDescription,
-                category = Category.Jewelery.id,
+                category = "jewelery",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -63,7 +62,7 @@ class GetProductsUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )
@@ -78,14 +77,14 @@ class GetProductsUseCaseTest {
     @Test
     fun `get products regardless of category id`() {
         runBlocking {
-            coEvery { productRepository.getProducts(Category.All.id)
+            coEvery { productRepository.getProducts("all")
             } returns flowOf(
                 Resource.Success(productList)
             )
 
-            val products = getProductsUseCase(Category.All.id).first().data
+            val products = getProductsUseCase("all").first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.All.id) }
+            coVerify(exactly = 1) { getProductsUseCase("all") }
             assertThat(products?.size).isEqualTo(4)
         }
     }
@@ -94,19 +93,19 @@ class GetProductsUseCaseTest {
     fun `get products from exactly one category`() {
         runBlocking {
             coEvery {
-                productRepository.getProducts(Category.Men.id)
+                productRepository.getProducts("men's clothing")
             } returns flowOf(
-                Resource.Success(productList.filter { it.category == Category.Men.id })
+                Resource.Success(productList.filter { it.category == "men's clothing" })
             )
 
-            val products = getProductsUseCase(Category.Men.id).first().data
+            val products = getProductsUseCase("men's clothing").first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.Men.id) }
+            coVerify(exactly = 1) { getProductsUseCase("men's clothing") }
             assertThat(products).isNotNull()
             assertThat(products?.size).isEqualTo(2)
             if (products != null) {
                 for(product in products) {
-                    assertThat(product.category).isEqualTo(Category.Men.id)
+                    assertThat(product.category).isEqualTo("men's clothing")
                 }
             }
         }
@@ -116,14 +115,14 @@ class GetProductsUseCaseTest {
     fun `return empty list when no product from that category`() {
         runBlocking {
             coEvery {
-                productRepository.getProducts(Category.Electronics.id)
+                productRepository.getProducts("electronics")
             } returns flowOf(
-                Resource.Success(productList.filter { it.category == Category.Electronics.id })
+                Resource.Success(productList.filter { it.category == "electronics" })
             )
 
-            val products = getProductsUseCase(Category.Electronics.id).first().data
+            val products = getProductsUseCase("electronics").first().data
 
-            coVerify(exactly = 1) { getProductsUseCase(Category.Electronics.id) }
+            coVerify(exactly = 1) { getProductsUseCase("electronics") }
             assertThat(products).isEmpty()
         }
     }
@@ -135,11 +134,11 @@ class GetProductsUseCaseTest {
                 Resource.Error("Error")
             )
 
-            val result = getProductsUseCase(Category.All.id).first()
+            val result = getProductsUseCase("all").first()
             val errorMessage = result.message
             val products = result.data
 
-            coVerify { getProductsUseCase(Category.All.id) }
+            coVerify { getProductsUseCase("all") }
             assertThat(errorMessage).isEqualTo("Error")
             assertThat(products).isNull()
         }

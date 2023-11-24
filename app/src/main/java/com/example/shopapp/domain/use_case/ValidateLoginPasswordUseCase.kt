@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
 
 class ValidateLoginPasswordUseCase {
     operator fun invoke(password: String): ValidationResult {

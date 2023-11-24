@@ -25,18 +25,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.MainActivity
-import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants
-import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
-import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.DELETE_BTN
-import com.example.shopapp.util.Constants.FAVOURITES_CONTENT
-import com.example.shopapp.util.Constants.FAVOURITES_CPI
-import com.example.shopapp.util.Constants.FAVOURITES_TOP_BAR
-import com.example.shopapp.util.Constants.FAVOURITES_LAZY_VERTICAL_GRID
-import com.example.shopapp.util.Constants.PRODUCT_ITEM_TITLE
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants
+import com.example.shopapp.presentation.common.Constants.ADD_TO_CART_BTN
+import com.example.shopapp.presentation.common.Constants.CART_BTN
+import com.example.shopapp.presentation.common.Constants.DELETE_BTN
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_CONTENT
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_CPI
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_LAZY_VERTICAL_GRID
+import com.example.shopapp.presentation.common.Constants.PRODUCT_ITEM_TITLE
+import com.example.shopapp.presentation.navigation.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -129,6 +128,7 @@ class FavouriteScreenTest {
                             isLoading = isLoading,
                             onProductSelected = {},
                             onDelete = {},
+                            onAddToCart = {},
                             onGoToCart = {}
                         )
                     }

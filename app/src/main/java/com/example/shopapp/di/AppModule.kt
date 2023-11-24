@@ -27,7 +27,6 @@ import com.example.shopapp.domain.use_case.DeleteCouponUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromCartUseCase
 import com.example.shopapp.domain.use_case.DeleteProductFromFavouritesUseCase
 import com.example.shopapp.domain.use_case.FilterProductsByUserFavouritesUseCase
-import com.example.shopapp.domain.use_case.GetCategoriesUseCase
 import com.example.shopapp.domain.use_case.GetCurrentUserUseCase
 import com.example.shopapp.domain.use_case.GetFavouriteIdUseCase
 import com.example.shopapp.domain.use_case.GetProductUseCase
@@ -42,6 +41,7 @@ import com.example.shopapp.domain.use_case.FilterProductsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemsUseCase
 import com.example.shopapp.domain.use_case.GetUserCartItemUseCase
 import com.example.shopapp.domain.use_case.GetUserCouponUseCase
+import com.example.shopapp.domain.use_case.GetUserFavouriteUseCase
 import com.example.shopapp.domain.use_case.GetUserOrdersUseCase
 import com.example.shopapp.domain.use_case.GetUserPointsUseCase
 import com.example.shopapp.domain.use_case.GetUserUseCase
@@ -62,11 +62,11 @@ import com.example.shopapp.domain.use_case.ValidateNameUseCase
 import com.example.shopapp.domain.use_case.ValidateSignupPasswordUseCase
 import com.example.shopapp.domain.use_case.ValidateStreetUseCase
 import com.example.shopapp.domain.use_case.ValidateZipCodeUseCase
-import com.example.shopapp.util.Constants.CARTS_COLLECTION
-import com.example.shopapp.util.Constants.COUPONS_COLLECTION
-import com.example.shopapp.util.Constants.FAVOURITES_COLLECTION
-import com.example.shopapp.util.Constants.ORDERS_COLLECTION
-import com.example.shopapp.util.Constants.USERS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.CARTS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.COUPONS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_COLLECTION
+import com.example.shopapp.presentation.common.Constants.ORDERS_COLLECTION
+import com.example.shopapp.presentation.common.Constants.USERS_COLLECTION
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -168,7 +168,6 @@ object AppModule {
     ): ShopUseCases {
         return ShopUseCases(
             getProductsUseCase = GetProductsUseCase(productRepository),
-            getCategoriesUseCase = GetCategoriesUseCase(),
             getProductUseCase = GetProductUseCase(productRepository),
             validateEmailUseCase = ValidateEmailUseCase(),
             validateLoginPasswordUseCase = ValidateLoginPasswordUseCase(),
@@ -209,7 +208,8 @@ object AppModule {
             addCouponUseCase = AddCouponUseCase(couponsRepository),
             getUserCouponUseCase = GetUserCouponUseCase(couponsRepository),
             deleteCouponUseCase = DeleteCouponUseCase(couponsRepository),
-            isCouponExpiredUseCase = IsCouponExpiredUseCase()
+            isCouponExpiredUseCase = IsCouponExpiredUseCase(),
+            getUserFavouriteUseCase = GetUserFavouriteUseCase(favouritesRepository)
         )
     }
 }

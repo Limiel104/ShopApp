@@ -5,5 +5,6 @@ sealed class FavouritesEvent {
     object OnLogin: FavouritesEvent()
     object OnSignup: FavouritesEvent()
     data class OnDelete(val value: Int): FavouritesEvent()
+    data class OnAddToCart(val value: Int): FavouritesEvent()
     object GoToCart: FavouritesEvent()
 }

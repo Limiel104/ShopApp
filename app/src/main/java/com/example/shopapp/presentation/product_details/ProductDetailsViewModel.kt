@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.CartItem
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,8 +26,8 @@ class ProductDetailsViewModel @Inject constructor(
     private val _productDetailsState = mutableStateOf(ProductDetailsState())
     val productDetailsState: State<ProductDetailsState> = _productDetailsState
 
-    private val _eventFlow = MutableSharedFlow<ProductDetailsUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _productDetailsEventChannel = Channel<ProductDetailsUiEvent>()
+    val productDetailsEventChannelFlow = _productDetailsEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG, PRODUCT_DETAILS_VM)
@@ -44,9 +44,10 @@ class ProductDetailsViewModel @Inject constructor(
 
     fun onEvent(event: ProductDetailsEvent) {
         when(event) {
-            ProductDetailsEvent.GoBack -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(ProductDetailsUiEvent.NavigateBack)
+            is ProductDetailsEvent.OnFavouriteButtonSelected -> {
+                if(_productDetailsState.value.isButtonEnabled) {
+                    isFavouriteButtonEnabled(false)
+                    onFavouriteButtonClicked(_productDetailsState.value.isInFavourites)
                 }
             }
             is ProductDetailsEvent.OnAddToCart -> {
@@ -58,8 +59,18 @@ class ProductDetailsViewModel @Inject constructor(
                 }
                 else {
                     viewModelScope.launch {
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage("You need to be logged in"))
                     }
+                }
+            }
+            is ProductDetailsEvent.GoToCart -> {
+                viewModelScope.launch {
+                    _productDetailsEventChannel.send(ProductDetailsUiEvent.NavigateToCart)
+                }
+            }
+            is ProductDetailsEvent.GoBack -> {
+                viewModelScope.launch {
+                    _productDetailsEventChannel.send(ProductDetailsUiEvent.NavigateBack)
                 }
             }
         }
@@ -68,7 +79,12 @@ class ProductDetailsViewModel @Inject constructor(
     private fun getProduct(productId: Int) {
         viewModelScope.launch {
             when(val response = shopUseCases.getProductUseCase(productId)) {
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    Log.i(TAG,"Loading products: ${response.isLoading}")
+                    _productDetailsState.value = productDetailsState.value.copy(
+                        isLoading = response.isLoading
+                    )
+                }
                 is Resource.Success -> {
                     if (response.data != null) {
                         _productDetailsState.value = productDetailsState.value.copy(
@@ -95,6 +111,39 @@ class ProductDetailsViewModel @Inject constructor(
                     userUID = currentUser.uid
                 )
             }
+
+            getProductFavouriteId(
+                _productDetailsState.value.userUID,
+                _productDetailsState.value.productId
+            )
+        }
+    }
+
+    fun getProductFavouriteId(userUID: String, productId: Int) {
+        viewModelScope.launch {
+            shopUseCases.getUserFavouriteUseCase(userUID,productId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        if (!response.data.isNullOrEmpty()) {
+                            _productDetailsState.value = productDetailsState.value.copy(
+                                favouriteId = response.data[0].favouriteId,
+                                isInFavourites = true
+                            )
+                            Log.i(TAG,"Product is user in favourites")
+                        }
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+            }
         }
     }
 
@@ -109,7 +158,7 @@ class ProductDetailsViewModel @Inject constructor(
                         )
                     }
                     is Resource.Success -> {
-                        if (!response.data.isNullOrEmpty()) {
+                        if(!response.data.isNullOrEmpty()) {
                             val cartItem = CartItem(
                                 cartItemId = response.data[0].cartItemId,
                                 userUID = response.data[0].userUID,
@@ -124,7 +173,7 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -143,11 +192,11 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product added to the cart")
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -166,13 +215,88 @@ class ProductDetailsViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Product updated in the cart")
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowProductAddedToCartMessage)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
+            }
+        }
+    }
+
+    fun isFavouriteButtonEnabled(value: Boolean) {
+        Log.i(TAG,"isEnabled - $value")
+        _productDetailsState.value = productDetailsState.value.copy(
+            isButtonEnabled = value
+        )
+    }
+    private fun onFavouriteButtonClicked(isInFavourites: Boolean) {
+        val userUID = _productDetailsState.value.userUID
+
+        if(userUID == null) {
+            Log.i(TAG,"User is not logged in - login or signup")
+            _productDetailsState.value = productDetailsState.value.copy(
+                isDialogActivated = true
+            )
+            isFavouriteButtonEnabled(true)
+        }
+        else if(isInFavourites) {
+            deleteProductFromUserFavourites(_productDetailsState.value.favouriteId)
+        }
+        else {
+            val productId = _productDetailsState.value.productId
+            addProductToUserFavourites(productId,userUID)
+        }
+    }
+
+    fun addProductToUserFavourites(productId: Int, userUID: String) {
+        viewModelScope.launch {
+            shopUseCases.addProductToFavouritesUseCase(productId,userUID).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading add favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Added product to favourites")
+                        getProductFavouriteId(userUID, productId)
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                isFavouriteButtonEnabled(true)
+            }
+        }
+    }
+
+    fun deleteProductFromUserFavourites(favouriteId: String) {
+        viewModelScope.launch {
+            shopUseCases.deleteProductFromFavouritesUseCase(favouriteId).collect { response ->
+                when(response) {
+                    is Resource.Loading -> {
+                        Log.i(TAG,"Loading delete favourite: ${response.isLoading}")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isLoading = response.isLoading
+                        )
+                    }
+                    is Resource.Success -> {
+                        Log.i(TAG,"Deleted product from favourites")
+                        _productDetailsState.value = productDetailsState.value.copy(
+                            isInFavourites = false
+                        )
+                    }
+                    is Resource.Error -> {
+                        Log.i(TAG, response.message.toString())
+                        _productDetailsEventChannel.send(ProductDetailsUiEvent.ShowErrorMessage(response.message.toString()))
+                    }
+                }
+                isFavouriteButtonEnabled(true)
             }
         }
     }

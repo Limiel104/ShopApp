@@ -9,5 +9,5 @@ data class FavouritesState (
     val isUserLoggedIn: Boolean = false,
     val userUID: String = "",
     val isLoading: Boolean = false,
-    val favouriteList: List<Favourite> = emptyList(),
+    val favouriteList: List<Favourite> = emptyList()
 )

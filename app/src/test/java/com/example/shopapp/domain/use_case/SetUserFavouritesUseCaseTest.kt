@@ -2,8 +2,7 @@ package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants
+import com.example.shopapp.presentation.common.Constants
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +23,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -33,7 +32,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -42,7 +41,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Jewelery.id,
+                category = "jewelery",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -51,7 +50,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )
@@ -94,7 +93,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Women.id,
+                category = "women's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = true
             ),
@@ -103,7 +102,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             ),
@@ -112,7 +111,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Jewelery.id,
+                category = "jewelery",
                 imageUrl = "imageUrl",
                 isInFavourites = true
             ),
@@ -121,7 +120,7 @@ class SetUserFavouritesUseCaseTest {
                 title = "Shirt",
                 price = 195.59,
                 description = Constants.productDescription,
-                category = Category.Men.id,
+                category = "men's clothing",
                 imageUrl = "imageUrl",
                 isInFavourites = false
             )

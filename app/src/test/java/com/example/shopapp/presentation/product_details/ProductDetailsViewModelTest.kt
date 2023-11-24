@@ -2,10 +2,11 @@ package com.example.shopapp.presentation.product_details
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.shopapp.domain.model.CartItem
+import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
@@ -39,6 +40,7 @@ class ProductDetailsViewModelTest {
     private lateinit var user: FirebaseUser
     private lateinit var cartItem: CartItem
     private lateinit var updatedCartItem: CartItem
+    private lateinit var favourite: Favourite
 
     @Before
     fun setUp() {
@@ -70,6 +72,12 @@ class ProductDetailsViewModelTest {
             productId = 1,
             amount = 2
         )
+
+        favourite = Favourite(
+            favouriteId = "favouriteId",
+            userUID = "userUID",
+            productId = 1
+        )
     }
 
     @After
@@ -90,9 +98,11 @@ class ProductDetailsViewModelTest {
         coEvery {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf( favourite)))
 
         productDetailsViewModel = setViewModel()
-
         val productId = getCurrentProductDetailsState().productId
 
         verify { savedStateHandle.get<String>("productId") }
@@ -104,9 +114,11 @@ class ProductDetailsViewModelTest {
         coEvery {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Error("Error"))
 
         productDetailsViewModel = setViewModel()
-
         val productToCheck = Product(
             id = getCurrentProductDetailsState().productId,
             title = getCurrentProductDetailsState().title,
@@ -116,12 +128,15 @@ class ProductDetailsViewModelTest {
             imageUrl = getCurrentProductDetailsState().imageUrl,
             isInFavourites = false
         )
+        val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
         }
         assertThat(productToCheck).isEqualTo(product)
+        assertThat(loadingState).isFalse()
     }
 
     @Test
@@ -129,19 +144,23 @@ class ProductDetailsViewModelTest {
         coEvery {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Error("Error")
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Error("Error"))
 
         productDetailsViewModel = setViewModel()
-
         val productId = getCurrentProductDetailsState().productId
         val title = getCurrentProductDetailsState().title
         val price = getCurrentProductDetailsState().price
         val description = getCurrentProductDetailsState().description
         val category = getCurrentProductDetailsState().category
         val imageUrl = getCurrentProductDetailsState().imageUrl
+        val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
         }
         assertThat(productId).isEqualTo(product.id)
         assertThat(title).isEqualTo("")
@@ -149,6 +168,7 @@ class ProductDetailsViewModelTest {
         assertThat(description).isEqualTo("")
         assertThat(category).isEqualTo("")
         assertThat(imageUrl).isEqualTo("")
+        assertThat(loadingState).isFalse()
     }
 
     @Test
@@ -156,19 +176,23 @@ class ProductDetailsViewModelTest {
         coEvery {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Loading(true)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Error("Error"))
 
         productDetailsViewModel = setViewModel()
-
         val productId = getCurrentProductDetailsState().productId
         val title = getCurrentProductDetailsState().title
         val price = getCurrentProductDetailsState().price
         val description = getCurrentProductDetailsState().description
         val category = getCurrentProductDetailsState().category
         val imageUrl = getCurrentProductDetailsState().imageUrl
+        val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
         }
         assertThat(productId).isEqualTo(product.id)
         assertThat(title).isEqualTo("")
@@ -176,6 +200,7 @@ class ProductDetailsViewModelTest {
         assertThat(description).isEqualTo("")
         assertThat(category).isEqualTo("")
         assertThat(imageUrl).isEqualTo("")
+        assertThat(loadingState).isTrue()
     }
 
     @Test
@@ -183,16 +208,115 @@ class ProductDetailsViewModelTest {
         coEvery {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
 
         productDetailsViewModel = setViewModel()
-
         val userUID = getCurrentProductDetailsState().userUID
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
         }
         assertThat(userUID).isEqualTo("userUID")
+    }
+
+    @Test
+    fun `get user favourite result is success - product is in favourites`() {
+        coEvery {
+            shopUseCases.getProductUseCase(1)
+        } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+
+        productDetailsViewModel = setViewModel()
+        val favouriteId = getCurrentProductDetailsState().favouriteId
+        val isInFavourites = getCurrentProductDetailsState().isInFavourites
+        val loadingState = getCurrentProductDetailsState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getProductUseCase(1)
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        }
+        assertThat(favouriteId).isEqualTo("favouriteId")
+        assertThat(isInFavourites).isTrue()
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `get user favourite result is success - product is not in favourites`() {
+        coEvery {
+            shopUseCases.getProductUseCase(1)
+        } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(emptyList()))
+
+        productDetailsViewModel = setViewModel()
+        val favouriteId = getCurrentProductDetailsState().favouriteId
+        val isInFavourites = getCurrentProductDetailsState().isInFavourites
+        val loadingState = getCurrentProductDetailsState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getProductUseCase(1)
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        }
+        assertThat(favouriteId).isEqualTo("")
+        assertThat(isInFavourites).isFalse()
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `get user favourite result is error`() {
+        coEvery {
+            shopUseCases.getProductUseCase(1)
+        } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Error("Error"))
+
+        productDetailsViewModel = setViewModel()
+        val favouriteId = getCurrentProductDetailsState().favouriteId
+        val isInFavourites = getCurrentProductDetailsState().isInFavourites
+        val loadingState = getCurrentProductDetailsState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getProductUseCase(1)
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        }
+        assertThat(favouriteId).isEqualTo("")
+        assertThat(isInFavourites).isFalse()
+        assertThat(loadingState).isFalse()
+    }
+
+    @Test
+    fun `get user favourite result is loading`() {
+        coEvery {
+            shopUseCases.getProductUseCase(1)
+        } returns Resource.Success(product)
+        coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Loading(true))
+
+        productDetailsViewModel = setViewModel()
+        val favouriteId = getCurrentProductDetailsState().favouriteId
+        val isInFavourites = getCurrentProductDetailsState().isInFavourites
+        val loadingState = getCurrentProductDetailsState().isLoading
+
+        coVerifySequence {
+            shopUseCases.getProductUseCase(1)
+            shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        }
+        assertThat(favouriteId).isEqualTo("")
+        assertThat(isInFavourites).isFalse()
+        assertThat(loadingState).isTrue()
     }
 
     @Test
@@ -201,17 +325,20 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.addProductToCart("userUID",1)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         }
         assertThat(loadingState).isFalse()
@@ -223,17 +350,20 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         } returns flowOf(Resource.Loading(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.addProductToCart("userUID",1)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         }
         assertThat(loadingState).isTrue()
@@ -245,11 +375,13 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.updateProductInCartUseCase(cartItem)
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.updateProductInCart(
             CartItem("cartItemId","userUID",1,1)
         )
@@ -258,6 +390,7 @@ class ProductDetailsViewModelTest {
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.updateProductInCartUseCase(cartItem)
         }
         assertThat(loadingState).isFalse()
@@ -269,11 +402,13 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.updateProductInCartUseCase(cartItem)
         } returns flowOf(Resource.Loading(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.updateProductInCart(
             CartItem("cartItemId","userUID",1,1)
         )
@@ -282,6 +417,7 @@ class ProductDetailsViewModelTest {
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.updateProductInCartUseCase(cartItem)
         }
         assertThat(loadingState).isTrue()
@@ -293,6 +429,9 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.getUserCartItemUseCase("userUID",1)
         } returns flowOf(Resource.Success(emptyList()))
         coEvery {
@@ -300,13 +439,13 @@ class ProductDetailsViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.addOrUpdateProductInCart("userUID",1)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.getUserCartItemUseCase("userUID",1)
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         }
@@ -319,6 +458,9 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.getUserCartItemUseCase("userUID",1)
         } returns flowOf(Resource.Success(listOf(cartItem)))
         coEvery {
@@ -326,13 +468,13 @@ class ProductDetailsViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.addOrUpdateProductInCart("userUID",1)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.getUserCartItemUseCase("userUID",1)
             shopUseCases.updateProductInCartUseCase(updatedCartItem)
         }
@@ -345,11 +487,13 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.getUserCartItemUseCase("userUID",1)
         } returns flowOf(Resource.Loading(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.addOrUpdateProductInCart("userUID",1)
         val loadingState = getCurrentProductDetailsState().isLoading
         println(loadingState)
@@ -357,6 +501,7 @@ class ProductDetailsViewModelTest {
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.getUserCartItemUseCase("userUID",1)
         }
         assertThat(loadingState).isTrue()
@@ -368,6 +513,9 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.getUserCartItemUseCase("userUID",1)
         } returns flowOf(Resource.Success(emptyList()))
         coEvery {
@@ -375,13 +523,13 @@ class ProductDetailsViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.onEvent(ProductDetailsEvent.OnAddToCart)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.getUserCartItemUseCase("userUID",1)
             shopUseCases.addProductToCartUseCase("userUID",1,1)
         }
@@ -394,6 +542,9 @@ class ProductDetailsViewModelTest {
             shopUseCases.getProductUseCase(1)
         } returns Resource.Success(product)
         coEvery {
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
+        } returns flowOf(Resource.Success(listOf(favourite)))
+        coEvery {
             shopUseCases.getUserCartItemUseCase("userUID",1)
         } returns flowOf(Resource.Success(listOf(cartItem)))
         coEvery {
@@ -401,13 +552,13 @@ class ProductDetailsViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         productDetailsViewModel = setViewModel()
-
         productDetailsViewModel.onEvent(ProductDetailsEvent.OnAddToCart)
         val loadingState = getCurrentProductDetailsState().isLoading
 
         coVerifySequence {
             shopUseCases.getProductUseCase(1)
             shopUseCases.getCurrentUserUseCase()
+            shopUseCases.getUserFavouriteUseCase("userUID",1)
             shopUseCases.getUserCartItemUseCase("userUID",1)
             shopUseCases.updateProductInCartUseCase(updatedCartItem)
         }

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.CATEGORY_SORT_SECTION
+import com.example.shopapp.presentation.common.Constants.CATEGORY_SORT_SECTION
 
 @Composable
 fun SortSection(

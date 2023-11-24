@@ -2,7 +2,7 @@ package com.example.shopapp.data.repository
 
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.repository.OrdersRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

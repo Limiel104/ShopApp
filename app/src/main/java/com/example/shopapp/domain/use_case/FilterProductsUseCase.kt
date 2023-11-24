@@ -1,7 +1,6 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Category
 
 class FilterProductsUseCase() {
     operator fun invoke(
@@ -29,10 +28,10 @@ class FilterProductsUseCase() {
 
 private fun returnCategory(categoryId: String): String {
     return when(categoryId) {
-        Category.Men.id -> Category.Men.title
-        Category.Women.id -> Category.Women.title
-        Category.Jewelery.id -> Category.Jewelery.title
-        Category.Electronics.id -> Category.Electronics.title
+        "men's clothing" -> "Men's clothing"
+        "women's clothing" -> "Women's clothing"
+        "jewelery" -> "Jewelery"
+        "electronics" -> "Electronics"
         else -> ""
     }
 }

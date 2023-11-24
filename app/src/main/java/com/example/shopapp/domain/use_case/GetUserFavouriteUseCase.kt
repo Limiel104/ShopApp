@@ -1,13 +1,14 @@
 package com.example.shopapp.domain.use_case
 
+import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.repository.FavouritesRepository
 import com.example.shopapp.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 
-class AddProductToFavouritesUseCase(
+class GetUserFavouriteUseCase(
     private val favouritesRepository: FavouritesRepository
 ) {
-    suspend operator fun invoke(productId: Int, userUID: String): Flow<Resource<Boolean>> {
-        return favouritesRepository.addProductToFavourites(productId,userUID)
+    suspend operator fun invoke(userUID: String, productId: Int): Flow<Resource<List<Favourite>>> {
+        return favouritesRepository.getUserFavourite(userUID, productId)
     }
 }

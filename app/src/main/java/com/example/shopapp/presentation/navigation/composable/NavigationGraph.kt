@@ -17,7 +17,7 @@ import com.example.shopapp.presentation.orders.composable.OrdersScreen
 import com.example.shopapp.presentation.product_details.composable.ProductDetailsScreen
 import com.example.shopapp.presentation.profile.composable.ProfileScreen
 import com.example.shopapp.presentation.signup.composable.SignupScreen
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.navigation.Screen
 
 @Composable
 fun NavigationGraph(
@@ -60,7 +60,7 @@ fun NavigationGraph(
             AccountScreen(navController = navController)
         }
         composable(
-            route = Screen.ProductDetailsScreen.route + "productId" + "={productId}",
+            route = Screen.ProductDetailsScreen.route + "productId={productId}",
             arguments = listOf(
                 navArgument(
                     name = "productId"
@@ -89,10 +89,10 @@ fun NavigationGraph(
         composable(
             route = Screen.OrdersScreen.route
         ) {
-            OrdersScreen()
+            OrdersScreen(navController = navController)
         }
         composable(
-            route = Screen.ProfileScreen.route + "userUID" + "={userUID}",
+            route = Screen.ProfileScreen.route + "userUID={userUID}",
             arguments = listOf(
                 navArgument(
                     name = "userUID"

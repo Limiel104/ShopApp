@@ -31,24 +31,22 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
 import com.example.shopapp.presentation.MainActivity
-import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.CATEGORY_CHECKBOXES
-import com.example.shopapp.util.Constants.CATEGORY_CONTENT
-import com.example.shopapp.util.Constants.CATEGORY_CPI
-import com.example.shopapp.util.Constants.CATEGORY_FILTER_SECTION
-import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
-import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER
-import com.example.shopapp.util.Constants.CATEGORY_PRICE_SLIDER_ITEM
-import com.example.shopapp.util.Constants.CATEGORY_SORT_SECTION
-import com.example.shopapp.util.Constants.CATEGORY_TOP_BAR
-import com.example.shopapp.util.Constants.IMAGE
-import com.example.shopapp.util.Constants.NOT_LOGGED_IN_DIALOG
-import com.example.shopapp.util.Constants.SORT_AND_FILTER_BTN
-import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.CART_BTN
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CHECKBOXES
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CONTENT
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CPI
+import com.example.shopapp.presentation.common.Constants.CATEGORY_FILTER_SECTION
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LAZY_VERTICAL_GRID
+import com.example.shopapp.presentation.common.Constants.CATEGORY_PRICE_SLIDER
+import com.example.shopapp.presentation.common.Constants.CATEGORY_PRICE_SLIDER_ITEM
+import com.example.shopapp.presentation.common.Constants.CATEGORY_SORT_SECTION
+import com.example.shopapp.presentation.common.Constants.CATEGORY_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.IMAGE
+import com.example.shopapp.presentation.common.Constants.NOT_LOGGED_IN_DIALOG
+import com.example.shopapp.presentation.common.Constants.SORT_AND_FILTER_BTN
+import com.example.shopapp.presentation.common.Constants.productDescription
+import com.example.shopapp.presentation.navigation.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -154,10 +152,10 @@ class CategoryScreenTest {
         )
 
         categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
     }
 
@@ -196,7 +194,7 @@ class CategoryScreenTest {
                             productList = productList,
                             isSortAndFilterSectionVisible = isSortAndFilterSectionVisible,
                             isLoading = isLoading,
-                            isButtonLocked = isButtonLocked,
+                            isButtonEnabled = isButtonLocked,
                             isDialogActivated = isDialogActivated,
                             sliderPosition = sliderPosition,
                             sliderRange = sliderRange,

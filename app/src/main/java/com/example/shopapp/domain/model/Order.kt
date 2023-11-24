@@ -8,4 +8,9 @@ data class Order(
     val totalAmount: Double,
     val products: List<CartProduct>,
     val isExpanded: Boolean
-)
+) {
+    fun totalAmountToString(): String {
+        val formattedPrice = String.format("%.2f PLN", totalAmount)
+        return formattedPrice.replace(".", ",")
+    }
+}

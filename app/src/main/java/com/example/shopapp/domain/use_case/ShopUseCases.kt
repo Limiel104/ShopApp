@@ -2,7 +2,6 @@ package com.example.shopapp.domain.use_case
 
 data class ShopUseCases(
     val getProductsUseCase: GetProductsUseCase,
-    val getCategoriesUseCase: GetCategoriesUseCase,
     val getProductUseCase: GetProductUseCase,
     val validateEmailUseCase: ValidateEmailUseCase,
     val validateLoginPasswordUseCase: ValidateLoginPasswordUseCase,
@@ -43,5 +42,6 @@ data class ShopUseCases(
     val addCouponUseCase: AddCouponUseCase,
     val getUserCouponUseCase: GetUserCouponUseCase,
     val deleteCouponUseCase: DeleteCouponUseCase,
-    val isCouponExpiredUseCase: IsCouponExpiredUseCase
+    val isCouponExpiredUseCase: IsCouponExpiredUseCase,
+    val getUserFavouriteUseCase: GetUserFavouriteUseCase
 )

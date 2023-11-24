@@ -1,7 +1,7 @@
 package com.example.shopapp.data.repository
 
 import com.example.shopapp.domain.repository.AuthRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow

@@ -12,15 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.CATEGORY_LIST_CONTENT
-import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
-import com.example.shopapp.util.getCategory
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_CONTENT
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_LAZY_COLUMN
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CategoryListContent(
-    categoryList: List<Category>,
+    categoryList: List<String>,
     onCategorySelected: (String) -> Unit,
     onGoToCart: () -> Unit
 ) {
@@ -45,8 +43,8 @@ fun CategoryListContent(
             ) {
                 items(categoryList) {category ->
                     CategoryListItem(
-                        name = category.title,
-                        onClick = { onCategorySelected(category.id) }
+                        name = category,
+                        onClick = { onCategorySelected(category.lowercase()) }
                     )
                 }
             }
@@ -60,7 +58,13 @@ fun CategoryListContent(
 fun CategoryListContentPreview() {
     ShopAppTheme {
         CategoryListContent(
-            categoryList = getCategory(),
+            categoryList = listOf(
+                "All",
+                "Men's clothing",
+                "Women's clothing",
+                "Jewelery",
+                "Electronics"
+            ),
             onCategorySelected = {},
             onGoToCart = {}
         )

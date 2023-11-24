@@ -1,8 +1,8 @@
 package com.example.shopapp.domain.use_case
 
-import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
-import com.example.shopapp.util.Constants.zipCodeBadFormat
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldContainsSpecialCharsError
+import com.example.shopapp.presentation.common.Constants.zipCodeBadFormat
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test

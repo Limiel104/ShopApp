@@ -1,7 +1,6 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.Product
-import com.example.shopapp.util.Category
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -87,10 +86,10 @@ class FilterProductsUseCaseTest {
     @Test
     fun `products are filtered by category correctly - one category true`() {
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,false),
-            Pair(Category.Jewelery.title,false),
-            Pair(Category.Electronics.title,false)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",false),
+            Pair("Jewelery",false),
+            Pair("Electronics",false)
         )
         val products = filterProductsUseCase(productList, 5.99F,2230.99F,categoryFilterMap)
 
@@ -103,10 +102,10 @@ class FilterProductsUseCaseTest {
     @Test
     fun `products are filtered by category correctly - two categories true`() {
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,false),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,false)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",false),
+            Pair("Jewelery",true),
+            Pair("Electronics",false)
         )
         val products = filterProductsUseCase(productList, 5.99F,2230.99F,categoryFilterMap)
 
@@ -119,10 +118,10 @@ class FilterProductsUseCaseTest {
     @Test
     fun `products are filtered by category correctly - three categories true`() {
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,false),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",false),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
         val products = filterProductsUseCase(productList, 5.99F,2230.99F,categoryFilterMap)
 
@@ -135,10 +134,10 @@ class FilterProductsUseCaseTest {
     @Test
     fun `products are filtered by category correctly - all categories true`() {
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
         val products = filterProductsUseCase(productList, 5.99F,2230.99F,categoryFilterMap)
 
@@ -154,10 +153,10 @@ class FilterProductsUseCaseTest {
         val maxPrice = 2230.99F
 
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
         val products = filterProductsUseCase(productList,minPrice,maxPrice,categoryFilterMap)
 
@@ -173,10 +172,10 @@ class FilterProductsUseCaseTest {
         val maxPrice = 150.99F
 
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
         val products = filterProductsUseCase(productList,minPrice,maxPrice,categoryFilterMap)
 
@@ -192,10 +191,10 @@ class FilterProductsUseCaseTest {
         val maxPrice = 150.99F
 
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,true),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,true)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",true),
+            Pair("Jewelery",true),
+            Pair("Electronics",true)
         )
         val products = filterProductsUseCase(productList,minPrice,maxPrice,categoryFilterMap)
 
@@ -208,10 +207,10 @@ class FilterProductsUseCaseTest {
         val maxPrice = 150.99F
 
         val categoryFilterMap = mapOf(
-            Pair(Category.Men.title,true),
-            Pair(Category.Women.title,false),
-            Pair(Category.Jewelery.title,true),
-            Pair(Category.Electronics.title,false)
+            Pair("Men's clothing",true),
+            Pair("Women's clothing",false),
+            Pair("Jewelery",true),
+            Pair("Electronics",false)
         )
         val products = filterProductsUseCase(productList,minPrice,maxPrice,categoryFilterMap)
 

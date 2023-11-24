@@ -5,12 +5,12 @@ import com.example.shopapp.domain.model.Address
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.cityEmptyError
-import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.streetEmptyError
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.cityEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldEmptyError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
@@ -93,7 +93,6 @@ class ProfileViewModelTest {
         val firstName = "Bob"
         val initialFirstName = getCurrentProfileState().firstName
         profileViewModel.onEvent(ProfileEvent.EnteredFirstName(firstName))
-
         val resultFirstName = getCurrentProfileState().firstName
 
         assertThat(initialFirstName).isEqualTo("John")
@@ -107,7 +106,6 @@ class ProfileViewModelTest {
         val lastName = "Hall"
         val initialLastName = getCurrentProfileState().lastName
         profileViewModel.onEvent(ProfileEvent.EnteredLastName(lastName))
-
         val resultLastName = getCurrentProfileState().lastName
 
         assertThat(initialLastName).isEqualTo("Smith")
@@ -121,7 +119,6 @@ class ProfileViewModelTest {
         val street = "Street 2"
         val initialStreet = getCurrentProfileState().street
         profileViewModel.onEvent(ProfileEvent.EnteredStreet(street))
-
         val resultStreet = getCurrentProfileState().street
 
         assertThat(initialStreet).isEqualTo("Street 1")
@@ -135,7 +132,6 @@ class ProfileViewModelTest {
         val city = "Berlin"
         val initialCity = getCurrentProfileState().city
         profileViewModel.onEvent(ProfileEvent.EnteredCity(city))
-
         val resultCity = getCurrentProfileState().city
 
         assertThat(initialCity).isEqualTo("Warsaw")
@@ -149,7 +145,6 @@ class ProfileViewModelTest {
         val zipCode = "98-765"
         val initialZipCode = getCurrentProfileState().zipCode
         profileViewModel.onEvent(ProfileEvent.EnteredZipCode(zipCode))
-
         val resultZipCode = getCurrentProfileState().zipCode
 
         assertThat(initialZipCode).isEqualTo("12-345")

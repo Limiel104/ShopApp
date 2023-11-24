@@ -3,9 +3,8 @@ package com.example.shopapp.presentation.favourites
 import com.example.shopapp.domain.model.Favourite
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Category
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
@@ -144,7 +143,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(emptyList()))
 
         favouritesViewModel = setViewModel()
-
         val isUserLoggedIn = getCurrentFavouritesState().isUserLoggedIn
 
         coVerifySequence {
@@ -160,20 +158,19 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().productList
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(favourites).isEqualTo(favouriteProducts)
@@ -185,11 +182,10 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(emptyList()))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -197,7 +193,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -211,7 +207,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Error("Error"))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -232,7 +227,6 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -252,14 +246,13 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -267,7 +260,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(favourites).isEqualTo(userFavourites)
@@ -281,11 +274,10 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Error("Error"))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -293,7 +285,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -306,11 +298,10 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         val favourites = getCurrentFavouritesState().favouriteList
         val products = getCurrentFavouritesState().productList
         val isLoading = getCurrentFavouritesState().isLoading
@@ -318,7 +309,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         }
         assertThat(favourites).isEqualTo(userFavourites)
         assertThat(products).isEmpty()
@@ -331,7 +322,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -341,14 +332,13 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.deleteProductFromFavourites("favouriteId")
         val loadingState = getCurrentFavouritesState().isLoading
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")
         }
@@ -361,7 +351,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -371,14 +361,13 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Loading(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.deleteProductFromFavourites("favouriteId")
         val loadingState = getCurrentFavouritesState().isLoading
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")
         }
@@ -391,14 +380,13 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         } returns favouriteProducts
 
         favouritesViewModel = setViewModel()
-
         val initialProductId = getCurrentFavouritesState().productId
         favouritesViewModel.onEvent(FavouritesEvent.OnProductSelected(1))
         val resultProductId = getCurrentFavouritesState().productId
@@ -406,7 +394,7 @@ class FavouritesViewModelTest {
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
         }
         assertThat(initialProductId).isEqualTo(-1)
@@ -419,7 +407,7 @@ class FavouritesViewModelTest {
             shopUseCases.getUserFavouritesUseCase("userUID")
         } returns flowOf(Resource.Success(userFavourites))
         coEvery {
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
         } returns flowOf(Resource.Success(productList))
         every {
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
@@ -432,14 +420,13 @@ class FavouritesViewModelTest {
         } returns flowOf(Resource.Success(true))
 
         favouritesViewModel = setViewModel()
-
         favouritesViewModel.onEvent(FavouritesEvent.OnDelete(1))
         val loadingState = getCurrentFavouritesState().isLoading
 
         coVerifySequence {
             shopUseCases.getCurrentUserUseCase()
             shopUseCases.getUserFavouritesUseCase("userUID")
-            shopUseCases.getProductsUseCase(Category.All.id)
+            shopUseCases.getProductsUseCase("all")
             shopUseCases.filterProductsByUserFavouritesUseCase(productList,userFavourites)
             shopUseCases.getFavouriteIdUseCase(userFavourites,1)
             shopUseCases.deleteProductFromFavouritesUseCase("favouriteId")

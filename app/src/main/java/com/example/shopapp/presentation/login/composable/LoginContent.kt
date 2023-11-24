@@ -19,15 +19,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.LOGIN_BTN
-import com.example.shopapp.util.Constants.LOGIN_COLUMN
-import com.example.shopapp.util.Constants.LOGIN_CONTENT
-import com.example.shopapp.util.Constants.LOGIN_CPI
-import com.example.shopapp.util.Constants.LOGIN_EMAIL_TF
-import com.example.shopapp.util.Constants.LOGIN_PASSWORD_TF
-import com.example.shopapp.util.Constants.LOGIN_SIGNUP_BTN
-import com.example.shopapp.util.Constants.emailEmptyError
-import com.example.shopapp.util.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.LOGIN_BTN
+import com.example.shopapp.presentation.common.Constants.LOGIN_COLUMN
+import com.example.shopapp.presentation.common.Constants.LOGIN_CONTENT
+import com.example.shopapp.presentation.common.Constants.LOGIN_CPI
+import com.example.shopapp.presentation.common.Constants.LOGIN_EMAIL_TF
+import com.example.shopapp.presentation.common.Constants.LOGIN_PASSWORD_TF
+import com.example.shopapp.presentation.common.Constants.LOGIN_SIGNUP_BTN
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
 
 @Composable
 fun LoginContent(
@@ -39,12 +39,13 @@ fun LoginContent(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLogin: () -> Unit,
-    onSignup: () -> Unit
+    onSignup: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
             LoginTopBar(
-                onClick = { /*TODO*/ }
+                onClick = { onGoBack() }
             )
         },
         modifier = Modifier
@@ -164,7 +165,8 @@ fun LoginContentPreview() {
             onPasswordChange = {},
             isLoading = false,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -182,7 +184,8 @@ fun LoginContentErrorPreview() {
             onPasswordChange = {},
             isLoading = false,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }
@@ -200,7 +203,8 @@ fun LoginContentCPIPreview() {
             onPasswordChange = {},
             isLoading = true,
             onLogin = {},
-            onSignup = {}
+            onSignup = {},
+            onGoBack = {}
         )
     }
 }

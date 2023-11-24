@@ -21,17 +21,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.CATEGORY_LIST_CONTENT
-import com.example.shopapp.util.Constants.CATEGORY_LIST_LAZY_COLUMN
-import com.example.shopapp.util.Constants.CATEGORY_LIST_TOP_BAR
-import com.example.shopapp.util.Constants.CATEGORY_NAME_1
-import com.example.shopapp.util.Constants.CATEGORY_NAME_2
-import com.example.shopapp.util.Constants.CATEGORY_NAME_3
-import com.example.shopapp.util.Constants.CATEGORY_NAME_4
-import com.example.shopapp.util.Constants.CATEGORY_NAME_5
-import com.example.shopapp.util.Screen
-import com.example.shopapp.util.getCategory
+import com.example.shopapp.presentation.common.Constants.CART_BTN
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_CONTENT
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_LAZY_COLUMN
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LIST_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.CATEGORY_NAME_1
+import com.example.shopapp.presentation.common.Constants.CATEGORY_NAME_2
+import com.example.shopapp.presentation.common.Constants.CATEGORY_NAME_3
+import com.example.shopapp.presentation.common.Constants.CATEGORY_NAME_4
+import com.example.shopapp.presentation.common.Constants.CATEGORY_NAME_5
+import com.example.shopapp.presentation.navigation.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -64,7 +63,13 @@ class CategoryListScreenTest {
                         route = Screen.CategoryListScreen.route,
                     ) {
                         CategoryListContent(
-                            categoryList = getCategory(),
+                            categoryList = listOf(
+                                "All",
+                                "Men's clothing",
+                                "Women's clothing",
+                                "Jewelery",
+                                "Electronics"
+                            ),
                             onCategorySelected = {},
                             onGoToCart = {}
                         )

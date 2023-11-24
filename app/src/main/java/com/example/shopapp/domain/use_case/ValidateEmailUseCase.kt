@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
 
 class ValidateEmailUseCase {
     operator fun invoke(email: String): ValidationResult {

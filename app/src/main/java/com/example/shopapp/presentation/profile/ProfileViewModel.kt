@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.Address
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.PROFILE_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.PROFILE_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +27,8 @@ class ProfileViewModel @Inject constructor(
     private val _profileState = mutableStateOf(ProfileState())
     val profileState: State<ProfileState> = _profileState
 
-    private val _eventFlow = MutableSharedFlow<ProfileUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _profileEventChannel = Channel<ProfileUiEvent>()
+    val profileEventChannelFlow = _profileEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG,PROFILE_VM)
@@ -98,7 +98,7 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileEvent.OnGoBack -> {
                 viewModelScope.launch {
-                    _eventFlow.emit(ProfileUiEvent.NavigateBack)
+                    _profileEventChannel.send(ProfileUiEvent.NavigateBack)
                 }
             }
         }
@@ -131,7 +131,7 @@ class ProfileViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
+                        _profileEventChannel.send(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }
@@ -184,11 +184,11 @@ class ProfileViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Updated user successfully")
-                        _eventFlow.emit(ProfileUiEvent.NavigateBack)
+                        _profileEventChannel.send(ProfileUiEvent.NavigateBack)
                     }
                     is Resource.Error -> {
                         Log.i(TAG, response.message.toString())
-                        _eventFlow.emit(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
+                        _profileEventChannel.send(ProfileUiEvent.ShowErrorMessage(response.message.toString()))
                     }
                 }
             }

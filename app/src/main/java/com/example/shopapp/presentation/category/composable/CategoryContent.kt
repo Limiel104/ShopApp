@@ -16,12 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.util.ProductOrder
+import com.example.shopapp.presentation.common.composable.NotLoggedInDialog
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Category
-import com.example.shopapp.util.Constants.CATEGORY_CONTENT
-import com.example.shopapp.util.Constants.CATEGORY_CPI
-import com.example.shopapp.util.Constants.CATEGORY_LAZY_VERTICAL_GRID
-import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CONTENT
+import com.example.shopapp.presentation.common.Constants.CATEGORY_CPI
+import com.example.shopapp.presentation.common.Constants.CATEGORY_LAZY_VERTICAL_GRID
+import com.example.shopapp.presentation.common.Constants.productDescription
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -30,7 +30,7 @@ fun CategoryContent(
     productList: List<Product>,
     isSortAndFilterSectionVisible: Boolean,
     isLoading: Boolean,
-    isButtonLocked: Boolean,
+    isButtonEnabled: Boolean,
     isDialogActivated: Boolean,
     sliderPosition: ClosedFloatingPointRange<Float>,
     sliderRange: ClosedFloatingPointRange<Float>,
@@ -93,7 +93,7 @@ fun CategoryContent(
                 itemsIndexed(productList) { _, product ->
                     ProductItem(
                         product = product,
-                        isButtonLocked = isButtonLocked,
+                        isButtonEnabled = isButtonEnabled,
                         onImageClick = { onProductSelected(product.id) },
                         onFavourite = { onFavourite(product.id) }
                     )
@@ -176,7 +176,7 @@ fun CategoryContentPreview() {
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
             isLoading = false,
-            isButtonLocked = false,
+            isButtonEnabled = true,
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
@@ -203,7 +203,7 @@ fun CategoryContentToggleTruePreviewCategoryIsNotAll() {
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
             isLoading = false,
-            isButtonLocked = false,
+            isButtonEnabled = true,
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
@@ -230,16 +230,16 @@ fun CategoryContentToggleTruePreviewCategoryIsAll() {
             productList = getProductList(),
             isSortAndFilterSectionVisible = true,
             isLoading = false,
-            isButtonLocked = false,
+            isButtonEnabled = true,
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
             productOrder = ProductOrder.NameDescending(),
             categoryFilterMap = mapOf(
-                Pair(Category.Men.title,true),
-                Pair(Category.Women.title,true),
-                Pair(Category.Jewelery.title,true),
-                Pair(Category.Electronics.title,true)
+                Pair("Men's clothing",true),
+                Pair("Women's clothing",true),
+                Pair("Jewelery",true),
+                Pair("Electronics",true)
             ),
             onProductSelected = {},
             onSortAndFilterSelected = {},
@@ -262,7 +262,7 @@ fun CategoryContentDialogPreview() {
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
             isLoading = false,
-            isButtonLocked = false,
+            isButtonEnabled = true,
             isDialogActivated = true,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,
@@ -289,7 +289,7 @@ fun CategoryContentCPIPreview() {
             productList = getProductList(),
             isSortAndFilterSectionVisible = false,
             isLoading = true,
-            isButtonLocked = false,
+            isButtonEnabled = true,
             isDialogActivated = false,
             sliderPosition = 1f..4f,
             sliderRange = 0f..5f,

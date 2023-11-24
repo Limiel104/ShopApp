@@ -23,13 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopapp.presentation.common.format.priceToString
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.presentation.common.composable.ImageItem
-import com.example.shopapp.util.Constants.MINUS_BTN
-import com.example.shopapp.util.Constants.PLUS_BTN
-import com.example.shopapp.util.Constants.cartProductItemImageHeight
-import com.example.shopapp.util.Constants.cartProductItemImageWidth
+import com.example.shopapp.presentation.common.Constants.MINUS_BTN
+import com.example.shopapp.presentation.common.Constants.PLUS_BTN
+import com.example.shopapp.presentation.common.Constants.cartProductItemImageHeight
+import com.example.shopapp.presentation.common.Constants.cartProductItemImageWidth
 
 @Composable
 fun CartProductItem(

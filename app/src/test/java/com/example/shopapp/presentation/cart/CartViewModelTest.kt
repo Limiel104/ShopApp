@@ -6,9 +6,9 @@ import com.example.shopapp.domain.model.Coupon
 import com.example.shopapp.domain.model.FirebaseOrder
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.productDescription
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations

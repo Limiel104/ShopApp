@@ -4,15 +4,15 @@ import com.example.shopapp.domain.model.Address
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.model.ValidationResult
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.cityEmptyError
-import com.example.shopapp.util.Constants.confirmPasswordError
-import com.example.shopapp.util.Constants.emailEmptyError
-import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.passwordEmptyError
-import com.example.shopapp.util.Constants.streetEmptyError
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.cityEmptyError
+import com.example.shopapp.presentation.common.Constants.confirmPasswordError
+import com.example.shopapp.presentation.common.Constants.emailEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldEmptyError
+import com.example.shopapp.presentation.common.Constants.passwordEmptyError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 import com.example.shopapp.util.MainDispatcherRule
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.auth.FirebaseUser
 import io.mockk.MockKAnnotations
@@ -103,7 +103,6 @@ class SignupViewModelTest {
         val email = "email@email.com"
         val initialEmailState = getCurrentSignupState().email
         signupViewModel.onEvent(SignupEvent.EnteredEmail(email))
-
         val resultEmail = getCurrentSignupState().email
 
         assertThat(initialEmailState).isEqualTo("")
@@ -117,7 +116,6 @@ class SignupViewModelTest {
         val password = "Qwerty1+"
         val initialPasswordState = getCurrentSignupState().password
         signupViewModel.onEvent(SignupEvent.EnteredPassword(password))
-
         val resultPassword = getCurrentSignupState().password
 
         assertThat(initialPasswordState).isEqualTo("")
@@ -131,7 +129,6 @@ class SignupViewModelTest {
         val password = "Qwerty1+"
         val initialConfirmPasswordState = getCurrentSignupState().password
         signupViewModel.onEvent(SignupEvent.EnteredConfirmPassword(password))
-
         val resultConfirmPassword = getCurrentSignupState().confirmPassword
 
         assertThat(initialConfirmPasswordState).isEqualTo("")
@@ -145,7 +142,6 @@ class SignupViewModelTest {
         val firstName = "John"
         val initialFirstName = getCurrentSignupState().firstName
         signupViewModel.onEvent(SignupEvent.EnteredFirstName(firstName))
-
         val resultFirstName = getCurrentSignupState().firstName
 
         assertThat(initialFirstName).isEqualTo("")
@@ -159,7 +155,6 @@ class SignupViewModelTest {
         val lastName = "Smith"
         val initialLastName = getCurrentSignupState().lastName
         signupViewModel.onEvent(SignupEvent.EnteredLastName(lastName))
-
         val resultLastName = getCurrentSignupState().lastName
 
         assertThat(initialLastName).isEqualTo("")
@@ -173,7 +168,6 @@ class SignupViewModelTest {
         val street = "Street 1"
         val initialStreet = getCurrentSignupState().street
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
-
         val resultStreet = getCurrentSignupState().street
 
         assertThat(initialStreet).isEqualTo("")
@@ -187,7 +181,6 @@ class SignupViewModelTest {
         val city = "Warsaw"
         val initialCity= getCurrentSignupState().city
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
-
         val resultCity= getCurrentSignupState().city
 
         assertThat(initialCity).isEqualTo("")
@@ -201,7 +194,6 @@ class SignupViewModelTest {
         val zipCode = "12-345"
         val initialZipCode= getCurrentSignupState().zipCode
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         val resultZipCode= getCurrentSignupState().zipCode
 
         assertThat(initialZipCode).isEqualTo("")
@@ -1031,7 +1023,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1109,7 +1100,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1186,7 +1176,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1263,7 +1252,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1340,7 +1328,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1417,7 +1404,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1494,7 +1480,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1571,7 +1556,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 
@@ -1666,7 +1650,6 @@ class SignupViewModelTest {
         signupViewModel.onEvent(SignupEvent.EnteredStreet(street))
         signupViewModel.onEvent(SignupEvent.EnteredCity(city))
         signupViewModel.onEvent(SignupEvent.EnteredZipCode(zipCode))
-
         signupViewModel.onEvent(SignupEvent.Signup)
         val signupState = getCurrentSignupState()
 

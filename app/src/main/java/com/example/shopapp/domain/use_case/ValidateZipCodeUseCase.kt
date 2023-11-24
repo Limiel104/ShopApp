@@ -1,11 +1,11 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.model.ValidationResult
-import com.example.shopapp.util.Constants.fieldContainsSpecialCharsError
-import com.example.shopapp.util.Constants.specialCharsZipCode
-import com.example.shopapp.util.Constants.zipCodeBadFormat
-import com.example.shopapp.util.Constants.zipCodeEmptyError
-import com.example.shopapp.util.Constants.zipCodeLength
+import com.example.shopapp.presentation.common.Constants.fieldContainsSpecialCharsError
+import com.example.shopapp.presentation.common.Constants.specialCharsZipCode
+import com.example.shopapp.presentation.common.Constants.zipCodeBadFormat
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeLength
 
 class ValidateZipCodeUseCase {
     operator fun invoke(zipCode: String): ValidationResult {

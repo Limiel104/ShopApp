@@ -24,7 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.R
 import com.example.shopapp.domain.model.BottomNavigationItem
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.navigation.Screen
 
 @Composable
 fun ShopAppNavigation() {
@@ -68,7 +68,8 @@ fun ShopAppNavigation() {
                 if(!currentRoute.contains(Screen.ProductDetailsScreen.route)) {
                     NavigationBar() {
                         items.forEachIndexed { index, item ->
-                            val isCategoryScreenCurrentlyDisplayed = navBackStackEntry.value?.destination?.route!!.contains(Screen.CategoryScreen.route)
+                            val isCategoryScreenCurrentlyDisplayed = navBackStackEntry.value?.destination?.route!!.contains(
+                                Screen.CategoryScreen.route)
                             val selected =
                                 if(isCategoryScreenCurrentlyDisplayed) item.route == Screen.CategoryListScreen.route
                                 else item.route == navBackStackEntry.value?.destination?.route

@@ -17,9 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.LOGOUT_BTN
-import com.example.shopapp.util.Constants.MY_PROFILE_BTN
-import com.example.shopapp.util.Constants.ORDERS_BTN
+import com.example.shopapp.presentation.common.Constants.LOGOUT_BTN
+import com.example.shopapp.presentation.common.Constants.MY_PROFILE_BTN
+import com.example.shopapp.presentation.common.Constants.ORDERS_BTN
 
 @Composable
 fun OptionsSection(

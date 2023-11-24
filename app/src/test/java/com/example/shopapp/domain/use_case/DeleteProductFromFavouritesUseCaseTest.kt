@@ -1,7 +1,7 @@
 package com.example.shopapp.domain.use_case
 
 import com.example.shopapp.domain.repository.FavouritesRepository
-import com.example.shopapp.util.Resource
+import com.example.shopapp.domain.util.Resource
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks

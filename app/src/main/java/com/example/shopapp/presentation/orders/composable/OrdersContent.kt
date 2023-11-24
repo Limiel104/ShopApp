@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.example.shopapp.domain.model.CartProduct
 import com.example.shopapp.domain.model.Order
 import com.example.shopapp.domain.util.OrderOrder
-import com.example.shopapp.util.Constants.ORDERS_CONTENT
-import com.example.shopapp.util.Constants.ORDERS_CPI
-import com.example.shopapp.util.Constants.ORDERS_LAZY_COLUMN
+import com.example.shopapp.presentation.common.Constants.ORDERS_CONTENT
+import com.example.shopapp.presentation.common.Constants.ORDERS_CPI
+import com.example.shopapp.presentation.common.Constants.ORDERS_LAZY_COLUMN
 import java.util.Date
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -37,13 +37,14 @@ fun OrdersContent(
     isSortSectionVisible: Boolean,
     onOrderSelected: (String) -> Unit,
     onOrderChange: (OrderOrder) -> Unit,
-    onSortSelected: () -> Unit
+    onSortSelected: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
             OrdersTopBar(
                 onSortSelected = { onSortSelected() },
-                onNavigateBack = { /*TODO*/ }
+                onNavigateBack = { onGoBack() }
             ) },
         modifier = Modifier
             .fillMaxSize()
@@ -173,7 +174,8 @@ fun OrdersContentPreview() {
         isSortSectionVisible = false,
         onOrderSelected = {},
         onOrderChange = {},
-        onSortSelected = {}
+        onSortSelected = {},
+        onGoBack = {}
     )
 }
 
@@ -187,7 +189,8 @@ fun OrdersContentPreviewSortSectionVisible() {
         isSortSectionVisible = true,
         onOrderSelected = {},
         onOrderChange = {},
-        onSortSelected = {}
+        onSortSelected = {},
+        onGoBack = {}
     )
 }
 
@@ -201,6 +204,7 @@ fun OrdersContentCPIPreview() {
         isSortSectionVisible = false,
         onOrderSelected = {},
         onOrderChange = {},
-        onSortSelected = {}
+        onSortSelected = {},
+        onGoBack = {}
     )
 }

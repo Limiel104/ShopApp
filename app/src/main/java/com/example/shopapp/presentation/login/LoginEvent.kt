@@ -5,4 +5,5 @@ sealed class LoginEvent {
     data class EnteredPassword(val value: String): LoginEvent()
     object OnSignupButtonSelected: LoginEvent()
     object Login: LoginEvent()
+    object OnGoBack: LoginEvent()
 }

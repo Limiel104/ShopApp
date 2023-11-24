@@ -14,10 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopapp.di.AppModule
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.LOGIN_BTN
-import com.example.shopapp.util.Constants.SIGNUP_BTN
-import com.example.shopapp.util.Constants.USER_NOT_LOGGED_IN_CONTENT
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.LOGIN_BTN
+import com.example.shopapp.presentation.common.Constants.SIGNUP_BTN
+import com.example.shopapp.presentation.common.Constants.USER_NOT_LOGGED_IN_CONTENT
+import com.example.shopapp.presentation.navigation.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

@@ -24,20 +24,20 @@ import androidx.compose.ui.unit.sp
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.common.composable.ImageItem
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Constants.productItemImageHeight
-import com.example.shopapp.util.Constants.productItemImageWidth
+import com.example.shopapp.presentation.common.Constants.productDescription
+import com.example.shopapp.presentation.common.Constants.productItemImageHeight
+import com.example.shopapp.presentation.common.Constants.productItemImageWidth
 import com.example.shopapp.R
-import com.example.shopapp.presentation.common.format.priceToString
-import com.example.shopapp.util.Constants.ADD_TO_CART_BTN
-import com.example.shopapp.util.Constants.DELETE_BTN
-import com.example.shopapp.util.Constants.PRODUCT_ITEM_TITLE
+import com.example.shopapp.presentation.common.Constants.ADD_TO_CART_BTN
+import com.example.shopapp.presentation.common.Constants.DELETE_BTN
+import com.example.shopapp.presentation.common.Constants.PRODUCT_ITEM_TITLE
 
 @Composable
 fun FavouriteProductItem(
     product: Product,
     onClick: () -> Unit,
-    onDelete: () ->  Unit
+    onDelete: () ->  Unit,
+    onAddToCart: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -93,10 +93,9 @@ fun FavouriteProductItem(
         FilledTonalButton(
             modifier = Modifier
                 .testTag(ADD_TO_CART_BTN + " ${product.title}"),
-            onClick = { /*TODO*/ }
+            onClick = { onAddToCart(product.id) }
         ) {
             Text(text = stringResource(id = R.string.add_to_cart))
-
         }
     }
 }
@@ -119,7 +118,8 @@ fun FavouriteProductItemPreview() {
             FavouriteProductItem(
                 product = product,
                 onClick = {},
-                onDelete = {}
+                onDelete = {},
+                onAddToCart = {}
             )
         }
     }

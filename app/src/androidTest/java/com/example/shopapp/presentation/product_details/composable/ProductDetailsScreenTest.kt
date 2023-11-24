@@ -32,18 +32,18 @@ import com.example.shopapp.di.AppModule
 import com.example.shopapp.domain.model.Product
 import com.example.shopapp.presentation.MainActivity
 import com.example.shopapp.ui.theme.ShopAppTheme
-import com.example.shopapp.util.Constants.CART_BTN
-import com.example.shopapp.util.Constants.FAVOURITES_BTN
-import com.example.shopapp.util.Constants.GO_BACK_BTN
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_COLUMN
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CONTENT
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_CPI
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_IMAGE_BOX
-import com.example.shopapp.util.Constants.PRODUCT_DETAILS_TOP_BAR
-import com.example.shopapp.util.Constants.productDescription
-import com.example.shopapp.util.Screen
+import com.example.shopapp.presentation.common.Constants.CART_BTN
+import com.example.shopapp.presentation.common.Constants.FAVOURITES_BTN
+import com.example.shopapp.presentation.common.Constants.GO_BACK_BTN
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_ADD_TO_CART_BTN
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_BOTTOM_SHEET
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_COLUMN
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_CONTENT
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_CPI
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_IMAGE_BOX
+import com.example.shopapp.presentation.common.Constants.PRODUCT_DETAILS_TOP_BAR
+import com.example.shopapp.presentation.common.Constants.productDescription
+import com.example.shopapp.presentation.navigation.Screen
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -106,8 +106,10 @@ class ProductDetailsScreenTest {
                             scaffoldState = rememberBottomSheetScaffoldState(),
                             product = product,
                             isLoading = isLoading,
+                            onFavourite = {},
+                            onAddToCart = {},
                             onNavigateBack = {},
-                            onAddToCart = {}
+                            onNavigateToCart = {}
                         )
                     }
                 }

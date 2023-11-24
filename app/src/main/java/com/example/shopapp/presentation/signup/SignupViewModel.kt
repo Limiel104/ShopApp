@@ -8,12 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.shopapp.domain.model.Address
 import com.example.shopapp.domain.model.User
 import com.example.shopapp.domain.use_case.ShopUseCases
-import com.example.shopapp.util.Constants.SIGNUP_VM
-import com.example.shopapp.util.Constants.TAG
-import com.example.shopapp.util.Resource
+import com.example.shopapp.presentation.common.Constants.SIGNUP_VM
+import com.example.shopapp.presentation.common.Constants.TAG
+import com.example.shopapp.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +25,8 @@ class SignupViewModel @Inject constructor(
     private val _signupState = mutableStateOf(SignupState())
     val signupState: State<SignupState> = _signupState
 
-    private val _eventFlow = MutableSharedFlow<SignupUiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
+    private val _signupEventChannel = Channel<SignupUiEvent>()
+    val signupEventChannelFlow = _signupEventChannel.receiveAsFlow()
 
     init {
         Log.i(TAG,SIGNUP_VM)
@@ -91,6 +91,11 @@ class SignupViewModel @Inject constructor(
                     Log.i(TAG, "Form validation error")
                 }
             }
+            is SignupEvent.OnGoBack -> {
+                viewModelScope.launch {
+                    _signupEventChannel.send(SignupUiEvent.NavigateBack)
+                }
+            }
         }
     }
 
@@ -122,7 +127,7 @@ class SignupViewModel @Inject constructor(
                         )
 
                         val errorMessage = response.message
-                        _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                        _signupEventChannel.send(SignupUiEvent.ShowErrorMessage(errorMessage!!))
                     }
                 }
             }
@@ -153,11 +158,11 @@ class SignupViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         Log.i(TAG,"Added user successfully")
-                        _eventFlow.emit(SignupUiEvent.Signup)
+                        _signupEventChannel.send(SignupUiEvent.Signup)
                     }
                     is Resource.Error -> {
                         val errorMessage = response.message
-                        _eventFlow.emit(SignupUiEvent.ShowErrorMessage(errorMessage!!))
+                        _signupEventChannel.send(SignupUiEvent.ShowErrorMessage(errorMessage!!))
                     }
                 }
             }

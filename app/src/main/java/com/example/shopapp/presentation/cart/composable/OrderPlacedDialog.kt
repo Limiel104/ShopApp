@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.ORDER_PLACED_DIALOG
+import com.example.shopapp.presentation.common.Constants.ORDER_PLACED_DIALOG
 
 @Composable
 fun OrderPlacedDialog(

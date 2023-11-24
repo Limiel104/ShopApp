@@ -19,19 +19,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopapp.R
-import com.example.shopapp.util.Constants.PROFILE_CITY_TF
-import com.example.shopapp.util.Constants.PROFILE_COLUMN
-import com.example.shopapp.util.Constants.PROFILE_CONTENT
-import com.example.shopapp.util.Constants.PROFILE_CPI
-import com.example.shopapp.util.Constants.PROFILE_FIRSTNAME_TF
-import com.example.shopapp.util.Constants.PROFILE_LASTNAME_TF
-import com.example.shopapp.util.Constants.PROFILE_STREET_TF
-import com.example.shopapp.util.Constants.PROFILE_ZIP_CODE_TF
-import com.example.shopapp.util.Constants.SAVE_BTN
-import com.example.shopapp.util.Constants.cityEmptyError
-import com.example.shopapp.util.Constants.fieldEmptyError
-import com.example.shopapp.util.Constants.streetEmptyError
-import com.example.shopapp.util.Constants.zipCodeEmptyError
+import com.example.shopapp.presentation.common.Constants.PROFILE_CITY_TF
+import com.example.shopapp.presentation.common.Constants.PROFILE_COLUMN
+import com.example.shopapp.presentation.common.Constants.PROFILE_CONTENT
+import com.example.shopapp.presentation.common.Constants.PROFILE_CPI
+import com.example.shopapp.presentation.common.Constants.PROFILE_FIRSTNAME_TF
+import com.example.shopapp.presentation.common.Constants.PROFILE_LASTNAME_TF
+import com.example.shopapp.presentation.common.Constants.PROFILE_STREET_TF
+import com.example.shopapp.presentation.common.Constants.PROFILE_ZIP_CODE_TF
+import com.example.shopapp.presentation.common.Constants.SAVE_BTN
+import com.example.shopapp.presentation.common.Constants.cityEmptyError
+import com.example.shopapp.presentation.common.Constants.fieldEmptyError
+import com.example.shopapp.presentation.common.Constants.streetEmptyError
+import com.example.shopapp.presentation.common.Constants.zipCodeEmptyError
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
